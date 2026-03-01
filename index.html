@@ -694,9 +694,16 @@ footer{background:var(--bg1);border-top:1px solid var(--border);padding:52px 20p
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
 // ██ FIREBASE CONFIG — REPLACE WITH YOURS ██
-const FC={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT_ID.firebaseapp.com",projectId:"YOUR_PROJECT_ID",storageBucket:"YOUR_PROJECT_ID.appspot.com",messagingSenderId:"YOUR_SENDER_ID",appId:"YOUR_APP_ID"};
+const firebaseConfig = {
+  apiKey: "AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",
+  authDomain: "nexbuildr-c2660.firebaseapp.com",
+  projectId: "nexbuildr-c2660",
+  storageBucket: "nexbuildr-c2660.firebasestorage.app",
+  messagingSenderId: "116373525590",
+  appId: "1:116373525590:web:ce249c4ec3ac4d48ae97f7"
+};
 const ADMIN="nexbuildrcorporation@gmail.com";
-firebase.initializeApp(FC);
+firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore();
 let CU=null,SDU=null,GUnsub=null,DUnsub=null,VID=null;
 // SCROLL REVEAL
