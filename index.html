@@ -435,7 +435,7 @@ textarea.ct-inp{resize:vertical;min-height:80px;font-family:'DM Sans',sans-serif
 .fp-time{font-size:9px;color:var(--t3);margin-left:auto;flex-shrink:0}
 .fp-title{padding:0 14px 6px;font-family:var(--fh);font-size:14px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
 .fp-body{padding:0 14px 12px;font-size:12px;color:var(--t2);line-height:1.7}
-.fp-img{width:100%;max-height:220px;object-fit:cover;display:block}
+.fp-img{width:100%;max-height:500px;object-fit:contain;display:block;background:#000;}
 .fp-actions{padding:10px 14px;border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:10px}
 .fp-del{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--t3);font-size:11px;cursor:none;transition:all .25s;padding:4px 8px;border-radius:8px;font-family:var(--fh);font-weight:700;margin-left:auto}
 .fp-del:hover{background:rgba(239,68,68,.1);color:var(--rd)}
@@ -1161,6 +1161,74 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
   background-color: rgba(255,255,255,.06) !important;
 }
 
+
+/* ===== FEED HEART & COMMENTS ===== */
+.fp-actions{padding:10px 4px;display:flex;align-items:center;gap:16px}
+.fp-heart-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-family:var(--fh);font-weight:700;padding:6px 2px;transition:color .2s}
+.fp-heart-btn.liked{color:#ef4444}
+.fp-heart-btn svg{transition:transform .15s}
+.fp-heart-btn.liked svg{fill:#ef4444;stroke:#ef4444}
+.fp-heart-btn:active svg{transform:scale(1.3)}
+.fp-cmt-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-family:var(--fh);font-weight:700;padding:6px 2px;transition:color .2s}
+.fp-cmt-btn:hover{color:#fff}
+.fp-del-btn{background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-size:10px;font-family:var(--fh);font-weight:700;margin-left:auto;padding:6px;text-transform:uppercase;letter-spacing:.06em}
+.fp-del-btn:hover{color:#ef4444}
+
+/* ===== COMMENT MODAL ===== */
+#cmt-ov{display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.8);align-items:flex-end;justify-content:center}
+#cmt-ov.on{display:flex}
+#cmt-box{background:#0a0a0a;border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:75vh;display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.08)}
+.cmt-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.cmt-ttl{font-family:var(--fh);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.cmt-cl{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.cmt-list{flex:1;overflow-y:auto;padding:12px 16px}
+.cmt-item{display:flex;gap:10px;margin-bottom:16px}
+.cmt-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.cmt-body{flex:1}
+.cmt-nm{font-size:11px;font-weight:700;color:#a78bfa;font-family:var(--fh);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.cmt-txt{font-size:13px;color:#e0e0f0;line-height:1.5}
+.cmt-inp-row{display:flex;gap:8px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.cmt-inp{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:10px 16px;color:#fff;font-size:13px;outline:none;font-family:inherit}
+.cmt-send{background:linear-gradient(135deg,#7c3aed,#ec4899);border:none;border-radius:20px;padding:10px 18px;color:#fff;font-family:var(--fh);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;flex-shrink:0}
+
+/* ===== CHAT LONG PRESS CONTEXT MENU ===== */
+#msg-ctx{display:none;position:fixed;z-index:9999;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;min-width:160px;box-shadow:0 8px 32px rgba(0,0,0,.7)}
+#msg-ctx.on{display:block}
+.ctx-item{display:flex;align-items:center;gap:10px;padding:13px 18px;font-size:13px;font-family:var(--fh);font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)}
+.ctx-item:last-child{border-bottom:none}
+.ctx-item:hover{background:rgba(255,255,255,.05)}
+.ctx-item.del{color:#ef4444}
+.ctx-item svg{flex-shrink:0}
+
+/* ===== REPLY PREVIEW ===== */
+.reply-bar{display:none;align-items:center;gap:10px;padding:8px 14px;background:rgba(139,92,246,.08);border-top:1px solid rgba(139,92,246,.2);border-left:3px solid #7c3aed}
+.reply-bar.on{display:flex}
+.reply-info{flex:1;font-size:11px;color:#a78bfa;overflow:hidden}
+.reply-nm{font-family:var(--fh);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.reply-txt{font-size:12px;color:#8888b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reply-cancel{background:none;border:none;color:#555577;cursor:pointer;padding:4px;font-size:16px;line-height:1}
+
+/* ===== REPLY QUOTE IN MESSAGE ===== */
+.m-reply{background:rgba(139,92,246,.1);border-left:2px solid #7c3aed;padding:6px 10px;border-radius:6px;margin-bottom:6px;font-size:11px}
+.m-reply-nm{color:#a78bfa;font-family:var(--fh);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.m-reply-txt{color:#8888b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ===== UNREAD BADGE DM ===== */
+.dm-unread{background:#ec4899;color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:2px 6px;font-family:var(--fh);letter-spacing:.04em;flex-shrink:0}
+.dm-user-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer}
+.dm-user-row:hover{background:rgba(255,255,255,.03)}
+.dm-u-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.dm-u-info{flex:1;min-width:0}
+.dm-u-nm{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;font-family:var(--fh);text-transform:uppercase;letter-spacing:.04em}
+.dm-u-prev{font-size:11px;color:#555577;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ===== EDIT MESSAGE INLINE ===== */
+.msg-editing .m-bub{display:none}
+.msg-edit-inp{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.4);border-radius:16px;padding:8px 14px;color:#fff;font-size:13px;font-family:inherit;outline:none;width:100%;box-sizing:border-box;margin-bottom:4px}
+.edit-actions{display:flex;gap:8px}
+.edit-save-btn,.edit-cancel-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:10px;font-family:var(--fh);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 12px;cursor:pointer}
+.edit-save-btn{background:linear-gradient(135deg,#7c3aed,#ec4899);border:none}
+
 </style>
 </head>
 <body>
@@ -1354,7 +1422,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
     <div class="ft-brand"><div style="display:flex;align-items:center;gap:10px"><div class="nb-ic">N</div><span class="nb-txt">Nex<span class="gt">Buildr</span></span></div><p>A next-generation EdTech and startup ecosystem helping students build real-world startups.</p></div>
     <div class="ft-col"><h4>Product</h4><a href="#features">Features</a><a href="#" onclick="oL()">AI Tools</a><a href="https://chat.whatsapp.com/Ba3y6R9PhKv4DnpvTeTlKe" target="_blank">Community</a></div>
     <div class="ft-col"><h4>Company</h4><a href="#about-sec">About Us</a><a href="#team">Team</a><a href="#contact">Contact</a></div>
-    <div class="ft-col"><h4>Contact Us</h4>nexbuildrcorporation@gmail.com<a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+    <div class="ft-col"><h4>Contact Us</h4><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e18f84998394888d8593828e93918e938095888e8fa1868c80888dcf828e8c">[email&#160;protected]</a><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
   </div>
   <div class="ft-bot"><span>An <strong style="color:#fff">Atharv Singh Raj</strong> Production</span><span>&copy; 2026 NexBuildr. All rights reserved.</span></div>
 </div></footer>
@@ -1392,11 +1460,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
           <div style="position:relative;flex-shrink:0;">
             <div id="fph-0" style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:700;color:#fff;overflow:hidden;">A</div>
-            <label style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);border:2px solid #000;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <input type="file" accept="image/*" onchange="setFPhoto(0,this)" style="display:none;"/>
-            </label>
-          </div>
+            </div>
           <div>
             <div style="font-family:var(--fh);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Atharv Singh Raj</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;">Founder &amp; CEO</div>
@@ -1420,11 +1484,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
           <div style="position:relative;flex-shrink:0;">
             <div id="fph-1" style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:700;color:#fff;overflow:hidden;">H</div>
-            <label style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);border:2px solid #000;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <input type="file" accept="image/*" onchange="setFPhoto(1,this)" style="display:none;"/>
-            </label>
-          </div>
+            </div>
           <div>
             <div style="font-family:var(--fh);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Hardik Dawar</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;">Co-Founder &amp; CFO</div>
@@ -1442,11 +1502,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
           <div style="position:relative;flex-shrink:0;">
             <div id="fph-2" style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:700;color:#fff;overflow:hidden;">A</div>
-            <label style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);border:2px solid #000;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <input type="file" accept="image/*" onchange="setFPhoto(2,this)" style="display:none;"/>
-            </label>
-          </div>
+            </div>
           <div>
             <div style="font-family:var(--fh);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Ayush Kumar</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;">Co-Founder &amp; CMO</div>
@@ -1464,11 +1520,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
           <div style="position:relative;flex-shrink:0;">
             <div id="fph-3" style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:700;color:#fff;overflow:hidden;">A</div>
-            <label style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);border:2px solid #000;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <input type="file" accept="image/*" onchange="setFPhoto(3,this)" style="display:none;"/>
-            </label>
-          </div>
+            </div>
           <div>
             <div style="font-family:var(--fh);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Anurag</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;">CTO</div>
@@ -1486,11 +1538,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
         <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
           <div style="position:relative;flex-shrink:0;">
             <div id="fph-4" style="width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:24px;font-weight:700;color:#fff;overflow:hidden;">P</div>
-            <label style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);border:2px solid #000;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              <input type="file" accept="image/*" onchange="setFPhoto(4,this)" style="display:none;"/>
-            </label>
-          </div>
+            </div>
           <div>
             <div style="font-family:var(--fh);font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Pradyumna Saha</div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#a78bfa;">COO</div>
@@ -1570,13 +1618,13 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
       <p style="font-size:14px;color:#8888b0;line-height:1.8;margin-bottom:28px;">Have a question, partnership idea, or just want to say hi? Our founders read every message.</p>
 
       <!-- Direct contact links -->
-      <a href="mailto:nexbuildrcorporation@gmail.com" style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none;color:inherit;margin-bottom:0;">
+      <a href="/cdn-cgi/l/email-protection#1c7279647e697570786e7f736e6c736e7d687573725c7b717d7570327f7371" style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none;color:inherit;margin-bottom:0;">
         <div style="width:42px;height:42px;border-radius:12px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;color:#a78bfa;flex-shrink:0;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
         <div>
           <div style="font-family:var(--fh);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555577;margin-bottom:3px;">Email Us</div>
-          <div style="font-size:13px;color:#a78bfa;">nexbuildrcorporation@gmail.com</div>
+          <div style="font-size:13px;color:#a78bfa;"><span class="__cf_email__" data-cfemail="442a213c26312d282036272b36342b3625302d2b2a042329252d286a272b29">[email&#160;protected]</span></div>
         </div>
       </a>
       <a href="https://chat.whatsapp.com/Ba3y6R9PhKv4DnpvTeTlKe" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none;color:inherit;margin-bottom:28px;">
@@ -1678,7 +1726,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
     <button class="ct-close" onclick="cCT()">&#10005;</button>
     <div class="ct-body">
       <div class="ct-title">Contact Us</div><div class="ct-sub">We would love to hear from you</div>
-      <div class="ct-email"><div class="ct-email-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="ct-email-lbl">Email Us Directly</div><div class="ct-email-val">nexbuildrcorporation@gmail.com</div></div></div>
+      <div class="ct-email"><div class="ct-email-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="ct-email-lbl">Email Us Directly</div><div class="ct-email-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d3bdb6abb1a6babfb7a1b0bca1a3bca1b2a7babcbd93b4beb2babffdb0bcbe">[email&#160;protected]</a></div></div></div>
       <div class="al" id="ct-al"></div>
       <input class="ct-inp" type="text" id="ct-nm" placeholder="Your name"/>
       <input class="ct-inp" type="email" id="ct-em" placeholder="Your email"/>
@@ -1788,27 +1836,51 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
   </div>
   <div class="b-nav">
     <div class="bn on" id="bn-home" onclick="nT('home')">
-      <svg class="bn-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <svg class="bn-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
       <div class="bn-lb">Home</div>
     </div>
     <div class="bn" id="bn-ai" onclick="nT('ai')">
-      <svg class="bn-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      <svg class="bn-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>
       <div class="bn-lb">AI</div>
     </div>
     <div class="bn" id="bn-feed" onclick="nT('feed')">
-      <svg class="bn-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg class="bn-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <div class="bn-lb">Feed</div>
     </div>
-    <div class="bn" id="bn-chat" onclick="nT('chat')">
-      <svg class="bn-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="13" y2="12"/></svg>
+    <div class="bn" id="bn-chat" onclick="nT('chat')" style="position:relative;">
+      <svg class="bn-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       <div class="bn-lb">Chat</div>
+      <div id="chat-unread-dot" style="display:none;position:absolute;top:6px;right:18px;width:8px;height:8px;border-radius:50%;background:#ec4899;border:1.5px solid #000;"></div>
     </div>
     <div class="bn" id="bn-showcase" onclick="nT('showcase')">
-      <svg class="bn-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <svg class="bn-ic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88 16.24,7.76"/></svg>
       <div class="bn-lb">Showcase</div>
     </div>
   </div>
 </div>
+
+<!-- COMMENT MODAL -->
+<div id="cmt-ov" onclick="if(event.target===this)cCmt()">
+  <div id="cmt-box">
+    <div class="cmt-hd">
+      <span class="cmt-ttl">Comments</span>
+      <button class="cmt-cl" onclick="cCmt()">&#10005;</button>
+    </div>
+    <div class="cmt-list" id="cmt-list"><div style="text-align:center;padding:30px;color:rgba(255,255,255,.3);font-size:12px;font-family:var(--fh);text-transform:uppercase">No comments yet. Be first!</div></div>
+    <div class="cmt-inp-row">
+      <input class="cmt-inp" id="cmt-inp" placeholder="Add a comment..." onkeydown="if(event.key==='Enter')sendCmt()"/>
+      <button class="cmt-send" onclick="sendCmt()">Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- MSG CONTEXT MENU -->
+<div id="msg-ctx">
+  <div class="ctx-item" onclick="ctxReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,14 4,9 9,4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>Reply</div>
+  <div class="ctx-item" onclick="ctxEdit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Edit</div>
+  <div class="ctx-item del" onclick="ctxDelete()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Delete</div>
+</div>
+
 
 <!-- POST CREATION MODAL -->
 <div id="pc-ov" onclick="if(event.target===this)cPC()">
@@ -1868,7 +1940,19 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
           <option value="Student">Student</option>
         </select>
       </div>
-      <div class="ep-f"><label class="ep-lbl">Profile Photo URL</label><input class="ep-inp" type="url" id="ep-photo" placeholder="https://example.com/photo.jpg" oninput="prevEPPhoto(this.value)"/></div>
+      <div class="ep-f">
+  <label class="ep-lbl">Profile Photo</label>
+  <div style="display:flex;align-items:center;gap:14px;padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;cursor:pointer;" onclick="document.getElementById('ep-photo-file').click()">
+    <div id="ep-photo-prev" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;overflow:hidden;flex-shrink:0;">?</div>
+    <div>
+      <div style="font-size:13px;color:#fff;font-weight:600;margin-bottom:3px;">Tap to change photo</div>
+      <div style="font-size:11px;color:#555577;">Select from gallery</div>
+    </div>
+    <svg style="margin-left:auto;color:#555577;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+  </div>
+  <input type="file" accept="image/*" id="ep-photo-file" style="display:none;" onchange="prevEPPhotoFile(this)"/>
+  <input type="hidden" id="ep-photo" value=""/>
+</div>
       <button class="ep-save" onclick="saveP()">Save Profile</button>
       <div class="ep-al" id="ep-al"></div>
     </div>
@@ -1901,7 +1985,7 @@ body, #lo, #app, #land, html { background: #000 !important; background-color: #0
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 
 // ===== SIMPLE PAGE NAVIGATION (NO DEPENDENCIES) =====
 function showPage(id){
@@ -2633,14 +2717,33 @@ function listenGC(){
     snap.docs.forEach(function(d){
       var m=d.data(),me=m.userId===CU.uid;
       var t=m.timestamp?new Date(m.timestamp.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
-      var av=m.userPhoto?'<img src="'+m.userPhoto+'" style="width:100%;height:100%;object-fit:cover"/>':((m.userName||'U').charAt(0).toUpperCase());
-      var delBtn=me?'<button class="msg-del" onclick="delMsg(\'globalChat\',\''+d.id+'\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>':'';
-      el.innerHTML+='<div class="msg'+(me?' me':'')+'"><div class="m-av" onclick="showUP(\''+m.userId+'\')">'+av+'</div><div class="m-bw">'+(me?'':'<div class="m-nm">'+eH(m.userName)+'</div>')+'<div class="m-bub">'+eH(m.text)+'</div><div class="m-t">'+t+' '+delBtn+'</div></div></div>';
+      var av=m.userPhoto?'<img src="'+m.userPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':((m.userName||'U').charAt(0).toUpperCase());
+      var replyHtml='';
+      if(m.replyTo){replyHtml='<div class="m-reply"><div class="m-reply-nm">'+eH(m.replyTo.userName)+'</div><div class="m-reply-txt">'+eH(m.replyTo.text)+'</div></div>';}
+      var row=document.createElement('div');row.className='msg'+(me?' me':'');row.dataset.mid=d.id;row.dataset.me=me?'1':'0';
+      row.dataset.txt=m.text;row.dataset.uid=m.userId;row.dataset.unm=m.userName;
+      row.innerHTML='<div class="m-av" onclick="showUP(''+m.userId+'')">'+av+'</div>'+
+        '<div class="m-bw">'+
+          (me?'':'<div class="m-nm">'+eH(m.userName)+'</div>')+
+          replyHtml+
+          '<div class="m-bub">'+eH(m.text)+'</div>'+
+          '<div id="edit-area-'+d.id+'" style="display:none"><input class="msg-edit-inp" id="edit-inp-'+d.id+'" value="'+m.text.replace(/"/g,"&quot;")+'" onkeydown="if(event.key==='Enter')saveEdit('globalChat',''+d.id+'',this.value)"/><div class="edit-actions"><button class="edit-save-btn" onclick="saveEdit('globalChat',''+d.id+'',document.getElementById('edit-inp-'+d.id+'').value)">Save</button><button class="edit-cancel-btn" onclick="cancelEdit(''+d.id+'')">Cancel</button></div></div>'+
+          '<div class="m-t">'+t+'</div>'+
+        '</div>';
+      // Long press
+      var lpt=null;
+      row.addEventListener('touchstart',function(e){if(!me)return;lpt=setTimeout(function(){showCtx(e,d.id,m.text,'globalChat',m.userId,m.userName);},520);},{passive:true});
+      row.addEventListener('touchend',function(){clearTimeout(lpt);},{passive:true});
+      row.addEventListener('touchmove',function(){clearTimeout(lpt);},{passive:true});
+      // Desktop right click
+      row.addEventListener('contextmenu',function(e){if(!me)return;e.preventDefault();showCtx(e,d.id,m.text,'globalChat',m.userId,m.userName);});
+      el.appendChild(row);
     });
     el.scrollTop=el.scrollHeight;
-    db.collection('presence').where('timestamp','>',new Date(Date.now()-300000)).get().then(function(s){var sc=document.getElementById('seen-ct');if(sc)sc.textContent=s.size;}).catch(function(){});
+    try{db.collection('presence').where('timestamp','>',new Date(Date.now()-300000)).get().then(function(s){var sc=document.getElementById('seen-ct');if(sc)sc.textContent=s.size;}).catch(function(){});}catch(e){}
   });
 }
+
 async function sendGM(){
   if(!CU){oL();return;}
   var inp=document.getElementById('g-inp'),txt=inp.value.trim();if(!txt)return;inp.value='';
@@ -2662,16 +2765,44 @@ async function oDM(uid,name,photo){
     var el=document.getElementById('dm-msgs');if(!el)return;
     if(!snap.docs.length){el.innerHTML='<div class="ch-empty">Start the conversation</div>';return;}
     el.innerHTML='';
+    var unreadIds=[];
     snap.docs.forEach(function(d){
       var m=d.data(),me=m.userId===CU.uid;
       var t=m.timestamp?new Date(m.timestamp.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
-      var av=m.userPhoto?'<img src="'+m.userPhoto+'" style="width:100%;height:100%;object-fit:cover"/>':((m.userName||'U').charAt(0).toUpperCase());
-      var delBtn=me?'<button class="msg-del" onclick="delMsg(\'dm\',\''+d.id+'\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>':'';
-      el.innerHTML+='<div class="msg'+(me?' me':'')+'"><div class="m-av">'+av+'</div><div class="m-bw">'+(me?'':'<div class="m-nm">'+eH(m.userName)+'</div>')+'<div class="m-bub">'+eH(m.text)+'</div><div class="m-t">'+t+' '+delBtn+'</div></div></div>';
+      var av=m.userPhoto?'<img src="'+m.userPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':((m.userName||'U').charAt(0).toUpperCase());
+      if(!me&&!m.seen)unreadIds.push(d.id);
+      var unreadDot=(!me&&!m.seen)?'<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ec4899;margin-left:6px;vertical-align:middle;flex-shrink:0;" title="Unread"></span>':'';
+      var seenMark=me?(m.seen?'<span style="font-size:9px;color:#7c3aed;margin-left:4px;">✓✓</span>':'<span style="font-size:9px;color:#555577;margin-left:4px;">✓</span>'):'';
+      var replyHtml='';
+      if(m.replyTo){replyHtml='<div class="m-reply"><div class="m-reply-nm">'+eH(m.replyTo.userName)+'</div><div class="m-reply-txt">'+eH(m.replyTo.text)+'</div></div>';}
+      var row=document.createElement('div');row.className='msg'+(me?' me':'');row.dataset.mid=d.id;row.dataset.me=me?'1':'0';
+      row.dataset.txt=m.text;row.dataset.uid=m.userId;row.dataset.unm=m.userName;
+      row.innerHTML='<div class="m-av">'+av+'</div>'+
+        '<div class="m-bw">'+
+          (me?'':'<div class="m-nm">'+eH(m.userName)+'</div>')+
+          replyHtml+
+          '<div class="m-bub">'+eH(m.text)+'</div>'+
+          '<div id="edit-area-dm-'+d.id+'" style="display:none"><input class="msg-edit-inp" id="edit-inp-dm-'+d.id+'" value="'+m.text.replace(/"/g,"&quot;")+'" onkeydown="if(event.key==='Enter')saveEdit('dm',''+d.id+'',this.value)"/><div class="edit-actions"><button class="edit-save-btn" onclick="saveEdit('dm',''+d.id+'',document.getElementById('edit-inp-dm-'+d.id+'').value)">Save</button><button class="edit-cancel-btn" onclick="cancelEdit('dm-'+d.id+'')">Cancel</button></div></div>'+
+          '<div class="m-t">'+t+seenMark+unreadDot+'</div>'+
+        '</div>';
+      // Long press
+      var lpt=null;
+      row.addEventListener('touchstart',function(e){lpt=setTimeout(function(){showCtx(e,d.id,m.text,'dm',m.userId,m.userName);},520);},{passive:true});
+      row.addEventListener('touchend',function(){clearTimeout(lpt);},{passive:true});
+      row.addEventListener('touchmove',function(){clearTimeout(lpt);},{passive:true});
+      row.addEventListener('contextmenu',function(e){e.preventDefault();showCtx(e,d.id,m.text,'dm',m.userId,m.userName);});
+      el.appendChild(row);
     });
     el.scrollTop=el.scrollHeight;
+    // Mark unread as seen
+    if(unreadIds.length){
+      var batch=db.batch();
+      unreadIds.forEach(function(mid){batch.update(db.collection('dms').doc(cid).collection('messages').doc(mid),{seen:true});});
+      batch.commit().catch(function(){});
+    }
   });
 }
+
 async function sendDM(){
   if(!CU||!window._CurDMID)return;
   var inp=document.getElementById('dm-inp'),txt=inp.value.trim();if(!txt)return;inp.value='';
@@ -2702,19 +2833,42 @@ async function loadFeed(){
   var list=document.getElementById('feed-list');if(!list||!db)return;
   try{
     var snap=await db.collection('feed').orderBy('timestamp','desc').limit(30).get();
-    if(snap.empty){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--t3);font-size:12px;font-family:var(--fh);text-transform:uppercase">No posts yet. Be the first!</div>';return;}
+    if(snap.empty){list.innerHTML='<div style="text-align:center;padding:40px;color:rgba(255,255,255,.25);font-size:12px;font-family:var(--fh);text-transform:uppercase;letter-spacing:.1em">No posts yet.<br>Be the first!</div>';return;}
     list.innerHTML='';
     snap.docs.forEach(function(d){
       var p=d.data(),pid=d.id;
       var t=p.timestamp?new Date(p.timestamp.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
-      var av=p.userPhoto?'<img src="'+p.userPhoto+'" style="width:100%;height:100%;object-fit:cover"/>':((p.userName||'U').charAt(0).toUpperCase());
+      var dAgo=p.timestamp?timeSince(p.timestamp.seconds*1000):'';
+      var av=p.userPhoto?'<img src="'+p.userPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>':((p.userName||'U').charAt(0).toUpperCase());
       var liked=(p.likes||[]).indexOf(CU?CU.uid:'')!==-1;
+      var lkCt=(p.likes||[]).length;
+      var cmtCt=p.commentCount||0;
       var el=document.createElement('div');el.className='fp';
-      el.innerHTML='<div class="fp-top"><div class="fp-av">'+av+'</div><div><div class="fp-nm">'+eH(p.userName)+'</div><div class="fp-meta"><div class="fp-badge">'+eH(p.userBadge||'Member')+'</div>'+(p.sector?'<div class="fp-sector">'+eH(p.sector)+'</div>':'')+'</div></div><span class="fp-time">'+t+'</span></div>'+(p.title?'<div class="fp-title">'+eH(p.title)+'</div>':'')+'<div class="fp-body">'+eH(p.body)+'</div>'+(p.image?'<img class="fp-img" src="'+p.image+'" loading="lazy"/>'  :'')+'<div class="fp-actions"><button class="fp-like'+(liked?' liked':'')+'" onclick="togLike(\''+pid+'\')">'+(p.likes||[]).length+' '+(liked?'Liked':'Like')+'</button>'+(CU&&p.userId===CU.uid?'<button class="fp-del" onclick="delPost(\''+pid+'\')">Delete</button>':'')+'</div>';
+      el.innerHTML=
+        '<div class="fp-top"><div class="fp-av" onclick="showUP(''+p.userId+'')">'+av+'</div>'+
+        '<div style="flex:1;min-width:0"><div class="fp-nm">'+eH(p.userName)+'</div>'+
+        '<div class="fp-meta"><div class="fp-badge">'+eH(p.userBadge||'Member')+'</div>'+(p.sector?'<div class="fp-sector">'+eH(p.sector)+'</div>':'')+'</div></div>'+
+        '<span class="fp-time">'+dAgo+'</span></div>'+
+        (p.title?'<div class="fp-title">'+eH(p.title)+'</div>':'')+
+        '<div class="fp-body">'+eH(p.body)+'</div>'+
+        (p.image?'<div style="width:100%;background:#050505;overflow:hidden;margin:8px 0;"><img class="fp-img" src="'+p.image+'" loading="lazy" style="width:100%;height:auto;max-height:600px;object-fit:contain;display:block;"/></div>':'')+
+        '<div class="fp-actions">'+
+          '<button class="fp-heart-btn'+(liked?' liked':'')+'" onclick="togLike(''+pid+'')" data-pid="'+pid+'">'+
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="'+(liked?'#ef4444':'none')+'" stroke="'+(liked?'#ef4444':'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'+
+            '<span>'+lkCt+'</span>'+
+          '</button>'+
+          '<button class="fp-cmt-btn" onclick="oCmt(''+pid+'')">'+
+            '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'+
+            '<span>'+cmtCt+'</span>'+
+          '</button>'+
+          (CU&&p.userId===CU.uid?'<button class="fp-del-btn" onclick="delPost(''+pid+'')">Delete</button>':'')+
+        '</div>';
       list.appendChild(el);
     });
-  }catch(e){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--t3);font-size:12px">Could not load feed</div>';}
+  }catch(e){list.innerHTML='<div style="text-align:center;padding:40px;color:rgba(255,255,255,.2);font-size:12px">Could not load feed</div>';}
 }
+function timeSince(ms){var s=Math.floor((Date.now()-ms)/1000);if(s<60)return 'just now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';}
+
 async function togLike(pid){
   if(!CU){oL();return;}
   try{var doc=await db.collection('feed').doc(pid).get();var d=doc.data()||{};var likes=d.likes||[];if(likes.indexOf(CU.uid)!==-1){await db.collection('feed').doc(pid).update({likes:firebase.firestore.FieldValue.arrayRemove(CU.uid)});}else{await db.collection('feed').doc(pid).update({likes:firebase.firestore.FieldValue.arrayUnion(CU.uid)});}loadFeed();}catch(e){console.error(e);}
@@ -2765,10 +2919,4 @@ async function delMsg(col,mid){
 
 // --- FEEDBACK ---
 async function subFB(){
-  var txt=document.getElementById('fb-txt').value.trim();
-  if(!window._fbRating){showAl('fb-al','Please select a rating.','er');return;}
-  var btn=document.querySelector('#fb-box .bf');btn.textContent='Submitting...';btn.disabled=true;
-  try{
-    if(db)await db.collection('feedback').add({rating:window._fbRating,message:txt,userId:CU?CU.uid:'anonymous',timestamp:firebase.firestore.FieldValue.serverTimestamp()});
-    showAl('fb-al','Thank you for your feedback!','ok');
-    document.getElementById('fb-txt').value='';window._fbRating=0;document.querySelectorAll('.fb-star').forE
+  var txt=document.getElementById('fb-txt').value.t
