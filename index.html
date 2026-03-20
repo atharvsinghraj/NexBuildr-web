@@ -121,9 +121,9 @@ img{display:block}
 .icard p{font-size:12px;color:var(--muted);line-height:1.6}
 
 /* ── EXPLORE PAGE ── */
-#explore-page{position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto;display:none}
+#explore-page{position:fixed;inset:0;background:var(--bg);z-index:1100;overflow-y:auto;display:none}
 #explore-page.open{display:block}
-.explore-page-nav{position:sticky;top:0;background:rgba(11,11,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 22px;display:flex;align-items:center;gap:12px;z-index:10}
+.explore-page-nav{position:sticky;top:0;background:rgba(11,11,15,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:1101}
 .explore-pub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .exp-list-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;transition:all .2s;cursor:pointer}
 .exp-list-card:hover{border-color:rgba(124,58,237,.35);background:rgba(124,58,237,.04)}
@@ -994,9 +994,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 <!-- ════════════ EXPLORE FULLPAGE ════════════ -->
 <div id="explore-page">
   <div class="explore-page-nav">
-    <button class="btn btn-ghost btn-sm" onclick="hideExplorePage()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Go to Home
+    <button onclick="hideExplorePage()" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--sans)" onmouseenter="this.style.background='rgba(124,58,237,0.12)';this.style.borderColor='rgba(124,58,237,0.4)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.7)'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Home
     </button>
     <span style="font-size:14px;font-weight:600;color:var(--muted)">Explore Startups</span>
   </div>
@@ -1040,10 +1040,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <button class="sb-link" onclick="nav('showcase')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Startup Showcase</button>
         <button class="sb-link" onclick="nav('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Network</button>
         <button class="sb-link" id="sb-notifs-btn" onclick="nav('notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</button>
+        <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Build Path</button>
+        <button class="sb-link" onclick="nav('leaderboard')"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Leaderboard</button>
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
-        <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Build Path</button>
         <button class="sb-link" onclick="nav('feedback')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Feedback</button>
         <button class="sb-link" onclick="nav('featurereq')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Feature Request</button>
       </div>
@@ -1181,8 +1182,32 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
       <!-- BUILD PATH -->
       <div class="page" id="page-buildpath">
-        <div class="page-hd"><div class="page-hd-l"><h1>Build Path</h1><p>Complete tasks. Earn coins. Master your startup.</p></div><div style="display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:6px 14px;font-size:14px;font-weight:700;color:#fcd34d"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fcd34d"><circle cx="12" cy="12" r="10"/></svg><span id="bp-coin-count">0</span> coins</div></div>
-        <div id="bp-container" style="max-width:640px;margin:0 auto"></div>
+        <div class="page-hd">
+          <div class="page-hd-l"><h1>Build Path</h1><p>Complete tasks. Earn coins. Master your startup.</p></div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div id="streak-badge" style="display:flex;align-items:center;gap:5px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:var(--r);padding:5px 12px;font-size:13px;font-weight:700;color:#f87171">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#f87171" stroke="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 4.28 4.54 9.17 6.56 11.36.48.51 1.4.51 1.88 0C15.46 18.17 20 13.28 20 9c0-3.87-3.13-7-8-7z"/></svg>
+              <span id="streak-count">0</span> Day Streak
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:5px 12px;font-size:13px;font-weight:700;color:#fcd34d">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#fcd34d" stroke="none"><circle cx="12" cy="12" r="10"/></svg>
+              <span id="bp-coin-count">0</span> coins
+            </div>
+          </div>
+        </div>
+        <div id="bp-container" style="max-width:660px;margin:0 auto"></div>
+      </div>
+
+      <!-- LEADERBOARD -->
+      <div class="page" id="page-leaderboard">
+        <div class="page-hd"><div class="page-hd-l"><h1>Leaderboard</h1><p>Top builders ranked by coins and tasks completed.</p></div></div>
+        <div style="max-width:640px;margin:0 auto">
+          <div id="my-rank-box" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(236,72,153,.08));border:1px solid rgba(124,58,237,.3);border-radius:var(--r2);padding:16px 20px;margin-bottom:20px;display:none">
+            <div style="font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Your Position</div>
+            <div id="my-rank-info" style="font-size:16px;font-weight:700"></div>
+          </div>
+          <div id="lb-list"><div class="spinner"></div></div>
+        </div>
       </div>
 
       <!-- FEEDBACK -->
@@ -1358,7 +1383,7 @@ function initDash(){
 }
 
 // ── NAVIGATION ──
-const PT={home:'Home',feed:'Feed',nexai:'Nex AI',chat:'Chat',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',feedback:'Feedback',featurereq:'Feature Request',profile:'Profile'};
+const PT={home:'Home',feed:'Feed',nexai:'Nex AI',chat:'Chat',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Build Path',leaderboard:'Leaderboard',feedback:'Feedback',featurereq:'Feature Request',profile:'Profile'};
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
@@ -1572,28 +1597,54 @@ function openPD(pid,title,tab){activePostId=pid;document.getElementById('pd-titl
 function closePD(){document.getElementById('pd-ov').classList.add('hidden');if(cmtUnsub){cmtUnsub();cmtUnsub=null}activePostId=null}
 function switchPD(tab){const isc=tab==='comments';['cmt','share'].forEach(x=>{document.getElementById('pdt-'+x).classList.toggle('active',x.slice(0,3)===tab.slice(0,3));document.getElementById('pd-pane-'+x).classList.toggle('hidden',x.slice(0,3)!==tab.slice(0,3))});if(isc&&activePostId)loadCmts(activePostId);else{document.getElementById('share-results').innerHTML='';document.getElementById('share-inp').value='';document.getElementById('share-ok').classList.add('hidden')}}
 
+function renderCmt(cm){
+  const ph=cm.authorPhoto?`<img src="${esc(cm.authorPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(cm.authorName||'U');
+  return `<div class="cmt-item"><div class="avatar cmt-av" style="${cm.authorPhoto?'background:none':''}" onclick="viewUser('${esc(cm.userId)}')">${ph}</div><div class="cmt-bubble"><div class="cmt-name" onclick="viewUser('${esc(cm.userId)}')">${esc(cm.authorName||'Anonymous')}</div><div class="cmt-text">${esc(cm.content||'')}</div><div class="cmt-time">${ft(cm.createdAt)}</div></div></div>`;
+}
 function loadCmts(pid){
   const c=document.getElementById('cmt-list');c.innerHTML='<div class="spinner"></div>';
   if(cmtUnsub)cmtUnsub();
   cmtUnsub=db.collection('posts').doc(pid).collection('comments').orderBy('createdAt','asc').limit(60).onSnapshot(snap=>{
     if(snap.empty){c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:16px">No comments yet.</div>';return}
     c.innerHTML='';
-    snap.forEach(doc=>{const cm=doc.data();const ph=cm.authorPhoto?`<img src="${esc(cm.authorPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(cm.authorName||'U');
-      c.insertAdjacentHTML('beforeend',`<div class="cmt-item"><div class="avatar cmt-av" style="${cm.authorPhoto?'background:none':''}" onclick="viewUser('${esc(cm.userId)}')">${ph}</div><div class="cmt-bubble"><div class="cmt-name" onclick="viewUser('${esc(cm.userId)}')">${esc(cm.authorName||'Anonymous')}</div><div class="cmt-text">${esc(cm.content||'')}</div><div class="cmt-time">${ft(cm.createdAt)}</div></div></div>`)});
+    snap.forEach(doc=>{c.insertAdjacentHTML('beforeend',renderCmt({...doc.data(),id:doc.id}))});
     c.scrollTop=c.scrollHeight;
-  },()=>{});
+  },err=>{
+    // Index fallback
+    if(cmtUnsub){cmtUnsub();cmtUnsub=null}
+    cmtUnsub=db.collection('posts').doc(pid).collection('comments').limit(60).onSnapshot(snap=>{
+      const items=[];snap.forEach(d=>items.push({id:d.id,...d.data()}));
+      items.sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+      c.innerHTML=items.length?'':'<div style="text-align:center;color:var(--faint);font-size:13px;padding:16px">No comments yet.</div>';
+      items.forEach(cm=>c.insertAdjacentHTML('beforeend',renderCmt(cm)));
+      c.scrollTop=c.scrollHeight;
+    },()=>{c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:12px">Failed to load comments.</div>'});
+  });
 }
 
 async function submitComment(){
   if(!activePostId||!CU)return;
-  const content=gi('cmt-input');if(!content)return;
+  const inp=document.getElementById('cmt-input');
+  const content=(inp.value||'').trim();if(!content)return;
   const btn=document.getElementById('cmt-sub-btn');btn.disabled=true;btn.textContent='...';
+  inp.value='';
+  // Optimistic UI - show immediately
+  const c=document.getElementById('cmt-list');
+  const ph=UD?.photoURL||CU.photoURL||'';
+  const nm=UD?.name||CU.displayName||'Anonymous';
+  const tempId='tmp_'+Date.now();
+  const phHtml=ph?`<img src="${esc(ph)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(nm);
+  c.insertAdjacentHTML('beforeend',`<div class="cmt-item" id="${tempId}"><div class="avatar cmt-av" style="${ph?'background:none':''}">${phHtml}</div><div class="cmt-bubble"><div class="cmt-name">${esc(nm)}</div><div class="cmt-text">${esc(content)}</div><div class="cmt-time">just now</div></div></div>`);
+  c.scrollTop=c.scrollHeight;
   try{
-    await db.collection('posts').doc(activePostId).collection('comments').add({userId:CU.uid,authorName:UD?.name||CU.displayName||'Anonymous',authorPhoto:UD?.photoURL||CU.photoURL||'',content,createdAt:fv.serverTimestamp()});
-    document.getElementById('cmt-input').value='';
-    const ps=await db.collection('posts').doc(activePostId).get();
-    if(ps.exists&&ps.data().userId!==CU.uid)mkNotif(ps.data().userId,'comment',{fromUid:CU.uid,fromName:UD?.name||'Someone',postId:activePostId,postTitle:ps.data().title||'post'});
-  }catch(e){console.error(e)}finally{btn.disabled=false;btn.textContent='Post'}
+    await db.collection('posts').doc(activePostId).collection('comments').add({userId:CU.uid,authorName:nm,authorPhoto:ph,content,createdAt:fv.serverTimestamp()});
+    const tmp=document.getElementById(tempId);if(tmp)tmp.remove();
+    db.collection('posts').doc(activePostId).get().then(ps=>{if(ps.exists&&ps.data().userId!==CU.uid)mkNotif(ps.data().userId,'comment',{fromUid:CU.uid,fromName:UD?.name||'Someone',postId:activePostId,postTitle:ps.data().title||'post'})});
+  }catch(err){
+    console.error('Comment error:',err);
+    const tmp=document.getElementById(tempId);if(tmp)tmp.remove();
+    inp.value=content;toast('Comment failed, try again','err');
+  }finally{btn.disabled=false;btn.textContent='Post'}
 }
 
 async function searchShareUsers(){
@@ -1727,11 +1778,29 @@ function openChat(uid,name,photo,handle){
   const chatId=[CU.uid,uid].sort().join('_');
   const mc=document.getElementById('pers-msgs');mc.innerHTML='';
   activeChatUnsub=db.collection('messages').where('chatId','==',chatId).orderBy('timestamp','asc').limit(100).onSnapshot(snap=>{
-    mc.innerHTML='';
-    if(snap.empty){mc.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:40px 20px">No messages yet.</div>';return}
-    snap.forEach(doc=>{const m=doc.data();const own=m.senderId===CU.uid;mc.insertAdjacentHTML('beforeend',`<div class="cmsg ${own?'own':'other'}"><div><div class="cmsg-bubble">${esc(m.message||'')}</div><div class="cmsg-time">${ft(m.timestamp)}</div></div></div>`)});
-    mc.scrollTop=mc.scrollHeight;
-  },()=>{});
+    // Remove optimistic messages, replace with real
+    const realMsgs=[];
+    snap.forEach(doc=>{realMsgs.push({id:doc.id,...doc.data()})});
+    if(realMsgs.length>0){
+      mc.innerHTML='';
+      realMsgs.forEach(m=>{const own=m.senderId===CU.uid;mc.insertAdjacentHTML('beforeend',`<div class="cmsg ${own?'own':'other'}"><div><div class="cmsg-bubble">${esc(m.message||'')}</div><div class="cmsg-time">${ft(m.timestamp)}</div></div></div>`)});
+      mc.scrollTop=mc.scrollHeight;
+    }else{
+      if(!mc.querySelector('.cmsg'))mc.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:40px 20px">No messages yet.</div>';
+    }
+  },err=>{
+    // Fallback: try without orderBy (index may not exist yet)
+    console.warn('Chat index error, falling back:',err);
+    if(activeChatUnsub){activeChatUnsub();activeChatUnsub=null}
+    activeChatUnsub=db.collection('messages').where('chatId','==',chatId).limit(100).onSnapshot(snap=>{
+      const msgs=[];snap.forEach(d=>msgs.push({id:d.id,...d.data()}));
+      msgs.sort((a,b)=>(a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+      mc.innerHTML='';
+      if(!msgs.length){mc.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:40px 20px">No messages yet.</div>';return}
+      msgs.forEach(m=>{const own=m.senderId===CU.uid;mc.insertAdjacentHTML('beforeend',`<div class="cmsg ${own?'own':'other'}"><div><div class="cmsg-bubble">${esc(m.message||'')}</div><div class="cmsg-time">${ft(m.timestamp)}</div></div></div>`)});
+      mc.scrollTop=mc.scrollHeight;
+    },()=>{});
+  });
   setTimeout(()=>document.getElementById('pers-inp').focus(),100);
 }
 function closeFullChat(){
@@ -1742,10 +1811,17 @@ function closeFullChat(){
 }
 async function sendPers(){
   if(!activeChatUid||!CU)return;
-  const inp=document.getElementById('pers-inp');const msg=inp.value.trim();if(!msg)return;inp.value='';
+  const inp=document.getElementById('pers-inp');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  const mc=document.getElementById('pers-msgs');
+  // Optimistic UI
+  mc.insertAdjacentHTML('beforeend','<div class="cmsg own"><div><div class="cmsg-bubble">'+esc(msg)+'</div><div class="cmsg-time">just now</div></div></div>');
+  mc.scrollTop=mc.scrollHeight;
   const chatId=[CU.uid,activeChatUid].sort().join('_');
-  try{await db.collection('messages').add({chatId,senderId:CU.uid,receiverId:activeChatUid,message:msg,timestamp:fv.serverTimestamp()});await mkNotif(activeChatUid,'message',{fromUid:CU.uid,fromName:UD?.name||'Someone',message:'sent you a message'})}
-  catch(e){inp.value=msg}
+  try{
+    await db.collection('messages').add({chatId,senderId:CU.uid,receiverId:activeChatUid,message:msg,timestamp:fv.serverTimestamp()});
+    mkNotif(activeChatUid,'message',{fromUid:CU.uid,fromName:UD?.name||'Someone',message:'sent you a message'}).catch(()=>{});
+  }catch(err){inp.value=msg;toast('Send failed','err')}
 }
 async function chatConnect(){if(!activeChatUid)return;const btn=document.getElementById('chat-connect-btn');btn.disabled=true;await doConnect(activeChatUid,btn)}
 function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');openChat(uid,name,photo,handle||'')}
@@ -1891,10 +1967,42 @@ function loadProfile(){
 }
 function triggerPhoto(){document.getElementById('photo-inp').click()}
 async function uploadPhoto(e){
-  const file=e.target.files[0];if(!file)return;if(file.size>3*1024*1024){toast('Photo max 3MB','err');return}
-  const av=document.getElementById('my-av');av.innerHTML='<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:auto"></div>';
-  try{const ref=storage.ref(`profiles/${CU.uid}/photo`);const sn=await ref.put(file);const url=await sn.ref.getDownloadURL();await db.collection('users').doc(CU.uid).update({photoURL:url});await CU.updateProfile({photoURL:url});if(UD)UD.photoURL=url;loadProfile();toast('Photo updated!')}
-  catch(e){toast('Upload failed','err');loadProfile()}
+  const file=e.target.files[0];if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Please select an image file','err');return}
+  const av=document.getElementById('my-av');
+  av.innerHTML='<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:auto"></div>';
+  try{
+    // Resize to 200x200 via canvas for fast upload
+    const dataUrl=await new Promise((res,rej)=>{
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        const img=new Image();
+        img.onload=()=>{
+          const c=document.createElement('canvas');c.width=200;c.height=200;
+          const ctx=c.getContext('2d');
+          const s=Math.min(img.width,img.height);
+          const x=(img.width-s)/2,y=(img.height-s)/2;
+          ctx.drawImage(img,x,y,s,s,0,0,200,200);
+          res(c.toDataURL('image/jpeg',0.8));
+        };
+        img.onerror=rej;img.src=ev.target.result;
+      };
+      reader.onerror=rej;reader.readAsDataURL(file);
+    });
+    // Convert to blob
+    const blob=await(await fetch(dataUrl)).blob();
+    const ref=storage.ref('profiles/'+CU.uid+'/photo_'+Date.now());
+    const sn=await ref.put(blob,{contentType:'image/jpeg'});
+    const url=await sn.ref.getDownloadURL();
+    await db.collection('users').doc(CU.uid).update({photoURL:url});
+    await CU.updateProfile({photoURL:url});
+    if(UD)UD.photoURL=url;
+    loadProfile();toast('Photo updated!');
+  }catch(err){
+    console.error('Photo upload error:',err);
+    toast('Upload failed: '+err.message,'err');
+    loadProfile();
+  }
 }
 function renderSkillTags(){document.getElementById('pe-skills-tags').innerHTML=mySkills.map((s,i)=>`<span class="tag">${esc(s)}<button class="tag-rem" onclick="mySkills.splice(${i},1);renderSkillTags()">&times;</button></span>`).join('')}
 function handleSkillKey(e){if(e.key==='Enter'){e.preventDefault();const v=e.target.value.trim();if(v&&!mySkills.includes(v)&&mySkills.length<20){mySkills.push(v);e.target.value='';renderSkillTags()}}}
@@ -2074,12 +2182,13 @@ const _origNavFn=nav;
 nav=function(page){
   _origNavFn(page);
   if(page==='profile')setTimeout(loadMyPosts,80);
-  if(page==='buildpath'){loadBuildPath();const bc=document.getElementById('bp-coin-count');if(bc)bc.textContent=userCoins}
+  if(page==='buildpath'){loadBuildPath();loadStreak();const bc=document.getElementById('bp-coin-count');if(bc)bc.textContent=userCoins}
+  if(page==='leaderboard')loadLeaderboard();
 };
 
 // Patch initDash to load coins
 const _origID=initDash;
-initDash=function(){_origID.call(this);loadCoins()};
+initDash=function(){_origID.call(this);loadCoins();loadStreak()};
 
 // ===== COINS =====
 let userCoins=0;
@@ -2100,100 +2209,347 @@ async function addCoins(amount,x,y){
   document.body.appendChild(fl);setTimeout(()=>fl.remove(),1100);
 }
 
-// ===== BUILD PATH =====
+// ===== BUILD PATH (20 Tasks × 5 Questions each) =====
 const BP=[
-  {id:'t1',ico:'1',title:'Startup Basics',desc:'What defines a startup?',cat:'Startup Knowledge',pts:5,q:'What is the primary goal of a startup?',opts:['Generate max profit immediately','Solve a problem and scale rapidly','Copy existing models','Avoid all investors'],ans:1},
-  {id:'t2',ico:'2',title:'Problem-Solution Fit',desc:'Finding the right problem.',cat:'Idea Validation',pts:5,q:'Best method to validate a startup idea early?',opts:['Build full product first','Talk to 100+ potential customers','Raise funds before validating','Post on social media only'],ans:1},
-  {id:'t3',ico:'3',title:'Revenue Models',desc:'How startups make money.',cat:'Business Concepts',pts:5,q:'What is a SaaS revenue model?',opts:['One-time product purchase','Monthly or yearly subscription','Revenue sharing with govt','Free forever for all'],ans:1},
-  {id:'t4',ico:'4',title:'Market Sizing',desc:'TAM, SAM, SOM explained.',cat:'Finance',pts:5,q:'What does TAM stand for?',opts:['Total Available Market','Technical Assessment Metrics','Target Acquisition Method','Tangible Asset Management'],ans:0},
-  {id:'t5',ico:'5',title:'MVP Mindset',desc:'Build less, learn more.',cat:'Startup Knowledge',pts:5,q:'What is an MVP?',opts:['Most expensive version','Core features to validate the idea','Built by minimum 5 people','For minimum 1000 users'],ans:1},
-  {id:'t6',ico:'6',title:'Growth Metrics',desc:'What to track and why.',cat:'Business Concepts',pts:5,q:'Most important early-stage metric?',opts:['Total registered users','DAU / Retention rate','Total funding raised','Office size'],ans:1},
-  {id:'t7',ico:'7',title:'Funding Stages',desc:'Angel to IPO.',cat:'Funding',pts:5,q:'Correct order of startup funding?',opts:['Series A > Seed > Angel > IPO','Angel > Seed > Series A > IPO','IPO > Series A > Seed','Bootstrap > IPO > Seed'],ans:1},
-  {id:'t8',ico:'8',title:'Equity Dilution',desc:'Understanding investor terms.',cat:'Funding',pts:5,q:'What does equity dilution mean?',opts:['Company earns more revenue','Founders own smaller % after investment','Startup loses market value','Investors get repaid with interest'],ans:1},
-  {id:'t9',ico:'9',title:'Unit Economics',desc:'Is your model profitable?',cat:'Finance',pts:5,q:'What is Customer Acquisition Cost (CAC)?',opts:['Revenue per customer','Total cost to acquire one customer','Customer satisfaction score','Product build cost'],ans:1},
-  {id:'t10',ico:'10',title:'Pitch Perfect',desc:'Nail your investor pitch.',cat:'Startup Knowledge',pts:10,q:'What should your pitch deck lead with?',opts:['Financial projections','Team credentials','The problem you solve','Your exact funding ask'],ans:2},
+{id:'t1',title:'What is a Startup?',cat:'Startup Basics',pts:5,qs:[
+  {q:'What primarily defines a startup?',o:['A small local business','A scalable business solving a specific problem','A government-funded enterprise','A franchise'],a:1},
+  {q:'Which of these is NOT a characteristic of startups?',o:['High growth potential','Risk tolerance','Guaranteed profitability','Innovation-driven'],a:2},
+  {q:'What does "product-market fit" mean?',o:['Product is cheap to make','Market loves and needs your product','You have many competitors','Product is technically complex'],a:1},
+  {q:'Who coined the term "Lean Startup"?',o:['Peter Thiel','Eric Ries','Paul Graham','Elon Musk'],a:1},
+  {q:'What is a startup pivot?',o:['Moving office location','Changing business strategy based on learnings','Hiring new employees','Launching a new marketing campaign'],a:1}
+]},
+{id:'t2',title:'Problem-Solution Fit',cat:'Idea Validation',pts:5,qs:[
+  {q:'What is the first step in idea validation?',o:['Build the product','Write business plan','Talk to potential customers','Raise funding'],a:2},
+  {q:'What is a "customer discovery" interview?',o:['Job interview with customers','Conversation to understand customer pain points','Survey sent via email','Market research report'],a:1},
+  {q:'How many customer interviews are generally recommended before building?',o:['5-10','50-100','1000+','Just 1'],a:1},
+  {q:'What does a "pain point" mean in startup context?',o:['Technical bug','Problem customers experience and want solved','Office ergonomics issue','Legal complication'],a:1},
+  {q:'Which method best validates willingness to pay?',o:['Ask "would you use this?"','Ask "would you pay for this?"','Get verbal commitments','Count social media likes'],a:1}
+]},
+{id:'t3',title:'Building Your MVP',cat:'Product Development',pts:5,qs:[
+  {q:'MVP stands for?',o:['Maximum Value Product','Minimum Viable Product','Most Valued Person','Market Validated Product'],a:1},
+  {q:'What is the main purpose of an MVP?',o:['Impress investors','Test core hypothesis with minimum effort','Launch a polished product','Get press coverage'],a:1},
+  {q:'Which of these is a valid MVP approach?',o:['Landing page with waitlist','Full-featured app','Enterprise sales team','TV advertisement'],a:0},
+  {q:'What should you prioritize in MVP development?',o:['Beautiful design','All features users might want','Core feature that solves the main problem','Scalable infrastructure'],a:2},
+  {q:'When is your MVP "done enough"?',o:['When design is perfect','When it can test your riskiest assumption','When it has 100 features','When investors approve it'],a:1}
+]},
+{id:'t4',title:'Revenue Models',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is a SaaS revenue model?',o:['One-time purchase','Monthly/yearly subscription','Per-transaction fee','Advertising revenue'],a:1},
+  {q:'What is "freemium"?',o:['Free product forever','Basic free tier + paid premium features','Free trial then forced payment','Government subsidy'],a:1},
+  {q:'What is a marketplace revenue model?',o:['Sell products directly','Take commission on transactions between buyers and sellers','Charge monthly fees','Sell data'],a:1},
+  {q:'Which metric measures subscription revenue health?',o:['Total downloads','Monthly Recurring Revenue (MRR)','App store rating','Website traffic'],a:1},
+  {q:'What is "churn rate"?',o:['Speed of product delivery','Percentage of customers who cancel subscription','Revenue growth rate','Customer satisfaction score'],a:1}
+]},
+{id:'t5',title:'Market Sizing',cat:'Finance',pts:5,qs:[
+  {q:'TAM stands for?',o:['Total Available Market','Technical Assessment Model','Target Audience Metrics','Transaction Asset Management'],a:0},
+  {q:'SAM stands for?',o:['Sales Acquisition Method','Serviceable Addressable Market','Software Asset Management','Startup Acceleration Module'],a:1},
+  {q:'SOM stands for?',o:['Sum of Markets','Serviceable Obtainable Market','Software Operating Model','Strategic Opportunity Map'],a:1},
+  {q:'A realistic SOM is usually what percentage of SAM for early startups?',o:['50-80%','1-5%','100%','0.001%'],a:1},
+  {q:'Why do investors care about market size?',o:['To check if founder is smart','To understand growth ceiling and return potential','To verify technical skills','To assess team culture'],a:1}
+]},
+{id:'t6',title:'Startup Funding',cat:'Funding',pts:5,qs:[
+  {q:'What is bootstrapping?',o:['Getting government grants','Funding with personal savings and revenue','Taking venture capital','Getting bank loans'],a:1},
+  {q:'What is an angel investor?',o:['Government funding body','High-net-worth individual investing personal money','Venture capital firm','Bank providing startup loans'],a:1},
+  {q:'What is a seed round?',o:['First institutional funding round','Series B funding','IPO preparation','Revenue-based financing'],a:0},
+  {q:'What does VC stand for?',o:['Venture Capital','Virtual Company','Value Creation','Variable Cost'],a:0},
+  {q:'Which comes first in funding stages?',o:['Series A','Series B','Seed','IPO'],a:2}
+]},
+{id:'t7',title:'Equity and Dilution',cat:'Funding',pts:5,qs:[
+  {q:'What is equity in a startup?',o:['Office space','Ownership percentage of the company','Revenue share','Salary package'],a:1},
+  {q:'What is dilution?',o:['Reducing product quality','Founders own smaller % after new shares issued','Losing customers','Decreasing prices'],a:1},
+  {q:'What is a cap table?',o:['Maximum funding allowed','Table showing who owns what percentage','Marketing cap budget','Technical capacity table'],a:1},
+  {q:'What is vesting?',o:['Checking product quality','Earning equity shares over time based on continued work','Initial equity grant','Fundraising process'],a:1},
+  {q:'What is a cliff in vesting?',o:['Maximum equity allowed','Minimum period before any vesting starts','Cliff-shaped graph','Risk assessment'],a:1}
+]},
+{id:'t8',title:'Unit Economics',cat:'Finance',pts:5,qs:[
+  {q:'What is CAC?',o:['Customer Acquisition Cost','Company Annual Cost','Capital Asset Count','Content Automation Center'],a:0},
+  {q:'What is LTV (or CLV)?',o:['Long Term Vision','Lifetime Value of a customer','Loan to Value ratio','Launch to Verify'],a:1},
+  {q:'A healthy SaaS business should have LTV:CAC ratio of at least?',o:['1:1','3:1','10:1','0.5:1'],a:1},
+  {q:'What is gross margin?',o:['Total revenue','Revenue minus cost of goods sold','Net profit','Operating expenses'],a:1},
+  {q:'What is payback period?',o:['Time to repay investor','Time to recover CAC through customer revenue','Time to build MVP','Product return window'],a:1}
+]},
+{id:'t9',title:'Growth Metrics',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is DAU?',o:['Daily Active Users','Data Analytics Unit','Digital Advertising Usage','Direct Acquisition Users'],a:0},
+  {q:'What is retention rate?',o:['% of customers who leave','% of customers who stay and continue using product','Revenue retention','Employee retention'],a:1},
+  {q:'What is NPS (Net Promoter Score)?',o:['Net profit score','Measure of how likely customers recommend your product','Network performance score','New product score'],a:1},
+  {q:'What does "viral coefficient" measure?',o:['App store rating','How many new users each existing user brings','Viral marketing budget','Social media followers'],a:1},
+  {q:'What is activation rate?',o:['Marketing activation cost','% of new users who reach key value moment','Server activation','Sales activation'],a:1}
+]},
+{id:'t10',title:'Product Strategy',cat:'Product Development',pts:5,qs:[
+  {q:'What is a product roadmap?',o:['Office floor plan','Plan showing product vision, direction, and milestones','Marketing calendar','Investor presentation'],a:1},
+  {q:'What does "North Star Metric" mean?',o:['Geographic expansion plan','Single metric that best captures core product value','Company headquarters location','Top investor metric'],a:1},
+  {q:'What is A/B testing?',o:['Accounting and budgeting test','Comparing two versions to see which performs better','Annual to biannual testing','Alpha beta software release'],a:1},
+  {q:'What is "feature creep"?',o:['Slow feature releases','Uncontrolled addition of features without clear purpose','Feature pricing strategy','Beta feature rollout'],a:1},
+  {q:'What is jobs-to-be-done (JTBD) theory?',o:['HR recruitment framework','Understanding what "job" customers hire your product for','Task management system','Job board strategy'],a:1}
+]},
+{id:'t11',title:'Go-To-Market Strategy',cat:'Startup Basics',pts:5,qs:[
+  {q:'What is a GTM strategy?',o:['Government-to-market regulation','Plan for launching product and reaching customers','Geographic territory map','Growth tracking method'],a:1},
+  {q:'What is product-led growth (PLG)?',o:['Product team expansion','Product itself drives user acquisition and expansion','Production-led manufacturing','Product line growth'],a:1},
+  {q:'What is a beachhead market?',o:['Coastal startup location','Initial niche market to dominate before expanding','Beach advertising campaign','B2C market segment'],a:1},
+  {q:'What is CAC payback period?',o:['Time to build new features','Time to earn back cost of acquiring a customer','Product launch time','Legal compliance period'],a:1},
+  {q:'Which GTM motion suits B2B enterprise sales?',o:['Viral consumer growth','Self-serve freemium','Field sales with long cycles','Influencer marketing'],a:2}
+]},
+{id:'t12',title:'Financial Basics',cat:'Finance',pts:5,qs:[
+  {q:'What is a P&L statement?',o:['Product and Logistics','Profit and Loss statement','Partnership and Licensing','Price and Location'],a:1},
+  {q:'What is runway?',o:['Airport feature','How long company can operate before running out of money','Marketing runway','Product launch timeline'],a:1},
+  {q:'What is burn rate?',o:['Server processing speed','Rate at which company spends money (monthly)','Customer churn rate','Marketing burn budget'],a:1},
+  {q:'What is EBITDA?',o:['Early Bird Investment Target Distribution Algorithm','Earnings Before Interest Taxes Depreciation Amortization','Enterprise Buyout Investment Deal Agreement','Estimated Budget in Target Development Areas'],a:1},
+  {q:'What is break-even point?',o:['When product launches','When revenue equals total costs (no profit or loss)','When funding runs out','When company goes public'],a:1}
+]},
+{id:'t13',title:'Team Building',cat:'Startup Basics',pts:5,qs:[
+  {q:'What does co-founder mean?',o:['Company accountant','Person who starts business together with founder','Senior employee','Investor partner'],a:1},
+  {q:'What is the "two pizza rule" (Amazon)?',o:['Office catering policy','Team should be small enough to feed with two pizzas','Sales quota rule','Revenue sharing rule'],a:1},
+  {q:'What roles are typically in a founding team?',o:['CEO only','Technical, business, and product/design skills','All C-suite executives','Just engineers'],a:1},
+  {q:'Why is diversity in founding teams important?',o:['Only for PR purposes','Different perspectives lead to better decisions and products','Legal requirement','Investor preference only'],a:1},
+  {q:'What is "founder vesting"?',o:['Founder salary structure','Founders earn equity over time to prevent early exit','Investment agreement','Office equipment fund'],a:1}
+]},
+{id:'t14',title:'Investor Relations',cat:'Funding',pts:5,qs:[
+  {q:'What is a pitch deck?',o:['Software development tool','Short presentation to explain startup to investors','Product deck of cards','Office presentation screen'],a:1},
+  {q:'What is a term sheet?',o:['Product terms and conditions','Non-binding document outlining investment terms','Employee agreement','Partnership contract'],a:1},
+  {q:'What is due diligence?',o:['Daily business checklist','Investor investigation of startup before investing','Legal compliance process','Product quality check'],a:1},
+  {q:'What is a lead investor?',o:['First customer','Main investor who sets terms and invests largest amount','Marketing lead','Sales team lead'],a:1},
+  {q:'What is a valuation cap?',o:['Maximum company valuation ever','Maximum valuation at which convertible note converts to equity','Cap table maximum','Marketing budget cap'],a:1}
+]},
+{id:'t15',title:'Legal Essentials',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is incorporation?',o:['Including more features','Formal legal registration of business as a company','Hiring process','Investor agreement'],a:1},
+  {q:'What is an NDA?',o:['No Direct Advertisement','Non-Disclosure Agreement to protect confidential info','National Data Authority','New Developer Agreement'],a:1},
+  {q:'What is IP (Intellectual Property)?',o:['Internet Protocol','Legal rights over creations of mind like patents, trademarks','Investment Portfolio','Information Platform'],a:1},
+  {q:'What does ESOP stand for?',o:['Employee Stock Ownership Plan','Enterprise Software Operations Platform','Equity Startup Option Program','External Sales Operations Protocol'],a:1},
+  {q:'What is a SAFE note?',o:['Safety agreement for office','Simple Agreement for Future Equity — convertible investment','Secure Access for Enterprise','Standard Accounting for Funding Events'],a:1}
+]},
+{id:'t16',title:'Marketing Fundamentals',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is content marketing?',o:['Advertising on TV','Creating valuable content to attract and retain customers','Paying for sponsored posts','Product packaging design'],a:1},
+  {q:'What is SEO?',o:['Sales Executive Operations','Search Engine Optimization — improving organic search ranking','Software Engineering Operations','Social Engagement Optimization'],a:1},
+  {q:'What is a "conversion rate"?',o:['Currency exchange rate','% of visitors who complete desired action','Product conversion cost','Marketing conversion budget'],a:1},
+  {q:'What is growth hacking?',o:['Hacking competitor systems','Using creative, low-cost strategies for rapid growth','Traditional marketing','Social media hacking'],a:1},
+  {q:'What does CAC stand for in marketing?',o:['Content Acquisition Cost','Customer Acquisition Cost','Channel Advertising Cost','Campaign Attribution Cost'],a:1}
+]},
+{id:'t17',title:'Scaling Operations',cat:'Startup Basics',pts:5,qs:[
+  {q:'What does "scaling" mean for a startup?',o:['Reducing team size','Growing revenue without proportional cost increase','Changing office location','Reducing product price'],a:1},
+  {q:'What is "technical debt"?',o:['Startup loan for tech equipment','Cost of shortcuts taken in code that need fixing later','Cloud computing bill','Developer salary debt'],a:1},
+  {q:'What is SOC 2 compliance?',o:['Sales operations certification','Security standard for service organizations protecting customer data','Software operations compliance','Startup optimization criteria'],a:1},
+  {q:'What is "ops" short for?',o:['Opportunities','Operations — systems and processes running the business','Optional features','Optimization score'],a:1},
+  {q:'What is outsourcing?',o:['Internal expansion','Hiring external party to handle specific business functions','Overseas office opening','Customer support strategy'],a:1}
+]},
+{id:'t18',title:'Startup Ecosystem',cat:'Startup Basics',pts:5,qs:[
+  {q:'What is an accelerator?',o:['Computer hardware component','Program helping startups grow fast with mentorship and funding','Business loan provider','Government startup initiative'],a:1},
+  {q:'What is Y Combinator?',o:['Chemistry compound','Top startup accelerator in Silicon Valley','Venture capital firm','Tech consulting company'],a:1},
+  {q:'What is a startup incubator?',o:['Baby incubator for office','Program supporting very early-stage startups with resources','Business school program','Government initiative'],a:1},
+  {q:'What is "unicorn" in startup world?',o:['Mythical team culture','Startup valued at $1 billion or more','Rare product feature','Unique market position'],a:1},
+  {q:'What is a startup ecosystem?',o:['App environment','Community of startups, investors, mentors, and support organizations','Digital ecosystem','Product feature set'],a:1}
+]},
+{id:'t19',title:'Customer Success',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is customer success?',o:['Just customer support','Proactively ensuring customers achieve their desired outcomes','Sales process','Customer acquisition'],a:1},
+  {q:'What is "onboarding"?',o:['Boarding passengers on transport','Process of helping new customers start using product effectively','Hiring new employees','Ship loading process'],a:1},
+  {q:'What does high churn indicate?',o:['Good product growth','Customers not finding enough value to continue using product','Strong revenue growth','Successful marketing'],a:1},
+  {q:'What is a customer success manager?',o:['Sales manager','Person dedicated to helping customers achieve goals and reduce churn','Customer support agent','Community manager'],a:1},
+  {q:'What is upselling?',o:['Selling at higher price','Encouraging existing customers to upgrade to higher-value plan','Selling second-hand products','B2B sales motion'],a:1}
+]},
+{id:'t20',title:'Exit Strategies',cat:'Business Concepts',pts:5,qs:[
+  {q:'What is an IPO?',o:['Internal Product Operation','Initial Public Offering — company lists on stock exchange','International Partnership Organization','Investment Portfolio Opportunity'],a:1},
+  {q:'What is an acquisition?',o:['Acquiring office equipment','When one company buys another company','Starting new product line','Partnership agreement'],a:1},
+  {q:'What is a strategic acquisition?',o:['Random company purchase','Buying company for strategic value like technology or market access','Investment in public stocks','Partnership without ownership'],a:1},
+  {q:'What is a secondary market?',o:['Second retail location','Market where investors buy/sell startup shares before IPO','Secondary product line','B2B secondary clients'],a:1},
+  {q:'What return multiple do top VC funds target?',o:['1-2x','3-5x','10x+','0.5x'],a:2}
+]}
 ];
-let bpProg={};
+
+let bpProg={},bpTaskQ={};// bpTaskQ tracks current question index per task
+
 function loadBuildPath(){
   if(!CU)return;
   db.collection('users').doc(CU.uid).get().then(d=>{
-    bpProg=d.data()?.bpProgress||{};
+    const data=d.data()||{};
+    bpProg=data.bpProgress||{};
+    bpTaskQ=data.bpTaskQ||{};
     if(!bpProg[BP[0].id])bpProg[BP[0].id]='active';
     renderBP();
   });
 }
+
 function renderBP(){
   const c=document.getElementById('bp-container');if(!c)return;
   const done=Object.values(bpProg).filter(v=>v==='done').length;
   const pct=Math.round(done/BP.length*100);
-  let html='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 20px;margin-bottom:22px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:600">'+done+'/'+BP.length+' Tasks Done</span><span style="font-size:13px;font-weight:700;color:#fcd34d">'+pct+'%</span></div><div style="height:6px;background:rgba(255,255,255,.07);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:3px;transition:width .5s"></div></div></div><div style="display:flex;flex-direction:column;gap:0">';
+  let html='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 20px;margin-bottom:22px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+    +'<span style="font-size:13px;font-weight:600">'+done+'/'+BP.length+' Tasks Completed</span>'
+    +'<span style="font-size:13px;font-weight:700;color:#fcd34d">'+pct+'%</span></div>'
+    +'<div style="height:6px;background:rgba(255,255,255,.07);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:3px;transition:width .5s"></div></div>'
+    +'</div><div style="display:flex;flex-direction:column;gap:0">';
   BP.forEach(function(t,i){
     const st=bpProg[t.id]||'locked';
+    const qDone=bpTaskQ[t.id]||0;
     const isLast=i===BP.length-1;
     const odd=i%2===0;
+    const pctQ=Math.round((qDone/t.qs.length)*100);
     html+='<div style="display:flex;gap:12px;flex-direction:'+(odd?'row':'row-reverse')+'">'
-      +'<div style="display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0">'
-      +'<div onclick="'+(st!=='locked'?'openBpTask(\''+t.id+'\')':'')+'" style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:2.5px solid '+(st==='done'?'transparent':st==='active'?'var(--purple)':'var(--border)')+';background:'+(st==='done'?'linear-gradient(135deg,var(--purple),var(--pink))':st==='active'?'rgba(124,58,237,.15)':'var(--card)')+';cursor:'+(st==='locked'?'not-allowed':'pointer')+';opacity:'+(st==='locked'?'.45':'1')+';box-shadow:'+(st==='done'?'0 0 18px rgba(124,58,237,.4)':st==='active'?'0 0 0 4px rgba(124,58,237,.12)':'none')+'">'
-      +(st==='done'?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>':st==='locked'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':t.ico)
+      +'<div style="display:flex;flex-direction:column;align-items:center;width:50px;flex-shrink:0">'
+      +'<div onclick="'+(st!=='locked'?'openBpTask(\''+t.id+'\')':'')+'" style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border:2.5px solid '+(st==='done'?'transparent':st==='active'?'var(--purple)':'var(--border)')+';background:'+(st==='done'?'linear-gradient(135deg,var(--purple),var(--pink))':st==='active'?'rgba(124,58,237,.15)':'var(--card)')+';cursor:'+(st==='locked'?'default':'pointer')+';opacity:'+(st==='locked'?'.4':'1')+';box-shadow:'+(st==='done'?'0 0 18px rgba(124,58,237,.4)':st==='active'?'0 0 0 4px rgba(124,58,237,.12)':'none')+'">'
+      +(st==='done'?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>':st==='locked'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':(i+1))
       +'</div>'
-      +(!isLast?'<div style="width:2px;flex:1;min-height:24px;background:'+(st==='done'?'linear-gradient(180deg,var(--purple),rgba(124,58,237,.2))':'var(--border)')+';margin:3px 0"></div>':'')
+      +(!isLast?'<div style="width:2px;flex:1;min-height:20px;background:'+(st==='done'?'linear-gradient(180deg,var(--purple),rgba(124,58,237,.2))':'rgba(255,255,255,.07)')+';margin:3px 0"></div>':'')
       +'</div>'
-      +'<div style="flex:1;background:var(--bg2);border:1px solid '+(st==='done'?'rgba(124,58,237,.3)':st==='active'?'var(--purple)':'var(--border)')+';border-radius:var(--r2);padding:14px;margin-bottom:12px;opacity:'+(st==='locked'?.55:1)+';">'
-      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;background:'+(st==='done'?'rgba(16,185,129,.12)':st==='active'?'rgba(124,58,237,.15)':'var(--card)')+';color:'+(st==='done'?'#34d399':st==='active'?'#a78bfa':'var(--faint)')+'">'+( st==='done'?'Done':st==='active'?'Active':'Locked')+'</span><span style="font-size:11px;font-weight:600;color:#fcd34d">+'+t.pts+' coins</span></div>'
-      +'<div style="font-size:14px;font-weight:700;margin-bottom:3px">'+t.title+'</div>'
-      +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">'+t.desc+'</div>'
-      +'<div style="display:flex;align-items:center;justify-content:space-between">'
-      +'<span style="font-size:10px;color:var(--faint);text-transform:uppercase;font-weight:600;letter-spacing:.05em">'+t.cat+'</span>'
-      +(st==='active'?'<button class="btn btn-grad btn-xs" onclick="openBpTask(\''+t.id+'\')">Start</button>':st==='done'?'<button class="btn btn-ghost btn-xs" onclick="openBpTask(\''+t.id+'\')">Review</button>':'')
+      +'<div style="flex:1;background:var(--bg2);border:1px solid '+(st==='done'?'rgba(124,58,237,.3)':st==='active'?'var(--purple)':'rgba(255,255,255,.06)')+';border-radius:var(--r2);padding:14px;margin-bottom:12px;opacity:'+(st==='locked'?.4:1)+';">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">'
+      +'<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:.04em;background:'+(st==='done'?'rgba(16,185,129,.12)':st==='active'?'rgba(124,58,237,.15)':'rgba(255,255,255,.05)')+';color:'+(st==='done'?'#34d399':st==='active'?'#a78bfa':'rgba(255,255,255,.3)')+'">'+( st==='done'?'Completed':st==='active'?'Active':'Locked')+'</span>'
+      +'<span style="font-size:11px;font-weight:600;color:#fcd34d">+'+t.pts+' coins</span>'
+      +'</div>'
+      +'<div style="font-size:14px;font-weight:700;margin-bottom:2px">'+t.title+'</div>'
+      +'<div style="font-size:11px;color:var(--faint);margin-bottom:9px">'+t.cat+' &middot; '+t.qs.length+' questions</div>'
+      +(st==='active'&&qDone>0?'<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:11px;color:var(--muted)">Progress</span><span style="font-size:11px;font-weight:600;color:#a78bfa">'+qDone+'/'+t.qs.length+'</span></div><div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px"><div style="height:100%;width:'+pctQ+'%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px;transition:width .3s"></div></div></div>':'')
+      +'<div style="display:flex;justify-content:flex-end">'
+      +(st==='active'?'<button class="btn btn-grad btn-xs" onclick="openBpTask(\''+t.id+'\')">'+( qDone>0?'Continue (Q'+(qDone+1)+')':'Start')+'</button>':st==='done'?'<button class="btn btn-ghost btn-xs" onclick="openBpTask(\''+t.id+'\')">Review</button>':'')
       +'</div></div></div>';
   });
   html+='</div>';
   c.innerHTML=html;
 }
 
+let activeBpTask=null,activeBpQ=0;
 function openBpTask(tid){
   const t=BP.find(function(x){return x.id===tid});if(!t)return;
   const st=bpProg[tid]||'locked';if(st==='locked')return;
-  document.getElementById('up-ov').classList.remove('hidden');
-  document.getElementById('up-body').innerHTML=
-    '<div style="text-align:center;font-size:36px;margin-bottom:8px">'+t.ico+'</div>'
-    +'<div style="text-align:center;margin-bottom:4px"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.15);color:#a78bfa">'+t.cat+'</span></div>'
-    +'<h2 style="font-family:var(--head);font-size:18px;font-weight:700;text-align:center;margin:8px 0 4px">'+t.title+'</h2>'
-    +'<p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:14px">'+t.desc+'</p>'
-    +'<div style="height:1px;background:var(--border);margin-bottom:14px"></div>'
-    +'<div style="font-size:15px;font-weight:600;line-height:1.5;margin-bottom:14px">'+t.q+'</div>'
-    +'<div id="bp-opts" style="display:flex;flex-direction:column;gap:8px">'
-    +t.opts.map(function(o,i){
-      return '<button data-i="'+i+'" onclick="checkBP(\''+tid+'\','+i+',event)" class="task-opt'+(st==='done'&&i===t.ans?' correct disabled':'')+'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px;text-align:left;transition:all .2s"><span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">'+String.fromCharCode(65+i)+'</span>'+esc(o)+'</button>';
-    }).join('')
-    +'</div>'
-    +(st==='done'?'<div class="success-box" style="margin-top:12px">Already completed! +'+t.pts+' coins earned.</div>':'');
+  activeBpTask=tid;
+  activeBpQ=bpTaskQ[tid]||0;
+  if(st==='done')activeBpQ=0;// review from start
+  showBpQuestion();
 }
 
-async function checkBP(tid,chosen,evt){
-  const t=BP.find(function(x){return x.id===tid});if(!t)return;
-  if(bpProg[tid]==='done')return;
+function showBpQuestion(){
+  const t=BP.find(function(x){return x.id===activeBpTask});if(!t)return;
+  const st=bpProg[activeBpTask]||'locked';
+  const qIdx=activeBpQ;
+  const qs=t.qs;
+  const isReview=st==='done';
+  if(qIdx>=qs.length){// all done
+    document.getElementById('up-ov').classList.add('hidden');
+    renderBP();return;
+  }
+  const qq=qs[qIdx];
+  document.getElementById('up-ov').classList.remove('hidden');
+  document.getElementById('up-body').innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">'
+    +'<div><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.15);color:#a78bfa">'+t.cat+'</span></div>'
+    +'<div style="font-size:12px;color:var(--faint);font-weight:600">Q'+(qIdx+1)+' of '+qs.length+'</div>'
+    +'</div>'
+    +'<h2 style="font-family:var(--head);font-size:16px;font-weight:700;margin-bottom:4px">'+t.title+'</h2>'
+    +'<div style="height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:16px"><div style="height:100%;width:'+(Math.round(qIdx/qs.length*100))+'%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:2px"></div></div>'
+    +'<div style="font-size:15px;font-weight:600;line-height:1.55;margin-bottom:14px">'+qq.q+'</div>'
+    +'<div id="bp-opts" style="display:flex;flex-direction:column;gap:8px">'
+    +qq.o.map(function(o,i){
+      const isDone=isReview&&i===qq.a;
+      return '<button data-i="'+i+'" onclick="checkBP('+i+',event)" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:'+(isDone?'rgba(16,185,129,.1)':'var(--card)')+';border:1px solid '+(isDone?'var(--green)':'var(--border)')+';border-radius:var(--r);cursor:pointer;font-size:13px;text-align:left;transition:all .2s;color:'+(isDone?'#34d399':'inherit')+';pointer-events:'+(isReview?'none':'auto')+'"><span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">'+String.fromCharCode(65+i)+'</span>'+esc(o)+'</button>';
+    }).join('')
+    +'</div>'
+    +(isReview?'<button class="btn btn-ghost" style="margin-top:14px;width:100%" onclick="activeBpQ++;showBpQuestion()">'+(qIdx<qs.length-1?'Next Question':'Close')+'</button>':'');
+}
+
+async function checkBP(chosen,evt){
+  const t=BP.find(function(x){return x.id===activeBpTask});if(!t)return;
+  const qq=t.qs[activeBpQ];
+  if(!qq)return;
   document.querySelectorAll('#bp-opts button').forEach(function(b){b.style.pointerEvents='none'});
-  const correct=chosen===t.ans;
-  const btn=document.querySelector('#bp-opts button[data-i="'+chosen+'"]');
-  if(btn)btn.style.cssText+=correct?';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important':';border-color:var(--red)!important;background:rgba(239,68,68,.07)!important;color:#f87171!important';
-  if(!correct){const ab=document.querySelector('#bp-opts button[data-i="'+t.ans+'"]');if(ab)ab.style.cssText+=';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important'}
+  const correct=chosen===qq.a;
+  const chosenBtn=document.querySelector('#bp-opts button[data-i="'+chosen+'"]');
+  if(chosenBtn)chosenBtn.style.cssText+=correct?';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important':';border-color:var(--red)!important;background:rgba(239,68,68,.07)!important;color:#f87171!important';
+  if(!correct){const ab=document.querySelector('#bp-opts button[data-i="'+qq.a+'"]');if(ab)ab.style.cssText+=';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important'}
   if(correct){
-    bpProg[tid]='done';
-    const ni=BP.findIndex(function(x){return x.id===tid})+1;
-    if(ni<BP.length)bpProg[BP[ni].id]='active';
-    const upd={};upd['bpProgress.'+tid]='done';
-    if(ni<BP.length)upd['bpProgress.'+BP[ni].id]='active';
+    activeBpQ++;
+    bpTaskQ[activeBpTask]=activeBpQ;
+    const upd={};upd['bpTaskQ.'+activeBpTask]=activeBpQ;
+    const allDone=activeBpQ>=t.qs.length;
+    if(allDone){
+      bpProg[activeBpTask]='done';
+      upd['bpProgress.'+activeBpTask]='done';
+      const ni=BP.findIndex(function(x){return x.id===activeBpTask})+1;
+      if(ni<BP.length){bpProg[BP[ni].id]='active';upd['bpProgress.'+BP[ni].id]='active'}
+    }
     try{await db.collection('users').doc(CU.uid).update(upd)}catch(e){}
-    const rect=btn?btn.getBoundingClientRect():{left:window.innerWidth/2,top:200,width:0};
-    await addCoins(t.pts,rect.left+rect.width/2,rect.top);
-    toast('Correct! +'+t.pts+' coins','ok');
-    setTimeout(function(){document.getElementById('up-ov').classList.add('hidden');renderBP()},1600);
+    const rect=chosenBtn?chosenBtn.getBoundingClientRect():{left:window.innerWidth/2,top:200,width:0};
+    if(allDone){
+      await addCoins(t.pts,rect.left+rect.width/2,rect.top);
+      toast('Task Complete! +'+t.pts+' coins earned!','ok');
+      setTimeout(function(){document.getElementById('up-ov').classList.add('hidden');renderBP()},1600);
+    }else{
+      toast('Correct! Next question...','ok');
+      setTimeout(showBpQuestion,900);
+    }
   }else{
-    toast('Wrong answer, try again!','err');
-    setTimeout(function(){document.querySelectorAll('#bp-opts button').forEach(function(b){b.style.pointerEvents='';b.style.borderColor='';b.style.background='';b.style.color=''})},1500);
+    toast('Wrong! Try again.','err');
+    setTimeout(function(){document.querySelectorAll('#bp-opts button').forEach(function(b){b.style.pointerEvents='';b.style.borderColor='';b.style.background='';b.style.color=''})},1400);
   }
 }
+
+// ===== DAILY STREAK =====
+function loadStreak(){
+  if(!CU)return;
+  db.collection('users').doc(CU.uid).get().then(d=>{
+    const data=d.data()||{};
+    let streak=data.streak||0;
+    const lastActive=data.lastActive;
+    const today=new Date().toDateString();
+    if(lastActive){
+      const last=new Date(lastActive).toDateString();
+      const yesterday=new Date(Date.now()-86400000).toDateString();
+      if(last===today){// already active today, keep streak
+      }else if(last===yesterday){streak+=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+      else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+    }else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+    const el=document.getElementById('streak-count');if(el)el.textContent=streak;
+  });
+}
+
+// ===== LEADERBOARD =====
+async function loadLeaderboard(){
+  const lb=document.getElementById('lb-list');if(!lb)return;
+  lb.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection('users').orderBy('coins','desc').limit(20).get();
+    const users=snap.docs.map((d,i)=>({rank:i+1,id:d.id,...d.data()}));
+    const myRank=users.findIndex(u=>u.id===CU?.uid);
+    const myBox=document.getElementById('my-rank-box');
+    if(myRank>=0&&myBox){
+      const u=users[myRank];
+      document.getElementById('my-rank-info').innerHTML='<span style="font-size:22px;font-weight:800;color:var(--purple)">#'+(myRank+1)+'</span> &nbsp; '+esc(u.name||'You')+' &nbsp; <span style="color:#fcd34d">'+(u.coins||0)+' coins</span>';
+      myBox.style.display='block';
+    }
+    lb.innerHTML=users.map(function(u,i){
+      const medal=i===0?'style="color:#f59e0b;font-size:18px"':i===1?'style="color:#9ca3af;font-size:16px"':i===2?'style="color:#cd7c2e;font-size:14px"':'style="color:var(--faint);font-size:13px"';
+      const rankNum=i===0?'#1':i===1?'#2':i===2?'#3':'#'+(i+1);
+      const isMe=u.id===CU?.uid;
+      const ph=u.photoURL?'<img src="'+esc(u.photoURL)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display=\'none\'">':ini(u.name||'?');
+      const tasks=Object.values(u.bpProgress||{}).filter(v=>v==='done').length;
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:'+(isMe?'rgba(124,58,237,.1)':'var(--card)')+';border:1px solid '+(isMe?'rgba(124,58,237,.3)':'var(--border)')+';border-radius:var(--r2);margin-bottom:8px;transition:all .2s" onmouseenter="this.style.borderColor=\'rgba(124,58,237,.25)\'" onmouseleave="this.style.borderColor=\''+(isMe?'rgba(124,58,237,.3)':'var(--border)')+'\';">'
+        +'<div '+medal+' style="width:28px;text-align:center;font-weight:800;flex-shrink:0">'+rankNum+'</div>'
+        +'<div class="avatar" style="width:38px;height:38px;font-size:14px;flex-shrink:0;cursor:pointer;'+(u.photoURL?'background:none':'')+'" onclick="viewUser(\''+u.id+'\')">'+ph+'</div>'
+        +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px" onclick="viewUser(\''+u.id+'\')">'
+        +esc(u.name||'Anonymous')+(isMe?'<span style="font-size:10px;background:rgba(124,58,237,.15);color:#a78bfa;padding:1px 6px;border-radius:4px">You</span>':'')+'</div>'
+        +'<div style="font-size:11px;color:var(--faint)">'+tasks+' tasks done</div>'
+        +'</div>'
+        +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-size:14px;font-weight:700;color:#fcd34d">'+(u.coins||0)+'</div>'
+        +'<div style="font-size:10px;color:var(--faint)">coins</div>'
+        +'</div></div>';
+    }).join('');
+  }catch(err){
+    // Fallback without orderBy (Firestore index may not exist)
+    try{
+      const snap2=await db.collection('users').limit(30).get();
+      const users2=snap2.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.coins||0)-(a.coins||0)).slice(0,20);
+      lb.innerHTML=users2.map(function(u,i){
+        const isMe=u.id===CU?.uid;
+        const ph=u.photoURL?'<img src="'+esc(u.photoURL)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':ini(u.name||'?');
+        return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:'+(isMe?'rgba(124,58,237,.1)':'var(--card)')+';border:1px solid '+(isMe?'rgba(124,58,237,.3)':'var(--border)')+';border-radius:var(--r2);margin-bottom:8px;">'
+          +'<div style="width:28px;text-align:center;font-size:13px;font-weight:700;color:var(--faint)">#'+(i+1)+'</div>'
+          +'<div class="avatar" style="width:38px;height:38px;font-size:14px;'+(u.photoURL?'background:none':'')+'" onclick="viewUser(\''+u.id+'\')">'+ph+'</div>'
+          +'<div style="flex:1"><div style="font-size:14px;font-weight:600">'+esc(u.name||'Anonymous')+'</div></div>'
+          +'<div style="font-size:14px;font-weight:700;color:#fcd34d">'+(u.coins||0)+'</div></div>';
+      }).join('');
+    }catch(e2){lb.innerHTML='<div class="empty-state">Failed to load leaderboard.</div>'}
+  }
+}
+
 </script>
 </body>
 </html>
