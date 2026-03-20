@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NexBuildr — Build. Connect. Grow.</title>
+<title>NexBuildr — Build. Connect. Launch.</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -60,6 +60,10 @@ img{display:block}
 .container{max-width:1160px;margin:0 auto;padding:0 24px}
 .divider{height:1px;background:var(--border);margin:16px 0}
 
+/* ── COINS + BUILD PATH ── */
+@keyframes coinFloat{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
+@keyframes coinPop{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1)}}
+.coin-anim{animation:coinPop .35s ease}
 /* ── TOAST ── */
 .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:11px 16px;font-size:13px;font-weight:500;min-width:230px;max-width:310px;pointer-events:all;animation:slideR .22s ease;transition:opacity .3s,transform .3s}
@@ -589,7 +593,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
   <div class="container">
     <div class="hero-inner">
       <div class="badge-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>The Builder Community for India</div>
-      <h1 class="hero-h">Build Your Startup.<br><span class="grad-text">Connect. Launch. Grow.</span></h1>
+      <h1 class="hero-h">Build. Connect. <span class="grad-text">Grow.</span></h1>
       <p class="hero-sub">NexBuildr is the platform for students and young entrepreneurs to share ideas, showcase startups, and build meaningful connections.</p>
       <div class="hero-btns">
         <button class="btn btn-grad" id="hero-cta-btn" onclick="heroCTA()">
@@ -959,6 +963,26 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
   </div>
 </div>
 
+<!-- Edit Profile Modal -->
+<div class="overlay hidden" id="ep-ov" onclick="if(event.target===this)closeEditProfile()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Edit Profile</h3><button class="modal-close" onclick="closeEditProfile()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
+        <div class="fg"><label>Handle</label><input type="text" id="pe-handle" placeholder="@yourhandle"></div>
+        <div class="fg" style="grid-column:1/-1"><label>About</label><input type="text" id="pe-about" placeholder="Brief headline"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Bio</label><textarea id="pe-bio" placeholder="Tell the community about yourself..."></textarea></div>
+        <div class="fg" style="grid-column:1/-1"><label>Experience</label><textarea id="pe-exp" placeholder="Experience, education, previous work..." style="min-height:70px"></textarea></div>
+        <div class="fg" style="grid-column:1/-1"><label>Skills (Enter to add)</label><input type="text" id="pe-skill-inp" placeholder="e.g. React, Design..." onkeydown="handleSkillKey(event)"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px" id="pe-skills-tags"></div></div>
+      </div>
+      <div class="success-box hidden" id="pe-ok" style="margin-top:8px">Profile updated!</div>
+      <div class="error-box hidden" id="pe-err" style="margin-top:8px"></div>
+      <button class="btn btn-grad" id="pe-save-btn" onclick="saveProfile()" style="margin-top:4px;align-self:flex-start">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <!-- Conn List Modal -->
 <div class="overlay hidden" id="cl-ov" onclick="if(event.target===this)this.classList.add('hidden')">
   <div class="modal">
@@ -971,8 +995,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 <div id="explore-page">
   <div class="explore-page-nav">
     <button class="btn btn-ghost btn-sm" onclick="hideExplorePage()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-      Back to Home
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Go to Home
     </button>
     <span style="font-size:14px;font-weight:600;color:var(--muted)">Explore Startups</span>
   </div>
@@ -1019,6 +1043,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
+        <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Build Path</button>
         <button class="sb-link" onclick="nav('feedback')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Feedback</button>
         <button class="sb-link" onclick="nav('featurereq')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Feature Request</button>
       </div>
@@ -1037,11 +1062,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <span id="page-title">Home</span>
       </div>
       <div class="topbar-r">
-        <!-- Search -->
-        <div class="topbar-search" id="topbar-search-wrap">
-          <svg class="si" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="tb-search" placeholder="Search users..." oninput="onTbSearch(this.value)" autocomplete="off">
-          <div class="topbar-search-results hidden" id="tb-results"></div>
+        <!-- Coins -->
+        <div id="coin-display" style="display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:5px 12px;font-size:13px;font-weight:700;color:#fcd34d" title="NexCoins"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fcd34d"><circle cx="12" cy="12" r="10"/></svg><span id="coin-count">0</span></div>
+        <!-- Search Icon -->
+        <div style="position:relative" id="topbar-search-wrap">
+          <button class="notif-btn" id="tb-search-btn" onclick="toggleTbSearch()" title="Search users">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <div class="hidden" id="tb-search-panel" style="position:absolute;top:calc(100%+8px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:300">
+            <input type="text" id="tb-search" placeholder="Search by name or handle..." oninput="onTbSearch(this.value)" autocomplete="off" style="margin-bottom:8px">
+            <div id="tb-results"></div>
+          </div>
         </div>
         <button class="notif-btn" onclick="nav('notifications')" title="Notifications">
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -1095,35 +1126,31 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         </div>
         <!-- Personal -->
         <div id="cp-pers" class="hidden" style="margin-top:14px">
-          <div class="chat-layout" style="height:500px">
-            <div class="chat-side" style="display:flex">
-              <div class="chat-side-hd">Messages</div>
-              <div class="chat-side-search"><input type="text" placeholder="Search users..." oninput="searchChatUsers(this.value)"></div>
-              <div class="chat-ulist" id="chat-ulist"><div class="spinner"></div></div>
-            </div>
-            <div class="chat-main" id="chat-main-pane">
-              <div class="chat-empty" id="chat-empty-state">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Select a conversation
-              </div>
-              <div class="hidden" id="chat-active" style="display:flex;flex-direction:column;height:100%">
-                <div class="chat-main-hd">
-                  <div class="chat-main-hd-l">
-                    <div class="avatar" id="chat-peer-av" style="width:30px;height:30px;font-size:11px;cursor:pointer" onclick="viewUser(activeChatUid)"></div>
-                    <div>
-                      <div id="chat-peer-name" style="font-size:13px;font-weight:600;cursor:pointer" onclick="viewUser(activeChatUid)"></div>
-                      <div id="chat-peer-handle" style="font-size:11px;color:var(--faint)"></div>
-                    </div>
-                  </div>
-                  <button class="btn btn-ghost btn-xs" id="chat-connect-btn" onclick="chatConnect()">Connect</button>
-                </div>
-                <div class="chat-msgs" id="pers-msgs"></div>
-                <div class="chat-input-row">
-                  <input type="text" id="pers-inp" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendPers()">
-                  <button class="btn btn-grad btn-sm" onclick="sendPers()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-                </div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden">
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+              <div style="position:relative">
+                <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--faint);fill:none;stroke-width:2;pointer-events:none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Search users by name or handle..." oninput="searchChatUsers(this.value)" style="padding-left:30px;font-size:13px">
               </div>
             </div>
+            <div class="chat-ulist" id="chat-ulist" style="max-height:320px;overflow-y:auto"><div class="spinner"></div></div>
+          </div>
+        </div>
+        <!-- Fullscreen chat overlay -->
+        <div id="pers-chat-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:600;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+            <button class="btn btn-ghost btn-sm" onclick="closeFullChat()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+            <div class="avatar" id="chat-peer-av" style="width:36px;height:36px;font-size:13px;cursor:pointer;flex-shrink:0" onclick="closeFullChat();viewUser(activeChatUid)"></div>
+            <div style="flex:1;min-width:0">
+              <div id="chat-peer-name" style="font-size:14px;font-weight:700;cursor:pointer" onclick="closeFullChat();viewUser(activeChatUid)"></div>
+              <div id="chat-peer-handle" style="font-size:11px;color:var(--faint)"></div>
+            </div>
+            <button class="btn btn-ghost btn-xs" id="chat-connect-btn" onclick="chatConnect()">Connect</button>
+          </div>
+          <div class="chat-msgs" id="pers-msgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px"></div>
+          <div style="display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+            <input type="text" id="pers-inp" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendPers()" style="flex:1">
+            <button class="btn btn-grad btn-sm" onclick="sendPers()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
           </div>
         </div>
       </div>
@@ -1152,6 +1179,12 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <div class="notif-list" id="notif-list"><div class="spinner"></div></div>
       </div>
 
+      <!-- BUILD PATH -->
+      <div class="page" id="page-buildpath">
+        <div class="page-hd"><div class="page-hd-l"><h1>Build Path</h1><p>Complete tasks. Earn coins. Master your startup.</p></div><div style="display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:6px 14px;font-size:14px;font-weight:700;color:#fcd34d"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fcd34d"><circle cx="12" cy="12" r="10"/></svg><span id="bp-coin-count">0</span> coins</div></div>
+        <div id="bp-container" style="max-width:640px;margin:0 auto"></div>
+      </div>
+
       <!-- FEEDBACK -->
       <div class="page" id="page-feedback">
         <div class="page-hd"><div class="page-hd-l"><h1>Feedback</h1><p>Help us improve NexBuildr.</p></div></div>
@@ -1175,12 +1208,14 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
                 <div class="pav-overlay"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
               </div>
               <input type="file" id="photo-inp" accept="image/*" class="hidden" onchange="uploadPhoto(event)">
-              <button class="btn btn-ghost btn-sm" onclick="nav('profile')">Edit Profile</button>
+              <button class="btn btn-grad btn-sm" onclick="openEditProfile()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Profile</button>
             </div>
             <div class="profile-name" id="my-name">Loading...</div>
             <div class="profile-handle" id="my-handle"></div>
             <div class="role-badge user" id="my-role">user</div>
             <div class="profile-bio" id="my-bio"></div>
+            <div id="my-about-disp" style="font-size:13px;color:var(--muted);margin:4px 0 6px;font-style:italic"></div>
+            <div id="my-exp-disp" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
             <div class="pstats-row">
               <div class="pstat" onclick="showConnList('connections')"><div class="pstat-n" id="my-conns">0</div><div class="pstat-l">Connections</div></div>
               <div class="pstat" onclick="showConnList('followers')"><div class="pstat-n" id="my-followers">0</div><div class="pstat-l">Followers</div></div>
@@ -1189,18 +1224,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
             <div class="pskills" id="my-skills-disp"></div>
           </div>
         </div>
-        <div class="profile-edit-form">
-          <h3>Edit Profile</h3>
-          <div class="pf-grid">
-            <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
-            <div class="fg"><label>Handle</label><input type="text" id="pe-handle" placeholder="@yourhandle"></div>
-            <div class="fg"><label>About</label><input type="text" id="pe-about" placeholder="Brief headline, e.g. Building EdTech startup"></div>
-            <div class="fg full"><label>Bio</label><textarea id="pe-bio" placeholder="Tell the community about yourself..."></textarea></div>
-            <div class="fg full"><label>Skills (press Enter to add)</label><input type="text" id="pe-skill-inp" placeholder="e.g. React, Product Design..." onkeydown="handleSkillKey(event)"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px" id="pe-skills-tags"></div></div>
-          </div>
-          <div class="success-box hidden" id="pe-ok" style="margin-top:12px">Profile updated!</div>
-          <div class="error-box hidden" id="pe-err" style="margin-top:12px"></div>
-          <button class="btn btn-grad" style="margin-top:14px" id="pe-save-btn" onclick="saveProfile()">Save Changes</button>
+        <div class="card" style="margin-top:16px">
+          <h3 style="font-size:11px;font-weight:700;color:var(--faint);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em">My Posts</h3>
+          <div id="my-posts-list"><div class="spinner"></div></div>
         </div>
       </div>
 
@@ -1347,6 +1373,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAuth();closePo
 
 // ── TOPBAR SEARCH ──
 let tbTimeout=null;
+function toggleTbSearch(){
+  const p=document.getElementById('tb-search-panel');
+  p.classList.toggle('hidden');
+  if(!p.classList.contains('hidden'))setTimeout(()=>document.getElementById('tb-search').focus(),50);
+}
 function onTbSearch(q){
   clearTimeout(tbTimeout);
   const res=document.getElementById('tb-results');
@@ -1363,7 +1394,7 @@ function onTbSearch(q){
     </div>`).join('');
   },280);
 }
-document.addEventListener('click',e=>{if(!e.target.closest('#topbar-search-wrap'))document.getElementById('tb-results')?.classList.add('hidden')});
+document.addEventListener('click',e=>{if(!e.target.closest('#topbar-search-wrap')){const p=document.getElementById('tb-search-panel');if(p)p.classList.add('hidden')}});
 
 // ── HOME STATS ──
 async function loadHomeStats(){
@@ -1684,10 +1715,11 @@ async function searchChatUsers(q){if(!q){loadChatUsers();return}const snap=await
 
 function openChat(uid,name,photo,handle){
   activeChatUid=uid;
-  document.getElementById('chat-empty-state').classList.add('hidden');
-  const ap=document.getElementById('chat-active');ap.classList.remove('hidden');ap.style.display='flex';
+  const ov=document.getElementById('pers-chat-overlay');
+  ov.style.display='flex';
+  document.body.style.overflow='hidden';
   const av=document.getElementById('chat-peer-av');
-  if(photo){av.style.background='none';av.innerHTML=`<img src="${esc(photo)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.style.background='';this.parentElement.textContent='${ini(name)}'"`;}
+  if(photo){av.style.background='none';av.innerHTML=`<img src="${esc(photo)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` ;}
   else{av.style.background='';av.textContent=ini(name)}
   document.getElementById('chat-peer-name').textContent=name;
   document.getElementById('chat-peer-handle').textContent=handle?'@'+handle:'';
@@ -1696,10 +1728,17 @@ function openChat(uid,name,photo,handle){
   const mc=document.getElementById('pers-msgs');mc.innerHTML='';
   activeChatUnsub=db.collection('messages').where('chatId','==',chatId).orderBy('timestamp','asc').limit(100).onSnapshot(snap=>{
     mc.innerHTML='';
-    if(snap.empty){mc.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet.</div>';return}
+    if(snap.empty){mc.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:40px 20px">No messages yet.</div>';return}
     snap.forEach(doc=>{const m=doc.data();const own=m.senderId===CU.uid;mc.insertAdjacentHTML('beforeend',`<div class="cmsg ${own?'own':'other'}"><div><div class="cmsg-bubble">${esc(m.message||'')}</div><div class="cmsg-time">${ft(m.timestamp)}</div></div></div>`)});
     mc.scrollTop=mc.scrollHeight;
   },()=>{});
+  setTimeout(()=>document.getElementById('pers-inp').focus(),100);
+}
+function closeFullChat(){
+  document.getElementById('pers-chat-overlay').style.display='none';
+  document.body.style.overflow='';
+  if(activeChatUnsub){activeChatUnsub();activeChatUnsub=null}
+  activeChatUid=null;
 }
 async function sendPers(){
   if(!activeChatUid||!CU)return;
@@ -1709,7 +1748,7 @@ async function sendPers(){
   catch(e){inp.value=msg}
 }
 async function chatConnect(){if(!activeChatUid)return;const btn=document.getElementById('chat-connect-btn');btn.disabled=true;await doConnect(activeChatUid,btn)}
-function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');setTimeout(()=>openChat(uid,name,photo,handle||''),100)}
+function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');openChat(uid,name,photo,handle||'')}
 
 // ── NETWORK ──
 async function loadNetwork(){
@@ -1719,14 +1758,13 @@ async function loadNetwork(){
 }
 function mkNetCard(u){
   const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
-  return `<div class="net-card">
+  return `<div class="net-card" style="cursor:pointer" onclick="viewUser('${esc(u.id)}')">
     <div class="avatar net-av" style="${u.photoURL?'background:none':''}">${ph}</div>
-    <div class="net-name" onclick="viewUser('${esc(u.id)}')">${esc(u.name||'Builder')}</div>
+    <div class="net-name">${esc(u.name||'Builder')}</div>
     <div class="net-handle">@${esc(u.handle||'')}</div>
     <div style="margin-bottom:8px"><span class="role-badge ${u.role||'user'}">${u.role||'user'}</span></div>
-    <div class="net-btns">
+    <div class="net-btns" onclick="event.stopPropagation()">
       <button class="btn btn-ghost btn-xs" onclick="doConnectBtn('${esc(u.id)}',this)">Connect</button>
-      <button class="btn btn-ghost btn-xs" onclick="doFollowBtn('${esc(u.id)}',this)">Follow</button>
     </div>
   </div>`;
 }
@@ -1974,6 +2012,188 @@ function ft(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);const
 
 // \u2500\u2500 INIT \u2500\u2500
 document.addEventListener('DOMContentLoaded',()=>{loadPublicExplore()});
+
+// ===== EDIT PROFILE MODAL =====
+function openEditProfile(){
+  document.getElementById('ep-ov').classList.remove('hidden');
+  document.getElementById('pe-name').value=UD?.name||'';
+  document.getElementById('pe-handle').value=UD?.handle||'';
+  document.getElementById('pe-bio').value=UD?.bio||'';
+  document.getElementById('pe-about').value=UD?.about||'';
+  document.getElementById('pe-exp').value=UD?.experience||'';
+  mySkills=[...(UD?.skills||[])];renderSkillTags();
+  document.getElementById('pe-ok').classList.add('hidden');
+  document.getElementById('pe-err').classList.add('hidden');
+}
+function closeEditProfile(){document.getElementById('ep-ov').classList.add('hidden')}
+
+// saveProfile override with experience + close modal
+const _origSP=saveProfile;
+saveProfile=async function(){
+  const name=gi('pe-name'),handle=gi('pe-handle').replace('@','').toLowerCase(),bio=gi('pe-bio'),about=gi('pe-about'),experience=(document.getElementById('pe-exp')?.value||'').trim();
+  const err=document.getElementById('pe-err'),ok=document.getElementById('pe-ok');
+  if(err)err.classList.add('hidden');if(ok)ok.classList.add('hidden');
+  if(!name){if(err){err.textContent='Name required.';err.classList.remove('hidden')}return}
+  if(!/^[a-z0-9_]+$/.test(handle)){if(err){err.textContent='Handle: lowercase, numbers, underscores only.';err.classList.remove('hidden')}return}
+  const btn=document.getElementById('pe-save-btn');if(btn){btn.disabled=true;btn.textContent='Saving...'}
+  try{
+    if(handle!==UD?.handle){const hs=await db.collection('users').where('handle','==',handle).limit(1).get();if(!hs.empty&&hs.docs[0].id!==CU.uid){if(err){err.textContent='Handle taken.';err.classList.remove('hidden')}return}}
+    await db.collection('users').doc(CU.uid).update({name,handle,bio,about,experience,skills:mySkills});
+    await CU.updateProfile({displayName:name});if(UD)Object.assign(UD,{name,handle,bio,about,experience,skills:mySkills});
+    document.getElementById('welcome-name').textContent=name;
+    loadProfile();
+    if(ok){ok.classList.remove('hidden');setTimeout(()=>ok.classList.add('hidden'),2500)}
+    toast('Profile updated!');
+    setTimeout(()=>closeEditProfile(),1100);
+  }catch(e){if(err){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}}
+  finally{if(btn){btn.disabled=false;btn.textContent='Save Changes'}}
+};
+
+// Patch loadProfile to show about/experience
+const _origLP=loadProfile;
+loadProfile=function(){
+  _origLP.call(this);
+  const abd=document.getElementById('my-about-disp');
+  const expd=document.getElementById('my-exp-disp');
+  if(abd)abd.textContent=UD?.about||'';
+  if(expd){const ev=UD?.experience||'';expd.textContent=ev?('\ud83d\udcbc '+ev):'';expd.style.display=ev?'':'none'}
+};
+
+// Load my posts on profile
+function loadMyPosts(){
+  const c=document.getElementById('my-posts-list');if(!c||!CU)return;
+  c.innerHTML='<div class="spinner"></div>';
+  db.collection('posts').where('userId','==',CU.uid).orderBy('createdAt','desc').limit(10).get().then(snap=>{
+    if(snap.empty){c.innerHTML='<div class="empty-state" style="padding:12px">No posts yet.</div>';return}
+    c.innerHTML=snap.docs.map(d=>{const p={id:d.id,...d.data()};return '<div style="padding:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;cursor:pointer" onclick="nav(\'feed\')" onmouseenter="this.style.borderColor=\'rgba(124,58,237,.3)\'" onmouseleave="this.style.borderColor=\'\'"><div style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">'+esc(p.sector||'General')+'</div><div style="font-size:14px;font-weight:600;margin-bottom:3px">'+esc(p.title||'Untitled')+'</div><div style="font-size:12px;color:var(--muted)">'+esc((p.content||'').substring(0,90))+'</div><div style="font-size:11px;color:var(--faint);margin-top:4px">'+ft(p.createdAt)+'</div></div>';}).join('');
+  }).catch(()=>{c.innerHTML='<div class="empty-state">Could not load posts.</div>'});
+}
+
+// Patch nav to trigger profile posts & build path
+const _origNavFn=nav;
+nav=function(page){
+  _origNavFn(page);
+  if(page==='profile')setTimeout(loadMyPosts,80);
+  if(page==='buildpath'){loadBuildPath();const bc=document.getElementById('bp-coin-count');if(bc)bc.textContent=userCoins}
+};
+
+// Patch initDash to load coins
+const _origID=initDash;
+initDash=function(){_origID.call(this);loadCoins()};
+
+// ===== COINS =====
+let userCoins=0;
+function loadCoins(){
+  if(!CU)return;
+  db.collection('users').doc(CU.uid).get().then(d=>{if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay()}});
+}
+function updateCoinDisplay(){
+  const el=document.getElementById('coin-count'),el2=document.getElementById('bp-coin-count');
+  if(el){el.textContent=userCoins;el.parentElement.classList.add('coin-anim');setTimeout(()=>el.parentElement.classList.remove('coin-anim'),400)}
+  if(el2)el2.textContent=userCoins;
+}
+async function addCoins(amount,x,y){
+  userCoins+=amount;updateCoinDisplay();
+  try{await db.collection('users').doc(CU.uid).update({coins:fv.increment(amount)})}catch(e){}
+  const fl=document.createElement('div');fl.className='coin-float';fl.textContent='+'+amount+' coin';
+  fl.style.cssText='position:fixed;left:'+(x||window.innerWidth/2)+'px;top:'+(y||200)+'px;pointer-events:none;font-size:14px;font-weight:800;color:#fcd34d;z-index:9999;animation:coinFloat 1s ease forwards';
+  document.body.appendChild(fl);setTimeout(()=>fl.remove(),1100);
+}
+
+// ===== BUILD PATH =====
+const BP=[
+  {id:'t1',ico:'1',title:'Startup Basics',desc:'What defines a startup?',cat:'Startup Knowledge',pts:5,q:'What is the primary goal of a startup?',opts:['Generate max profit immediately','Solve a problem and scale rapidly','Copy existing models','Avoid all investors'],ans:1},
+  {id:'t2',ico:'2',title:'Problem-Solution Fit',desc:'Finding the right problem.',cat:'Idea Validation',pts:5,q:'Best method to validate a startup idea early?',opts:['Build full product first','Talk to 100+ potential customers','Raise funds before validating','Post on social media only'],ans:1},
+  {id:'t3',ico:'3',title:'Revenue Models',desc:'How startups make money.',cat:'Business Concepts',pts:5,q:'What is a SaaS revenue model?',opts:['One-time product purchase','Monthly or yearly subscription','Revenue sharing with govt','Free forever for all'],ans:1},
+  {id:'t4',ico:'4',title:'Market Sizing',desc:'TAM, SAM, SOM explained.',cat:'Finance',pts:5,q:'What does TAM stand for?',opts:['Total Available Market','Technical Assessment Metrics','Target Acquisition Method','Tangible Asset Management'],ans:0},
+  {id:'t5',ico:'5',title:'MVP Mindset',desc:'Build less, learn more.',cat:'Startup Knowledge',pts:5,q:'What is an MVP?',opts:['Most expensive version','Core features to validate the idea','Built by minimum 5 people','For minimum 1000 users'],ans:1},
+  {id:'t6',ico:'6',title:'Growth Metrics',desc:'What to track and why.',cat:'Business Concepts',pts:5,q:'Most important early-stage metric?',opts:['Total registered users','DAU / Retention rate','Total funding raised','Office size'],ans:1},
+  {id:'t7',ico:'7',title:'Funding Stages',desc:'Angel to IPO.',cat:'Funding',pts:5,q:'Correct order of startup funding?',opts:['Series A > Seed > Angel > IPO','Angel > Seed > Series A > IPO','IPO > Series A > Seed','Bootstrap > IPO > Seed'],ans:1},
+  {id:'t8',ico:'8',title:'Equity Dilution',desc:'Understanding investor terms.',cat:'Funding',pts:5,q:'What does equity dilution mean?',opts:['Company earns more revenue','Founders own smaller % after investment','Startup loses market value','Investors get repaid with interest'],ans:1},
+  {id:'t9',ico:'9',title:'Unit Economics',desc:'Is your model profitable?',cat:'Finance',pts:5,q:'What is Customer Acquisition Cost (CAC)?',opts:['Revenue per customer','Total cost to acquire one customer','Customer satisfaction score','Product build cost'],ans:1},
+  {id:'t10',ico:'10',title:'Pitch Perfect',desc:'Nail your investor pitch.',cat:'Startup Knowledge',pts:10,q:'What should your pitch deck lead with?',opts:['Financial projections','Team credentials','The problem you solve','Your exact funding ask'],ans:2},
+];
+let bpProg={};
+function loadBuildPath(){
+  if(!CU)return;
+  db.collection('users').doc(CU.uid).get().then(d=>{
+    bpProg=d.data()?.bpProgress||{};
+    if(!bpProg[BP[0].id])bpProg[BP[0].id]='active';
+    renderBP();
+  });
+}
+function renderBP(){
+  const c=document.getElementById('bp-container');if(!c)return;
+  const done=Object.values(bpProg).filter(v=>v==='done').length;
+  const pct=Math.round(done/BP.length*100);
+  let html='<div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 20px;margin-bottom:22px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:600">'+done+'/'+BP.length+' Tasks Done</span><span style="font-size:13px;font-weight:700;color:#fcd34d">'+pct+'%</span></div><div style="height:6px;background:rgba(255,255,255,.07);border-radius:3px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:3px;transition:width .5s"></div></div></div><div style="display:flex;flex-direction:column;gap:0">';
+  BP.forEach(function(t,i){
+    const st=bpProg[t.id]||'locked';
+    const isLast=i===BP.length-1;
+    const odd=i%2===0;
+    html+='<div style="display:flex;gap:12px;flex-direction:'+(odd?'row':'row-reverse')+'">'
+      +'<div style="display:flex;flex-direction:column;align-items:center;width:48px;flex-shrink:0">'
+      +'<div onclick="'+(st!=='locked'?'openBpTask(\''+t.id+'\')':'')+'" style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:2.5px solid '+(st==='done'?'transparent':st==='active'?'var(--purple)':'var(--border)')+';background:'+(st==='done'?'linear-gradient(135deg,var(--purple),var(--pink))':st==='active'?'rgba(124,58,237,.15)':'var(--card)')+';cursor:'+(st==='locked'?'not-allowed':'pointer')+';opacity:'+(st==='locked'?'.45':'1')+';box-shadow:'+(st==='done'?'0 0 18px rgba(124,58,237,.4)':st==='active'?'0 0 0 4px rgba(124,58,237,.12)':'none')+'">'
+      +(st==='done'?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>':st==='locked'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':t.ico)
+      +'</div>'
+      +(!isLast?'<div style="width:2px;flex:1;min-height:24px;background:'+(st==='done'?'linear-gradient(180deg,var(--purple),rgba(124,58,237,.2))':'var(--border)')+';margin:3px 0"></div>':'')
+      +'</div>'
+      +'<div style="flex:1;background:var(--bg2);border:1px solid '+(st==='done'?'rgba(124,58,237,.3)':st==='active'?'var(--purple)':'var(--border)')+';border-radius:var(--r2);padding:14px;margin-bottom:12px;opacity:'+(st==='locked'?.55:1)+';">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;background:'+(st==='done'?'rgba(16,185,129,.12)':st==='active'?'rgba(124,58,237,.15)':'var(--card)')+';color:'+(st==='done'?'#34d399':st==='active'?'#a78bfa':'var(--faint)')+'">'+( st==='done'?'Done':st==='active'?'Active':'Locked')+'</span><span style="font-size:11px;font-weight:600;color:#fcd34d">+'+t.pts+' coins</span></div>'
+      +'<div style="font-size:14px;font-weight:700;margin-bottom:3px">'+t.title+'</div>'
+      +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">'+t.desc+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      +'<span style="font-size:10px;color:var(--faint);text-transform:uppercase;font-weight:600;letter-spacing:.05em">'+t.cat+'</span>'
+      +(st==='active'?'<button class="btn btn-grad btn-xs" onclick="openBpTask(\''+t.id+'\')">Start</button>':st==='done'?'<button class="btn btn-ghost btn-xs" onclick="openBpTask(\''+t.id+'\')">Review</button>':'')
+      +'</div></div></div>';
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function openBpTask(tid){
+  const t=BP.find(function(x){return x.id===tid});if(!t)return;
+  const st=bpProg[tid]||'locked';if(st==='locked')return;
+  document.getElementById('up-ov').classList.remove('hidden');
+  document.getElementById('up-body').innerHTML=
+    '<div style="text-align:center;font-size:36px;margin-bottom:8px">'+t.ico+'</div>'
+    +'<div style="text-align:center;margin-bottom:4px"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.15);color:#a78bfa">'+t.cat+'</span></div>'
+    +'<h2 style="font-family:var(--head);font-size:18px;font-weight:700;text-align:center;margin:8px 0 4px">'+t.title+'</h2>'
+    +'<p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:14px">'+t.desc+'</p>'
+    +'<div style="height:1px;background:var(--border);margin-bottom:14px"></div>'
+    +'<div style="font-size:15px;font-weight:600;line-height:1.5;margin-bottom:14px">'+t.q+'</div>'
+    +'<div id="bp-opts" style="display:flex;flex-direction:column;gap:8px">'
+    +t.opts.map(function(o,i){
+      return '<button data-i="'+i+'" onclick="checkBP(\''+tid+'\','+i+',event)" class="task-opt'+(st==='done'&&i===t.ans?' correct disabled':'')+'" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px;text-align:left;transition:all .2s"><span style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">'+String.fromCharCode(65+i)+'</span>'+esc(o)+'</button>';
+    }).join('')
+    +'</div>'
+    +(st==='done'?'<div class="success-box" style="margin-top:12px">Already completed! +'+t.pts+' coins earned.</div>':'');
+}
+
+async function checkBP(tid,chosen,evt){
+  const t=BP.find(function(x){return x.id===tid});if(!t)return;
+  if(bpProg[tid]==='done')return;
+  document.querySelectorAll('#bp-opts button').forEach(function(b){b.style.pointerEvents='none'});
+  const correct=chosen===t.ans;
+  const btn=document.querySelector('#bp-opts button[data-i="'+chosen+'"]');
+  if(btn)btn.style.cssText+=correct?';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important':';border-color:var(--red)!important;background:rgba(239,68,68,.07)!important;color:#f87171!important';
+  if(!correct){const ab=document.querySelector('#bp-opts button[data-i="'+t.ans+'"]');if(ab)ab.style.cssText+=';border-color:var(--green)!important;background:rgba(16,185,129,.1)!important;color:#34d399!important'}
+  if(correct){
+    bpProg[tid]='done';
+    const ni=BP.findIndex(function(x){return x.id===tid})+1;
+    if(ni<BP.length)bpProg[BP[ni].id]='active';
+    const upd={};upd['bpProgress.'+tid]='done';
+    if(ni<BP.length)upd['bpProgress.'+BP[ni].id]='active';
+    try{await db.collection('users').doc(CU.uid).update(upd)}catch(e){}
+    const rect=btn?btn.getBoundingClientRect():{left:window.innerWidth/2,top:200,width:0};
+    await addCoins(t.pts,rect.left+rect.width/2,rect.top);
+    toast('Correct! +'+t.pts+' coins','ok');
+    setTimeout(function(){document.getElementById('up-ov').classList.add('hidden');renderBP()},1600);
+  }else{
+    toast('Wrong answer, try again!','err');
+    setTimeout(function(){document.querySelectorAll('#bp-opts button').forEach(function(b){b.style.pointerEvents='';b.style.borderColor='';b.style.background='';b.style.color=''})},1500);
+  }
+}
 </script>
 </body>
 </html>
