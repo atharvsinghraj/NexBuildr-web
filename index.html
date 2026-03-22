@@ -592,7 +592,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
   <div class="orb orb1"></div><div class="orb orb2"></div>
   <div class="container">
     <div class="hero-inner">
-      <div class="badge-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>The Builder Community for India</div>
+      <div class="badge-pill" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#A1A1AA;font-size:11px;font-weight:500;letter-spacing:.04em"><span style="color:#7C3AED;font-size:14px;line-height:1">•</span>India's #1 and Biggest Startup Ecosystem Platform</div>
       <h1 class="hero-h">Where ideas turn into<br><span class="grad-text">real startups.</span></h1>
       <p class="hero-sub">Validate faster, connect smarter, and build with confidence using AI and the right network.</p>
       <div class="hero-btns">
@@ -1836,20 +1836,23 @@ function closeFullChat(){
 }
 async function sendPers(){
   if(!activeChatUid||!CU)return;
-  const inp=document.getElementById('pers-inp');const msg=inp.value.trim();if(!msg)return;
+  const inp=document.getElementById('pers-inp');
+  const msg=inp.value.trim();if(!msg)return;
   inp.value='';
-  const mc=document.getElementById('pers-msgs');
-  // Remove "no messages" placeholder if present
-  const noPh=mc.querySelector('div:not([style*="flex"])');
-  if(noPh&&noPh.textContent.includes('No messages'))noPh.remove();
-  // Optimistic UI
-  mc.insertAdjacentHTML('beforeend','<div style="display:flex;margin-bottom:4px;flex-direction:row-reverse"><div style="max-width:72%"><div style="padding:9px 13px;border-radius:16px 4px 16px 16px;font-size:13px;background:rgba(124,58,237,.3);opacity:.7">'+esc(msg)+'</div><div style="font-size:10px;color:var(--faint);margin-top:3px;text-align:right">sending...</div></div></div>');
-  mc.scrollTop=mc.scrollHeight;
   const chatId=[CU.uid,activeChatUid].sort().join('_');
   try{
-    await db.collection('messages').add({chatId,senderId:CU.uid,receiverId:activeChatUid,message:msg,timestamp:fv.serverTimestamp()});
+    await db.collection('messages').add({
+      chatId,
+      senderId:CU.uid,
+      receiverId:activeChatUid,
+      message:msg,
+      timestamp:fv.serverTimestamp()
+    });
     mkNotif(activeChatUid,'message',{fromUid:CU.uid,fromName:UD?.name||'Someone',message:'sent you a message'}).catch(()=>{});
-  }catch(err){inp.value=msg;toast('Send failed','err')}
+  }catch(err){
+    inp.value=msg;
+    toast('Message not sent. Try again.','err');
+  }
 }
 async function chatConnect(){if(!activeChatUid)return;const btn=document.getElementById('chat-connect-btn');btn.disabled=true;await doConnect(activeChatUid,btn)}
 function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');openChat(uid,name,photo,handle||'')}
@@ -1929,29 +1932,69 @@ async function doFollowBtn(uid,btn){
 // ── NOTIFICATIONS ──
 function loadNotifs(){
   if(notifUnsub)notifUnsub();
-  notifUnsub=db.collection('notifications').where('userId','==',CU.uid).orderBy('createdAt','desc').limit(50).onSnapshot(snap=>{
+  const c=document.getElementById('notif-list');
+
+  function renderNotifSnap(snap){
     const pip=document.getElementById('notif-pip');
     const hasUnread=snap.docs.some(d=>!d.data().read);
-    pip.classList.toggle('hidden',!hasUnread);
+    if(pip)pip.classList.toggle('hidden',!hasUnread);
     const sbn=document.getElementById('sb-notifs-btn');
-    const existing=sbn.querySelector('.sb-dot');
-    if(hasUnread&&!existing){const d=document.createElement('div');d.className='sb-dot';sbn.appendChild(d)}
-    else if(!hasUnread&&existing)existing.remove();
-    const c=document.getElementById('notif-list');
+    if(sbn){const existing=sbn.querySelector('.sb-dot');if(hasUnread&&!existing){const d=document.createElement('div');d.className='sb-dot';sbn.appendChild(d)}else if(!hasUnread&&existing)existing.remove()}
     if(snap.empty){c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';return}
-    c.innerHTML=snap.docs.map(doc=>{
+    // Sort by createdAt desc (in case fallback doesn't orderBy)
+    const docs=[...snap.docs].sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+    c.innerHTML=docs.map(doc=>{
       const n={id:doc.id,...doc.data()};
-      const tm={like:{icon:'<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',msg:`<strong>${esc(n.fromName||'Someone')}</strong> liked your post "${esc(n.postTitle||'')}"`,cls:'like'},comment:{icon:'<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',msg:`<strong>${esc(n.fromName||'Someone')}</strong> commented on your post "${esc(n.postTitle||'')}"`,cls:'comment'},view:{icon:'<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',msg:esc(n.message||'Your startup got new views'),cls:'view'},message:{icon:'<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',msg:`<strong>${esc(n.fromName||'Someone')}</strong> ${esc(n.message||'sent you a message')}`,cls:'message'},connect:{icon:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',msg:n.connReq?`<strong>${esc(n.fromName||'Someone')}</strong> sent you a connection request`:esc(n.message||'Someone connected with you'),cls:'connect'}};
-      const t=tm[n.type]||tm.connect;
-      // Connection request with accept/reject
-      const actions=n.connReq&&!n.read?`<div class="ni-actions"><button class="btn btn-green btn-xs" onclick="acceptConnNotif('${n.id}','${esc(n.fromUid||'')}',this)">Accept</button><button class="btn btn-red btn-xs" onclick="rejectConnNotif('${n.id}',this)">Reject</button></div>`:'';
-      return `<div class="notif-item ${n.read?'':'unread'}" id="ni-${n.id}">
-        <div class="ni-icon ${t.cls}">${t.icon}</div>
-        <div class="ni-body"><div class="ni-text">${t.msg}</div><div class="ni-time">${ft(n.createdAt)}</div>${actions}</div>
+      const icons={
+        like:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+        comment:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+        view:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+        message:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+        connect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+      };
+      const msgs={
+        like:`<strong>${esc(n.fromName||'Someone')}</strong> liked your post`,
+        comment:`<strong>${esc(n.fromName||'Someone')}</strong> commented on your post`,
+        view:esc(n.message||'Your startup got new views'),
+        message:`<strong>${esc(n.fromName||'Someone')}</strong> sent you a message`,
+        connect:n.connReq?`<strong>${esc(n.fromName||'Someone')}</strong> sent you a connection request`:`<strong>${esc(n.fromName||'Someone')}</strong> connected with you`
+      };
+      const cls=n.type||'connect';
+      const icon=icons[cls]||icons.connect;
+      const msg=msgs[cls]||msgs.connect;
+      const actions=n.connReq&&!n.read
+        ?`<div class="ni-actions" style="margin-top:8px;display:flex;gap:7px">
+            <button class="btn btn-green btn-xs" onclick="event.stopPropagation();acceptConnNotif('${n.id}','${esc(n.fromUid||'')}',this)">Accept</button>
+            <button class="btn btn-red btn-xs" onclick="event.stopPropagation();rejectConnNotif('${n.id}',this)">Decline</button>
+          </div>`
+        :'';
+      const clickable=n.fromUid&&n.fromUid!=='undefined'?`onclick="viewUser('${esc(n.fromUid)}')" style="cursor:pointer"`:'';
+      return `<div class="notif-item ${n.read?'':'unread'}" id="ni-${n.id}" ${clickable}>
+        <div class="ni-icon ${cls}">${icon}</div>
+        <div class="ni-body"><div class="ni-text">${msg}</div><div class="ni-time">${ft(n.createdAt)}</div>${actions}</div>
       </div>`;
     }).join('');
-  },()=>{document.getElementById('notif-list').innerHTML='<div class="empty-state"><p>Failed to load.</p></div>'});
+  }
+
+  // Primary query with orderBy
+  notifUnsub=db.collection('notifications')
+    .where('userId','==',CU.uid)
+    .orderBy('createdAt','desc')
+    .limit(50)
+    .onSnapshot(renderNotifSnap, err=>{
+      // Fallback: no orderBy (avoids composite index requirement)
+      console.warn('Notif index fallback:',err.code);
+      if(notifUnsub){notifUnsub();notifUnsub=null}
+      notifUnsub=db.collection('notifications')
+        .where('userId','==',CU.uid)
+        .limit(50)
+        .onSnapshot(renderNotifSnap, err2=>{
+          console.error('Notif load failed:',err2);
+          c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';
+        });
+    });
 }
+
 
 async function acceptConnNotif(notifId,fromUid,btn){
   btn.closest('.ni-actions').innerHTML='<span style="font-size:12px;color:var(--green)">Accepted</span>';
@@ -1979,14 +2022,16 @@ function loadProfile(){
   const av=document.getElementById('my-av');
   if(photoURL){av.style.background='none';av.innerHTML=`<img src="${esc(photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`}
   else{av.style.background='';av.innerHTML=ini(name)+'<div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>'}
-  document.getElementById('my-name').textContent=name||'No name set';
-  document.getElementById('my-handle').textContent=handle?'@'+handle:'';
-  const rb=document.getElementById('my-role');rb.textContent=role;rb.className='role-badge '+role;
-  document.getElementById('my-bio').textContent=bio||(about||'');
-  document.getElementById('my-conns').textContent=UD.connectionCount||0;
-  document.getElementById('my-followers').textContent=UD.followerCount||0;
-  document.getElementById('my-following').textContent=UD.followingCount||0;
-  document.getElementById('my-skills-disp').innerHTML=mySkills.map(s=>`<span class="tag">${esc(s)}</span>`).join('');
+  const setT=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  const setH=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v};
+  setT('my-name',name||'No name set');
+  setT('my-handle',handle?'@'+handle:'');
+  const rb=document.getElementById('my-role');if(rb){rb.textContent=role;rb.className='role-badge '+role}
+  setT('my-bio',bio||(about||''));
+  setT('my-conns',UD.connectionCount||0);
+  setT('my-followers',UD.followerCount||0);
+  setT('my-following',UD.followingCount||0);
+  setH('my-skills-disp',mySkills.map(s=>`<span class="tag">${esc(s)}</span>`).join(''));
   // Edit profile photo preview
   const epAv=document.getElementById('ep-photo-av');
   if(epAv){
@@ -2007,42 +2052,60 @@ function loadProfile(){
 }
 function triggerPhoto(){document.getElementById('photo-inp').click()}
 async function uploadPhoto(e){
-  const file=e.target.files[0];if(!file)return;
-  if(!file.type.startsWith('image/')){toast('Please select an image file','err');return}
-  const av=document.getElementById('my-av');
-  av.innerHTML='<div style="width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin:auto"></div>';
+  const file=e.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Please select an image','err');return}
+  if(file.size>5*1024*1024){toast('Image too large. Max 5MB.','err');return}
+  // Show preview instantly from local file
+  const localUrl=URL.createObjectURL(file);
+  const mainAv=document.getElementById('my-av');
+  const epAv=document.getElementById('ep-photo-av');
+  if(mainAv){mainAv.style.background='none';mainAv.innerHTML=`<img src="${localUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
+  if(epAv){epAv.style.background='none';epAv.innerHTML=`<img src="${localUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
+  toast('Uploading photo...','info');
   try{
-    // Resize to 200x200 via canvas for fast upload
+    // Resize via canvas (200×200, JPEG 0.85)
     const dataUrl=await new Promise((res,rej)=>{
       const reader=new FileReader();
       reader.onload=ev=>{
         const img=new Image();
         img.onload=()=>{
-          const c=document.createElement('canvas');c.width=200;c.height=200;
-          const ctx=c.getContext('2d');
-          const s=Math.min(img.width,img.height);
-          const x=(img.width-s)/2,y=(img.height-s)/2;
-          ctx.drawImage(img,x,y,s,s,0,0,200,200);
-          res(c.toDataURL('image/jpeg',0.8));
+          const cv=document.createElement('canvas');cv.width=200;cv.height=200;
+          const ctx=cv.getContext('2d');
+          const side=Math.min(img.width,img.height);
+          const ox=(img.width-side)/2,oy=(img.height-side)/2;
+          ctx.drawImage(img,ox,oy,side,side,0,0,200,200);
+          res(cv.toDataURL('image/jpeg',0.85));
         };
-        img.onerror=rej;img.src=ev.target.result;
+        img.onerror=rej;
+        img.src=ev.target.result;
       };
-      reader.onerror=rej;reader.readAsDataURL(file);
+      reader.onerror=rej;
+      reader.readAsDataURL(file);
     });
-    // Convert to blob
     const blob=await(await fetch(dataUrl)).blob();
-    const ref=storage.ref('profiles/'+CU.uid+'/photo_'+Date.now());
-    const sn=await ref.put(blob,{contentType:'image/jpeg'});
-    const url=await sn.ref.getDownloadURL();
-    await db.collection('users').doc(CU.uid).update({photoURL:url});
-    await CU.updateProfile({photoURL:url});
+    const ref=storage.ref('profiles/'+CU.uid+'/avatar');
+    await ref.put(blob,{contentType:'image/jpeg'});
+    const url=await ref.getDownloadURL();
+    await Promise.all([
+      db.collection('users').doc(CU.uid).update({photoURL:url}),
+      CU.updateProfile({photoURL:url})
+    ]);
     if(UD)UD.photoURL=url;
-    loadProfile();toast('Photo updated!');
+    URL.revokeObjectURL(localUrl);
+    // Update all avatars with final URL
+    const finalImg=`<img src="${esc(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    if(mainAv){mainAv.style.background='none';mainAv.innerHTML=finalImg}
+    if(epAv){epAv.style.background='none';epAv.innerHTML=finalImg}
+    toast('Photo updated!','ok');
   }catch(err){
-    console.error('Photo upload error:',err);
-    toast('Upload failed: '+err.message,'err');
+    console.error('Upload error:',err);
+    URL.revokeObjectURL(localUrl);
     loadProfile();
+    toast('Upload failed. Check your connection.','err');
   }
+  // Reset input so same file can be picked again
+  e.target.value='';
 }
 function renderSkillTags(){document.getElementById('pe-skills-tags').innerHTML=mySkills.map((s,i)=>`<span class="tag">${esc(s)}<button class="tag-rem" onclick="mySkills.splice(${i},1);renderSkillTags()">&times;</button></span>`).join('')}
 function handleSkillKey(e){if(e.key==='Enter'){e.preventDefault();const v=e.target.value.trim();if(v&&!mySkills.includes(v)&&mySkills.length<20){mySkills.push(v);e.target.value='';renderSkillTags()}}}
@@ -2085,14 +2148,23 @@ async function viewUser(uid){
   const body=document.getElementById('up-body');
   body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;padding:40px"><div class="spinner"></div></div>';
   try{
-    const[uSnap,connSnap,followSnap,postsSnap,startupsSnap]=await Promise.all([
+    // Fetch user + connection status in parallel. Posts/startups use fallback pattern.
+    const[uSnap,connSnap,followSnap]=await Promise.all([
       db.collection('users').doc(uid).get(),
-      db.collection('connections').where('fromUid','==',CU?.uid||'').where('toUid','==',uid).limit(1).get(),
-      db.collection('follows').where('followerUid','==',CU?.uid||'').where('followingUid','==',uid).limit(1).get(),
-      db.collection('posts').where('userId','==',uid).orderBy('createdAt','desc').limit(6).get(),
-      db.collection('startups').where('userId','==',uid).orderBy('createdAt','desc').limit(4).get()
+      CU?db.collection('connections').where('fromUid','==',CU.uid).where('toUid','==',uid).limit(1).get():Promise.resolve({empty:true,docs:[]}),
+      CU?db.collection('follows').where('followerUid','==',CU.uid).where('followingUid','==',uid).limit(1).get():Promise.resolve({empty:true,docs:[]})
     ]);
-    if(!uSnap.exists){body.innerHTML='<p style="color:var(--faint)">User not found.</p>';return}
+    if(!uSnap.exists){body.innerHTML='<p style="color:var(--faint);padding:20px;text-align:center">User not found.</p>';return}
+
+    // Fetch posts with index fallback
+    let postsSnap;
+    try{postsSnap=await db.collection('posts').where('userId','==',uid).orderBy('createdAt','desc').limit(6).get()}
+    catch(e){postsSnap=await db.collection('posts').where('userId','==',uid).limit(6).get()}
+
+    // Fetch startups with index fallback
+    let startupsSnap;
+    try{startupsSnap=await db.collection('startups').where('userId','==',uid).orderBy('createdAt','desc').limit(4).get()}
+    catch(e){startupsSnap=await db.collection('startups').where('userId','==',uid).limit(4).get()}
     const u={id:uSnap.id,...uSnap.data()};
     const connStatus=connSnap.empty?'none':connSnap.docs[0].data().status;
     const isFollowing=!followSnap.empty;
