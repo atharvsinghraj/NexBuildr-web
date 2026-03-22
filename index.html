@@ -64,6 +64,30 @@ img{display:block}
 @keyframes coinFloat{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
 @keyframes coinPop{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(1)}}
 .coin-anim{animation:coinPop .35s ease}
+
+/* ── CO-FOUNDER CARDS ── */
+.cf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.cf-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:20px;transition:border-color .2s;display:flex;flex-direction:column;gap:10px}
+.cf-card:hover{border-color:#7C3AED}
+.cf-card-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cf-title{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.cf-role{display:inline-flex;align-items:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.14);color:#a78bfa;border:1px solid rgba(124,58,237,.22)}
+.cf-meta{display:flex;flex-wrap:wrap;gap:6px}
+.cf-tag{font-size:11px;color:#A1A1AA;background:#1a1a1a;border:1px solid #2a2a2a;padding:2px 8px;border-radius:6px}
+.cf-match{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px;background:rgba(16,185,129,.1);color:#34d399;border:1px solid rgba(16,185,129,.2)}
+.cf-desc{font-size:13px;color:#A1A1AA;line-height:1.6;flex:1}
+.cf-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid #1F1F1F;margin-top:auto}
+/* ── FEED FILTERS ── */
+.feed-filters{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.ff-btn{padding:6px 16px;font-size:13px;font-weight:500;border-radius:var(--r);border:1px solid #1F1F1F;background:transparent;color:#A1A1AA;cursor:pointer;transition:all .18s}
+.ff-btn:hover{border-color:#7C3AED;color:#fff}
+.ff-btn.active{background:rgba(124,58,237,.14);border-color:#7C3AED;color:#fff}
+/* ── NETWORK FILTERS ── */
+.net-filters{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.nf-btn{padding:5px 14px;font-size:12px;font-weight:600;border-radius:100px;border:1px solid #1F1F1F;background:transparent;color:#A1A1AA;cursor:pointer;transition:all .18s;text-transform:capitalize}
+.nf-btn:hover{border-color:#7C3AED;color:#fff}
+.nf-btn.active{background:rgba(124,58,237,.14);border-color:#7C3AED;color:#fff}
+
 /* ── TOAST ── */
 .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:11px 16px;font-size:13px;font-weight:500;min-width:230px;max-width:310px;pointer-events:all;animation:slideR .22s ease;transition:opacity .3s,transform .3s}
@@ -752,6 +776,23 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         </div>
       </div>
 
+      <!-- Find Co-founder -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 11c1.66 0 3 1.34 3 3v1"/><path d="M21 11a2 2 0 0 1 0 4"/></svg>Live</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Co-founder Match</div><div class="mock-badge pink">New</div></div>
+            <div class="mock-row"><div class="mock-av">RK</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Rohan Kumar</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Developer · EdTech</div></div><div class="mock-pct" style="font-size:10px;color:#34d399">92%</div></div>
+            <div class="mock-row"><div class="mock-av">PS</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Priya Sharma</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Designer · B2C</div></div><div class="mock-pct" style="font-size:10px;color:#a78bfa">78%</div></div>
+            <div class="mock-row"><div class="mock-av">AM</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Arjun Mehta</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Marketer · SaaS</div></div><div class="mock-pct" style="font-size:10px;color:#a78bfa">71%</div></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Find Your Co-founder</h3>
+          <p>Discover the right people to build your startup with. Post your requirements or apply to join exciting ideas.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -976,13 +1017,54 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
         <div class="fg"><label>Handle</label><input type="text" id="pe-handle" placeholder="@yourhandle"></div>
         <div class="fg" style="grid-column:1/-1"><label>About</label><input type="text" id="pe-about" placeholder="Brief headline"></div>
-        <div class="fg" style="grid-column:1/-1"><label>Bio</label><textarea id="pe-bio" placeholder="Tell the community about yourself..."></textarea></div>
+
         <div class="fg" style="grid-column:1/-1"><label>Experience</label><textarea id="pe-exp" placeholder="Experience, education, previous work..." style="min-height:70px"></textarea></div>
         <div class="fg" style="grid-column:1/-1"><label>Skills (Enter to add)</label><input type="text" id="pe-skill-inp" placeholder="e.g. React, Design..." onkeydown="handleSkillKey(event)"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px" id="pe-skills-tags"></div></div>
       </div>
       <div class="success-box hidden" id="pe-ok" style="margin-top:8px">Profile updated!</div>
       <div class="error-box hidden" id="pe-err" style="margin-top:8px"></div>
       <button class="btn btn-grad" id="pe-save-btn" onclick="saveProfile()" style="margin-top:4px;align-self:flex-start">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Co-founder Post Modal -->
+<div class="overlay hidden" id="cf-post-ov" onclick="if(event.target===this)closeCFPost()">
+  <div class="modal modal-lg" style="max-width:620px">
+    <div class="modal-hd"><h3>Post Co-founder Opportunity</h3><button class="modal-close" onclick="closeCFPost()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Startup Name</label><input type="text" id="cf-startup" placeholder="e.g. EduTrack"></div>
+        <div class="fg"><label>Role Needed</label><select id="cf-role"><option value="Co-founder">Co-founder</option><option value="Developer">Developer</option><option value="Designer">Designer</option><option value="Marketer">Marketer</option><option value="Finance">Finance/CFO</option><option value="Sales">Sales</option><option value="Operations">Operations</option></select></div>
+        <div class="fg"><label>Startup Stage</label><select id="cf-stage"><option value="Idea">Idea Stage</option><option value="MVP">MVP</option><option value="Growing">Growing</option><option value="Funded">Funded</option></select></div>
+        <div class="fg"><label>Industry</label><select id="cf-industry"><option value="Technology">Technology</option><option value="Education">Education</option><option value="Healthcare">Healthcare</option><option value="Finance">Finance</option><option value="E-commerce">E-commerce</option><option value="Social">Social</option><option value="Agriculture">Agriculture</option><option value="Other">Other</option></select></div>
+        <div class="fg"><label>Equity Offering (%)</label><input type="number" id="cf-equity" placeholder="e.g. 20" min="0" max="100"></div>
+        <div class="fg"><label>Commitment</label><select id="cf-commit"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Flexible">Flexible</option></select></div>
+        <div class="fg"><label>Location</label><input type="text" id="cf-location" placeholder="Remote / City"></div>
+        <div class="fg"><label>Contact via</label><select id="cf-contact"><option value="chat">Chat on NexBuildr</option><option value="email">Email</option></select></div>
+        <div class="fg" style="grid-column:1/-1"><label>Skills Required (comma separated)</label><input type="text" id="cf-skills" placeholder="e.g. React, Product Design, Growth"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Description</label><textarea id="cf-desc" placeholder="Describe your startup, what you're building, and what you're looking for..." style="min-height:100px"></textarea></div>
+      </div>
+      <div class="error-box hidden" id="cf-err"></div>
+      <button class="btn btn-grad" id="cf-sub-btn" onclick="submitCFPost()" style="align-self:flex-start">Post Opportunity</button>
+    </div>
+  </div>
+</div>
+
+<!-- Co-founder Apply Modal -->
+<div class="overlay hidden" id="cf-apply-ov" onclick="if(event.target===this)closeCFApply()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Apply for Co-founder Role</h3><button class="modal-close" onclick="closeCFApply()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div id="cf-apply-header" style="padding:12px;background:#1a1a1a;border:1px solid #1F1F1F;border-radius:var(--r);margin-bottom:4px;font-size:13px;color:var(--muted)"></div>
+      <div class="fg"><label>Your Name</label><input type="text" id="ca-name" placeholder="Full name"></div>
+      <div class="fg"><label>Your Skills</label><input type="text" id="ca-skills" placeholder="e.g. React, Node.js, UI/UX"></div>
+      <div class="fg"><label>Experience</label><textarea id="ca-exp" placeholder="Brief background, relevant experience..." style="min-height:70px"></textarea></div>
+      <div class="fg"><label>Portfolio / LinkedIn</label><input type="url" id="ca-portfolio" placeholder="https://..."></div>
+      <div class="fg"><label>Why do you want to join?</label><textarea id="ca-why" placeholder="Tell them why you're a great fit..." style="min-height:80px"></textarea></div>
+      <div class="error-box hidden" id="ca-err"></div>
+      <div class="success-box hidden" id="ca-ok">Application sent!</div>
+      <button class="btn btn-grad" id="ca-sub-btn" onclick="submitCFApply()" style="align-self:flex-start">Submit Application</button>
     </div>
   </div>
 </div>
@@ -1043,6 +1125,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <button class="sb-link" onclick="nav('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>
         <button class="sb-link" onclick="nav('showcase')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Startup Showcase</button>
         <button class="sb-link" onclick="nav('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Network</button>
+        <button class="sb-link" onclick="nav('cofounder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 11c1.66 0 3 1.34 3 3v1"/><path d="M21 11a2 2 0 0 1 0 4"/></svg>Find Co-founder</button>
         <button class="sb-link" id="sb-notifs-btn" onclick="nav('notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</button>
         <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Learn</button>
         <button class="sb-link" onclick="nav('leaderboard')"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Leaderboard</button>
@@ -1106,6 +1189,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
       <!-- FEED -->
       <div class="page" id="page-feed">
         <div class="page-hd"><div class="page-hd-l"><h1>Feed</h1><p>Discover what builders are sharing.</p></div><button class="btn btn-grad" onclick="openPost()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Post</button></div>
+        <div class="feed-filters">
+          <button class="ff-btn active" id="ff-newest" onclick="setFeedFilter('newest')">Newest</button>
+          <button class="ff-btn" id="ff-top" onclick="setFeedFilter('top')">Top</button>
+          <button class="ff-btn" id="ff-mine" onclick="setFeedFilter('mine')">My Posts</button>
+        </div>
         <div class="feed-wrap" id="feed-list"><div class="spinner"></div></div>
       </div>
 
@@ -1169,12 +1257,22 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
       <!-- NETWORK -->
       <div class="page" id="page-network">
         <div class="page-hd"><div class="page-hd-l"><h1>Network</h1><p>Discover builders and grow your connections.</p></div></div>
-        <div style="position:relative;max-width:440px;margin-bottom:22px">
-          <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--faint);fill:none;stroke-width:2;pointer-events:none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="net-search" placeholder="Search by name or handle..." oninput="netSearch(this.value)" style="padding-left:36px">
-          <div class="topbar-search-results hidden" id="net-results" style="left:0;right:0;top:calc(100%+6px)"></div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <div style="position:relative;flex:1;min-width:200px;max-width:360px">
+            <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--faint);fill:none;stroke-width:2;pointer-events:none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="net-search" placeholder="Search by name or handle..." oninput="netSearch(this.value)" style="padding-left:36px">
+            <div class="topbar-search-results hidden" id="net-results" style="left:0;right:0;top:calc(100%+6px)"></div>
+          </div>
         </div>
-        <div class="sec-label" style="margin-bottom:14px">Suggested Builders</div>
+        <div class="net-filters">
+          <button class="nf-btn active" id="nf-all" onclick="setNetFilter('all')">All</button>
+          <button class="nf-btn" id="nf-founder" onclick="setNetFilter('founder')">Founder</button>
+          <button class="nf-btn" id="nf-co-founder" onclick="setNetFilter('co-founder')">Co-founder</button>
+          <button class="nf-btn" id="nf-developer" onclick="setNetFilter('developer')">Developer</button>
+          <button class="nf-btn" id="nf-designer" onclick="setNetFilter('designer')">Designer</button>
+          <button class="nf-btn" id="nf-marketer" onclick="setNetFilter('marketer')">Marketer</button>
+          <button class="nf-btn" id="nf-investor" onclick="setNetFilter('investor')">Investor</button>
+        </div>
         <div class="net-grid" id="net-grid"><div class="spinner"></div></div>
       </div>
 
@@ -1212,6 +1310,15 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
           </div>
           <div id="lb-list"><div class="spinner"></div></div>
         </div>
+      </div>
+
+      <!-- CO-FOUNDER -->
+      <div class="page" id="page-cofounder">
+        <div class="page-hd">
+          <div class="page-hd-l"><h1>Find Co-founder</h1><p>Connect with the right people to build your startup.</p></div>
+          <button class="btn btn-grad" onclick="openCFPost()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Post Opportunity</button>
+        </div>
+        <div class="cf-grid" id="cf-grid"><div class="spinner"></div></div>
       </div>
 
       <!-- FEEDBACK -->
@@ -1386,7 +1493,7 @@ function initDash(){
 }
 
 // ── NAVIGATION ──
-const PT={home:'Home',feed:'Feed',nexai:'Nex AI',chat:'Chat',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',feedback:'Feedback',featurereq:'Feature Request',profile:'Profile'};
+const PT={home:'Home',feed:'Feed',nexai:'Nex AI',chat:'Chat',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',feedback:'Feedback',featurereq:'Feature Request',profile:'Profile'};
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
@@ -1541,14 +1648,55 @@ async function submitPost(){
   finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Publish Post'}
 }
 
+let feedFilter='newest';
+function setFeedFilter(f){
+  feedFilter=f;
+  document.querySelectorAll('.ff-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('ff-'+f);if(el)el.classList.add('active');
+  loadFeed();
+}
 function loadFeed(){
   const c=document.getElementById('feed-list');
-  if(feedUnsub)feedUnsub();
-  feedUnsub=db.collection('posts').orderBy('createdAt','desc').limit(40).onSnapshot(snap=>{
-    if(snap.empty){c.innerHTML='<div class="empty-state"><p>No posts yet. Be the first!</p></div>';return}
-    c.innerHTML='';
-    snap.forEach(doc=>{const p={id:doc.id,...doc.data()};c.insertAdjacentHTML('beforeend',mkPost(p));if(p.userId!==CU?.uid&&!viewedPosts.has(p.id)){viewedPosts.add(p.id);db.collection('posts').doc(p.id).update({views:fv.arrayUnion(CU.uid)}).catch(()=>{})}});
-  },()=>{c.innerHTML='<div class="empty-state"><p>Failed to load feed.</p></div>'});
+  if(feedUnsub){feedUnsub();feedUnsub=null}
+  c.innerHTML='<div class="spinner"></div>';
+  if(feedFilter==='mine'){
+    feedUnsub=db.collection('posts').where('userId','==',CU.uid).orderBy('createdAt','desc').limit(40).onSnapshot(snap=>{
+      if(snap.empty){c.innerHTML='<div class="empty-state"><p>You haven\'t posted yet.</p></div>';return}
+      c.innerHTML='';
+      snap.forEach(doc=>{const p={id:doc.id,...doc.data()};c.insertAdjacentHTML('beforeend',mkPost(p))});
+    },err=>{
+      // fallback without orderBy
+      feedUnsub=db.collection('posts').where('userId','==',CU.uid).limit(40).onSnapshot(snap=>{
+        const posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        c.innerHTML='';
+        if(!posts.length){c.innerHTML='<div class="empty-state"><p>You haven\'t posted yet.</p></div>';return}
+        posts.forEach(p=>c.insertAdjacentHTML('beforeend',mkPost(p)));
+      },()=>{c.innerHTML='<div class="empty-state"><p>Failed to load.</p></div>'});
+    });
+  } else {
+    // newest or top - use onSnapshot
+    feedUnsub=db.collection('posts').orderBy('createdAt','desc').limit(40).onSnapshot(snap=>{
+      if(snap.empty){c.innerHTML='<div class="empty-state"><p>No posts yet. Be the first!</p></div>';return}
+      let posts=snap.docs.map(d=>({id:d.id,...d.data()}));
+      if(feedFilter==='top'){
+        posts=posts.sort((a,b)=>{
+          const scoreA=(Array.isArray(a.likes)?a.likes.length:0)*3+(Array.isArray(a.views)?a.views.length:0);
+          const scoreB=(Array.isArray(b.likes)?b.likes.length:0)*3+(Array.isArray(b.views)?b.views.length:0);
+          return scoreB-scoreA;
+        });
+      }
+      c.innerHTML='';
+      posts.forEach(p=>{c.insertAdjacentHTML('beforeend',mkPost(p));if(p.userId!==CU?.uid&&!viewedPosts.has(p.id)){viewedPosts.add(p.id);db.collection('posts').doc(p.id).update({views:fv.arrayUnion(CU.uid)}).catch(()=>{})}});
+    },err=>{
+      // fallback
+      db.collection('posts').limit(40).get().then(snap=>{
+        let posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        c.innerHTML='';
+        if(!posts.length){c.innerHTML='<div class="empty-state"><p>No posts yet.</p></div>';return}
+        posts.forEach(p=>c.insertAdjacentHTML('beforeend',mkPost(p)));
+      }).catch(()=>{c.innerHTML='<div class="empty-state"><p>Failed to load feed.</p></div>'});
+    });
+  }
 }
 
 function mkPost(p){
@@ -1858,9 +2006,25 @@ async function chatConnect(){if(!activeChatUid)return;const btn=document.getElem
 function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');openChat(uid,name,photo,handle||'')}
 
 // ── NETWORK ──
+let allNetUsers=[],netFilterRole='all';
+function setNetFilter(role){
+  netFilterRole=role;
+  document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('nf-'+role.replace('/','-'));if(el)el.classList.add('active');
+  renderNetUsers();
+}
+function renderNetUsers(){
+  const g=document.getElementById('net-grid');
+  let users=allNetUsers;
+  if(netFilterRole!=='all'){
+    users=allNetUsers.filter(u=>(u.role||'').toLowerCase()===netFilterRole||(u.about||'').toLowerCase().includes(netFilterRole)||(u.skills||[]).some(s=>s.toLowerCase().includes(netFilterRole)));
+  }
+  if(!users.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No builders found for this filter.</p></div>';return}
+  g.innerHTML=users.map(mkNetCard).join('');
+}
 async function loadNetwork(){
   const g=document.getElementById('net-grid');g.innerHTML='<div class="spinner"></div>';
-  try{const snap=await db.collection('users').limit(24).get();const users=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));if(!users.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other users yet.</p></div>';return}g.innerHTML=users.map(mkNetCard).join('')}
+  try{const snap=await db.collection('users').limit(40).get();allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other users yet.</p></div>';return}renderNetUsers()}
   catch(e){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load.</p></div>'}
 }
 function mkNetCard(u){
@@ -2027,7 +2191,7 @@ function loadProfile(){
   setT('my-name',name||'No name set');
   setT('my-handle',handle?'@'+handle:'');
   const rb=document.getElementById('my-role');if(rb){rb.textContent=role;rb.className='role-badge '+role}
-  setT('my-bio',bio||(about||''));
+  setT('my-bio',about||(bio||''));
   setT('my-conns',UD.connectionCount||0);
   setT('my-followers',UD.followerCount||0);
   setT('my-following',UD.followingCount||0);
@@ -2110,8 +2274,8 @@ async function uploadPhoto(e){
 function renderSkillTags(){document.getElementById('pe-skills-tags').innerHTML=mySkills.map((s,i)=>`<span class="tag">${esc(s)}<button class="tag-rem" onclick="mySkills.splice(${i},1);renderSkillTags()">&times;</button></span>`).join('')}
 function handleSkillKey(e){if(e.key==='Enter'){e.preventDefault();const v=e.target.value.trim();if(v&&!mySkills.includes(v)&&mySkills.length<20){mySkills.push(v);e.target.value='';renderSkillTags()}}}
 async function saveProfile(){
-  const name=gi('pe-name'),handle=gi('pe-handle').replace('@','').toLowerCase(),bio=gi('pe-bio'),about=gi('pe-about');
-  const err=document.getElementById('pe-err'),ok=document.getElementById('pe-ok');err.classList.add('hidden');ok.classList.add('hidden');
+  const name=gi('pe-name'),handle=gi('pe-handle').replace('@','').toLowerCase(),about=gi('pe-about'),bio=gi('pe-bio')||about;
+  const err=document.getElementById('pe-err'),ok=document.getElementById('pe-ok');if(err)err.classList.add('hidden');if(ok)ok.classList.add('hidden');
   if(!name){err.textContent='Name cannot be empty.';err.classList.remove('hidden');return}
   if(!/^[a-z0-9_]+$/.test(handle)){err.textContent='Handle: only lowercase letters, numbers, underscores.';err.classList.remove('hidden');return}
   const btn=document.getElementById('pe-save-btn');btn.disabled=true;btn.textContent='Saving...';
@@ -2239,7 +2403,7 @@ function openEditProfile(){
   document.getElementById('ep-ov').classList.remove('hidden');
   document.getElementById('pe-name').value=UD?.name||'';
   document.getElementById('pe-handle').value=UD?.handle||'';
-  document.getElementById('pe-bio').value=UD?.bio||'';
+  const peBioEl2=document.getElementById('pe-bio');if(peBioEl2)peBioEl2.value=UD?.bio||'';
   document.getElementById('pe-about').value=UD?.about||'';
   document.getElementById('pe-exp').value=UD?.experience||'';
   mySkills=[...(UD?.skills||[])];renderSkillTags();
@@ -2251,7 +2415,7 @@ function closeEditProfile(){document.getElementById('ep-ov').classList.add('hidd
 // saveProfile override with experience + close modal
 const _origSP=saveProfile;
 saveProfile=async function(){
-  const name=gi('pe-name'),handle=gi('pe-handle').replace('@','').toLowerCase(),bio=gi('pe-bio'),about=gi('pe-about'),experience=(document.getElementById('pe-exp')?.value||'').trim();
+  const name=gi('pe-name'),handle=gi('pe-handle').replace('@','').toLowerCase(),about=gi('pe-about'),bio=(document.getElementById('pe-bio')?.value||about).trim(),experience=(document.getElementById('pe-exp')?.value||'').trim();
   const err=document.getElementById('pe-err'),ok=document.getElementById('pe-ok');
   if(err)err.classList.add('hidden');if(ok)ok.classList.add('hidden');
   if(!name){if(err){err.textContent='Name required.';err.classList.remove('hidden')}return}
@@ -2301,7 +2465,7 @@ nav=function(page){
 
 // Patch initDash to load coins
 const _origID=initDash;
-initDash=function(){_origID.call(this);loadCoins();loadStreak()};
+initDash=function(){_origID.call(this);loadCoins();loadStreak();};
 
 // ===== COINS =====
 let userCoins=0;
@@ -2663,6 +2827,169 @@ async function loadLeaderboard(){
   }
 }
 
+
+// ═══════════════════════════════════════════════════════
+// CO-FOUNDER SYSTEM
+// ═══════════════════════════════════════════════════════
+let activeCFPostId=null,myUserSkills=[];
+
+function openCFPost(){document.getElementById('cf-post-ov').classList.remove('hidden')}
+function closeCFPost(){document.getElementById('cf-post-ov').classList.add('hidden');document.getElementById('cf-err').classList.add('hidden')}
+function openCFApply(){document.getElementById('cf-apply-ov').classList.remove('hidden')}
+function closeCFApply(){document.getElementById('cf-apply-ov').classList.add('hidden');document.getElementById('ca-err').classList.add('hidden');document.getElementById('ca-ok').classList.add('hidden')}
+
+async function submitCFPost(){
+  const startup=gi('cf-startup'),role=document.getElementById('cf-role').value,stage=document.getElementById('cf-stage').value,industry=document.getElementById('cf-industry').value,equity=gi('cf-equity'),commit=document.getElementById('cf-commit').value,location=gi('cf-location'),contact=document.getElementById('cf-contact').value,skills=gi('cf-skills'),desc=gi('cf-desc');
+  const err=document.getElementById('cf-err');err.classList.add('hidden');
+  if(!startup||!desc){err.textContent='Startup name and description are required.';err.classList.remove('hidden');return}
+  const btn=document.getElementById('cf-sub-btn');btn.disabled=true;btn.textContent='Posting...';
+  try{
+    await db.collection('cofounderPosts').add({
+      userId:CU.uid,founderName:UD?.name||CU.displayName||'Anonymous',founderPhoto:UD?.photoURL||'',founderHandle:UD?.handle||'',
+      startup,role,stage,industry,equity:equity||'Negotiable',commit,location:location||'Remote',contact,
+      skills:skills.split(',').map(s=>s.trim()).filter(Boolean),desc,
+      applicants:0,createdAt:fv.serverTimestamp()
+    });
+    closeCFPost();toast('Opportunity posted!');loadCFPosts();
+  }catch(e){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}
+  finally{btn.disabled=false;btn.textContent='Post Opportunity'}
+}
+
+function applyCF(postId,founderName,startup){
+  activeCFPostId=postId;
+  document.getElementById('cf-apply-header').innerHTML=`Applying for <strong>${esc(role||'Co-founder')}</strong> at <strong>${esc(startup||'startup')}</strong> by ${esc(founderName||'Founder')}`;
+  document.getElementById('ca-name').value=UD?.name||'';
+  document.getElementById('ca-skills').value=(UD?.skills||[]).join(', ');
+  document.getElementById('ca-exp').value=UD?.experience||'';
+  document.getElementById('ca-ok').classList.add('hidden');
+  document.getElementById('ca-err').classList.add('hidden');
+  openCFApply();
+}
+// Fix apply header - needs role param
+function applyCFPost(postId,founderName,startup,role){
+  activeCFPostId=postId;
+  document.getElementById('cf-apply-header').innerHTML=`Applying for <strong>${esc(role||'Co-founder')}</strong> at <strong>${esc(startup||'')}</strong> &mdash; by ${esc(founderName||'Founder')}`;
+  document.getElementById('ca-name').value=UD?.name||'';
+  document.getElementById('ca-skills').value=(UD?.skills||[]).join(', ');
+  document.getElementById('ca-exp').value=UD?.experience||'';
+  document.getElementById('ca-portfolio').value='';
+  document.getElementById('ca-why').value='';
+  document.getElementById('ca-ok').classList.add('hidden');
+  document.getElementById('ca-err').classList.add('hidden');
+  openCFApply();
+}
+
+async function submitCFApply(){
+  if(!activeCFPostId||!CU)return;
+  const name=gi('ca-name'),skills=gi('ca-skills'),exp=gi('ca-exp'),portfolio=gi('ca-portfolio'),why=gi('ca-why');
+  const err=document.getElementById('ca-err'),ok=document.getElementById('ca-ok');
+  err.classList.add('hidden');ok.classList.add('hidden');
+  if(!name||!why){err.textContent='Name and motivation are required.';err.classList.remove('hidden');return}
+  const btn=document.getElementById('ca-sub-btn');btn.disabled=true;btn.textContent='Sending...';
+  try{
+    // Check if already applied
+    const existing=await db.collection('cfApplications').where('postId','==',activeCFPostId).where('userId','==',CU.uid).limit(1).get();
+    if(!existing.empty){err.textContent='You already applied to this post.';err.classList.remove('hidden');return}
+    const postSnap=await db.collection('cofounderPosts').doc(activeCFPostId).get();
+    if(!postSnap.exists)throw new Error('Post not found');
+    const postData=postSnap.data();
+    // Save application
+    await db.collection('cfApplications').add({
+      postId:activeCFPostId,postOwner:postData.userId,userId:CU.uid,
+      applicantName:name,applicantPhoto:UD?.photoURL||'',applicantHandle:UD?.handle||'',
+      skills,experience:exp,portfolio,why,status:'pending',createdAt:fv.serverTimestamp()
+    });
+    // Increment applicants count
+    db.collection('cofounderPosts').doc(activeCFPostId).update({applicants:fv.increment(1)}).catch(()=>{});
+    // Notify post owner
+    mkNotif(postData.userId,'connect',{fromUid:CU.uid,fromName:UD?.name||'Someone',message:`${UD?.name||'Someone'} applied for the ${postData.role} role at ${postData.startup}`});
+    ok.classList.remove('hidden');
+    toast('Application sent!','ok');
+    setTimeout(()=>{closeCFApply();},2000);
+  }catch(e){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}
+  finally{btn.disabled=false;btn.textContent='Submit Application'}
+}
+
+// Calculate match score
+function calcMatchScore(post){
+  if(!UD)return 0;
+  let score=0;const max=100;
+  const mySkillsLow=(UD.skills||[]).map(s=>s.toLowerCase());
+  const reqSkills=(post.skills||[]).map(s=>s.toLowerCase());
+  // Skills match (40 pts)
+  if(reqSkills.length>0){const matched=reqSkills.filter(s=>mySkillsLow.some(ms=>ms.includes(s)||s.includes(ms)));score+=Math.round((matched.length/reqSkills.length)*40)}
+  // Role match (30 pts) - role in about/skills
+  const myRole=(UD.about||'').toLowerCase()+(UD.role||'').toLowerCase();
+  if(myRole.includes((post.role||'').toLowerCase())||myRole.includes('co-founder')||myRole.includes('cofounder'))score+=30;
+  else score+=10;
+  // Location (15 pts)
+  if((post.location||'').toLowerCase()==='remote')score+=15;
+  else if(UD.about&&UD.about.toLowerCase().includes((post.location||'').toLowerCase()))score+=15;
+  else score+=5;
+  // Has experience (15 pts)
+  if(UD.experience&&UD.experience.length>10)score+=15;
+  return Math.min(score,100);
+}
+
+async function loadCFPosts(){
+  const g=document.getElementById('cf-grid');if(!g)return;
+  g.innerHTML='<div class="spinner"></div>';
+  try{
+    let snap;
+    try{snap=await db.collection('cofounderPosts').orderBy('createdAt','desc').limit(30).get()}
+    catch(e){snap=await db.collection('cofounderPosts').limit(30).get()}
+    if(snap.empty){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No co-founder opportunities yet.<br>Be the first to post!</p></div>';return}
+    const posts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    // Add match scores and sort by score desc
+    const withScores=posts.map(p=>({...p,score:calcMatchScore(p)})).sort((a,b)=>b.score-a.score);
+    g.innerHTML=withScores.map(renderCFCard).join('');
+  }catch(e){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load opportunities.</p></div>'}
+}
+
+function renderCFCard(p){
+  const isOwn=p.userId===CU?.uid;
+  const score=p.score||0;
+  const isBestMatch=score>=70;
+  const stageColors={Idea:'stage-idea',MVP:'stage-mvp',Growing:'stage-growth',Funded:'stage-scale'};
+  const ph=p.founderPhoto?`<img src="${esc(p.founderPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(p.founderName||'F');
+  return `<div class="cf-card">
+    <div class="cf-card-hd">
+      <div style="flex:1">
+        <div class="cf-title">${esc(p.startup||'Untitled')}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap">
+          <span class="cf-role">${esc(p.role||'Co-founder')}</span>
+          <span class="stage-badge ${stageColors[p.stage]||'stage-idea'}">${esc(p.stage||'Idea')}</span>
+          ${isBestMatch?`<span class="cf-match"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Best Match ${score}%</span>`:''}
+        </div>
+      </div>
+      <div class="avatar" style="width:38px;height:38px;font-size:14px;flex-shrink:0;cursor:pointer;${p.founderPhoto?'background:none':''}" onclick="viewUser('${esc(p.userId)}')">${ph}</div>
+    </div>
+    <div class="cf-meta">
+      ${(p.skills||[]).slice(0,4).map(s=>`<span class="cf-tag">${esc(s)}</span>`).join('')}
+    </div>
+    <div class="cf-desc">${esc((p.desc||'').substring(0,120))}${(p.desc||'').length>120?'...':''}</div>
+    <div class="cf-foot">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--faint)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" style="vertical-align:middle;margin-right:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(p.location||'Remote')}</span>
+        <span style="font-size:11px;color:var(--faint)">${esc(p.equity||'Negotiable')}% equity</span>
+        <span style="font-size:11px;color:var(--faint)">${esc(p.commit||'Full-time')}</span>
+        ${p.applicants?`<span style="font-size:11px;color:var(--faint)">${p.applicants} applied</span>`:''}
+      </div>
+      <div style="display:flex;gap:6px">
+        ${!isOwn?`<button class="btn btn-ghost btn-xs" onclick="viewUser('${esc(p.userId)}')">View Founder</button>
+        <button class="btn btn-grad btn-xs" onclick="applyCFPost('${esc(p.id)}','${esc(p.founderName||'')}','${esc(p.startup||'')}','${esc(p.role||'')}')">Apply</button>`
+        :`<span style="font-size:11px;color:var(--faint);align-self:center">Your post · ${p.applicants||0} applicants</span>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Patch nav to load cofounder page ──
+const _origNavG=nav;
+nav=function(page){
+  _origNavG(page);
+  if(page==='cofounder')loadCFPosts();
+};
 </script>
 </body>
 </html>
