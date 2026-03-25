@@ -526,15 +526,28 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 .fcard h3{font-size:15px;font-weight:700;margin-bottom:5px}
 .fcard>p{font-size:13px;color:var(--muted);margin-bottom:18px}
 .fgrid{display:flex;flex-direction:column;gap:13px}
-.ai-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);display:flex;flex-direction:column;height:500px;max-width:660px;margin:0 auto}
-.ai-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
-.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.ai-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);display:flex;flex-direction:column;height:520px;max-width:660px;margin:0 auto}
+.ai-hd{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);transition:background .3s}
+.ai-dot.live{background:var(--green);box-shadow:0 0 6px rgba(16,185,129,.5)}
+.ai-dot.thinking{background:var(--purple);animation:ai-pulse .8s ease infinite}
+@keyframes ai-pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .ai-hd h3{font-size:14px;font-weight:700}
 .ai-hd p{font-size:11px;color:var(--faint)}
-.ai-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
-.ai-sys{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:var(--r);padding:14px;font-size:13px;color:#fcd34d;line-height:1.6;text-align:center;max-width:360px;margin:auto}
+.ai-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.ai-sys{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:var(--r);padding:14px;font-size:13px;color:#fcd34d;line-height:1.65;text-align:center;max-width:380px;margin:auto}
 .ai-input{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border)}
 .ai-input input{flex:1}
+.ai-msg-user{display:flex;justify-content:flex-end}
+.ai-msg-user .bubble{background:rgba(124,58,237,.28);color:#fff;padding:9px 13px;border-radius:16px 4px 16px 16px;font-size:13px;line-height:1.55;max-width:80%;word-break:break-word}
+.ai-msg-bot{display:flex;justify-content:flex-start;gap:9px;align-items:flex-start}
+.ai-msg-bot .ai-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:#fff}
+.ai-msg-bot .bubble{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--text);padding:9px 13px;border-radius:4px 16px 16px 16px;font-size:13px;line-height:1.65;max-width:80%;word-break:break-word;white-space:pre-wrap}
+.ai-typing{display:flex;align-items:center;gap:4px;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);width:fit-content}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:ai-bounce .9s ease infinite}
+.ai-typing span:nth-child(2){animation-delay:.15s}
+.ai-typing span:nth-child(3){animation-delay:.3s}
+@keyframes ai-bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 /* img lightbox */
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:3000;display:flex;align-items:center;justify-content:center;cursor:zoom-out}
 .lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;object-fit:contain}
@@ -1200,7 +1213,24 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
       <!-- NEX AI -->
       <div class="page" id="page-nexai">
         <div class="page-hd"><div class="page-hd-l"><h1>Nex AI</h1><p>Your intelligent startup assistant.</p></div></div>
-        <div class="ai-box"><div class="ai-hd"><div class="ai-dot"></div><div><h3>Nex AI</h3><p>Powered by NexBuildr Intelligence</p></div></div><div class="ai-msgs"><div class="ai-sys">API not connected yet.<br><br>Nex AI is under development. Once integrated you will get startup advice, pitch feedback, idea validation, and much more — right here.</div></div><div class="ai-input"><input type="text" placeholder="Ask Nex AI anything..." disabled><button class="btn btn-grad btn-sm" disabled style="opacity:.5;cursor:not-allowed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>
+        <div class="ai-box" id="ai-box">
+          <div class="ai-hd">
+            <div class="ai-dot" id="ai-status-dot"></div>
+            <div><h3>Nex AI</h3><p id="ai-status-text">Powered by NexBuildr Intelligence</p></div>
+          </div>
+          <div class="ai-msgs" id="ai-msgs">
+            <div class="ai-sys" id="ai-welcome">
+              <strong>Hi, I'm Nex AI.</strong><br><br>
+              Ask me anything about startups — idea validation, business models, funding, pitching, co-founders, or the Indian startup ecosystem.
+            </div>
+          </div>
+          <div class="ai-input">
+            <input type="text" id="ai-inp" placeholder="Ask anything about your startup..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)sendAI()">
+            <button class="btn btn-grad btn-sm" id="ai-send-btn" onclick="sendAI()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- CHAT -->
@@ -2990,26 +3020,123 @@ nav=function(page){
   _origNavG(page);
   if(page==='cofounder')loadCFPosts();
 };
-async function sendMessage() {
-  const input = document.getElementById("input").value;
 
-  const res = await fetch("/api/ai", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: input
-    })
-  });
+// ═══════════════════════════════════════════
+// NEX AI — production-ready Groq integration
+// ═══════════════════════════════════════════
+const aiHistory=[];// conversation history [{role,content}]
 
-  const data = await res.json();
-
-  console.log(data.reply);
-
-  // yaha UI me show karo
+function aiSetStatus(state){
+  const dot=document.getElementById('ai-status-dot');
+  const txt=document.getElementById('ai-status-text');
+  if(!dot||!txt)return;
+  dot.className='ai-dot'+(state==='live'?' live':state==='thinking'?' thinking':'');
+  txt.textContent=state==='live'?'Ready — ask me anything':state==='thinking'?'Thinking...':'Powered by NexBuildr Intelligence';
 }
-  
+
+function aiAppendUser(msg){
+  const c=document.getElementById('ai-msgs');
+  const welcome=document.getElementById('ai-welcome');
+  if(welcome)welcome.remove();
+  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-user"><div class="bubble">${esc(msg)}</div></div>`);
+  c.scrollTop=c.scrollHeight;
+}
+
+function aiAppendBot(text){
+  const c=document.getElementById('ai-msgs');
+  // Remove typing indicator
+  const typing=document.getElementById('ai-typing-ind');if(typing)typing.remove();
+  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-bot"><div class="ai-av">AI</div><div class="bubble">${esc(text)}</div></div>`);
+  c.scrollTop=c.scrollHeight;
+}
+
+function aiShowTyping(){
+  const c=document.getElementById('ai-msgs');
+  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-bot" id="ai-typing-ind"><div class="ai-av">AI</div><div class="ai-typing"><span></span><span></span><span></span></div></div>`);
+  c.scrollTop=c.scrollHeight;
+}
+
+function aiShowError(msg){
+  const c=document.getElementById('ai-msgs');
+  const typing=document.getElementById('ai-typing-ind');if(typing)typing.remove();
+  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-bot"><div class="ai-av">AI</div><div class="bubble" style="color:#f87171;border-color:rgba(239,68,68,.2)">${esc(msg)}</div></div>`);
+  c.scrollTop=c.scrollHeight;
+}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-inp');
+  const btn=document.getElementById('ai-send-btn');
+  if(!inp||!btn)return;
+  const msg=inp.value.trim();
+  if(!msg)return;
+  if(!CU){aiShowError('Please sign in to use Nex AI.');return}
+
+  // Update UI
+  inp.value='';
+  inp.disabled=true;
+  btn.disabled=true;
+  aiAppendUser(msg);
+  aiShowTyping();
+  aiSetStatus('thinking');
+
+  // Add to conversation history
+  aiHistory.push({role:'user',content:msg});
+
+  console.log('[NexAI] Sending request →', msg.substring(0,60));
+
+  try{
+    const res=await fetch('/api/ai',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:aiHistory})
+    });
+
+    console.log('[NexAI] Response status:', res.status);
+
+    if(!res.ok){
+      let errMsg='AI service unavailable. Try again.';
+      try{const d=await res.json();errMsg=d.error||errMsg}catch(_){}
+      console.error('[NexAI] API error:', res.status, errMsg);
+      // Remove failed message from history
+      aiHistory.pop();
+      aiShowError(errMsg);
+      aiSetStatus('live');
+      return;
+    }
+
+    const data=await res.json();
+    console.log('[NexAI] Reply received, chars:', data.reply?.length);
+
+    if(!data.reply){
+      aiHistory.pop();
+      aiShowError('Empty response from AI. Try again.');
+      aiSetStatus('live');
+      return;
+    }
+
+    // Add assistant reply to history
+    aiHistory.push({role:'assistant',content:data.reply});
+    aiAppendBot(data.reply);
+    aiSetStatus('live');
+
+  }catch(err){
+    console.error('[NexAI] Fetch failed:', err.message);
+    aiHistory.pop();
+    aiShowError('Connection error. Make sure you are online and try again.');
+    aiSetStatus('');
+  }finally{
+    inp.disabled=false;
+    btn.disabled=false;
+    inp.focus();
+  }
+}
+
+// Set AI status to live when dashboard loads
+const _origInitDash2=initDash;
+initDash=function(){
+  _origInitDash2.call(this);
+  setTimeout(()=>aiSetStatus('live'),500);
+};
 </script>
 </body>
 </html>
