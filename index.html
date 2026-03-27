@@ -1413,6 +1413,22 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
 
+// ── FIRESTORE HELPERS (resilient - no index required) ──
+// Safe get: always returns docs array, never throws
+async function safeGet(query){
+  try{const s=await query.get();return s.docs}catch(e){console.warn('[safeGet]',e.code,e.message);return[]}
+}
+// Safe onSnapshot with auto-fallback to .get() if index missing
+function safeSnap(query,onData,onErr){
+  let unsub=null;
+  unsub=query.onSnapshot(onData,async err=>{
+    console.warn('[safeSnap fallback]',err.code);
+    try{const s=await query.get();onData(s)}
+    catch(e){if(onErr)onErr(e)}
+  });
+  return unsub;
+}
+
 // ── STATE ──
 let CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
 
@@ -1598,13 +1614,13 @@ document.addEventListener('click',e=>{if(!e.target.closest('#topbar-search-wrap'
 // ── HOME STATS ──
 async function loadHomeStats(){
   try{
-    const[p,s]=await Promise.all([
-      db.collection('posts').where('userId','==',CU.uid).get().catch(()=>({size:0,docs:[]})),
-      db.collection('startups').where('userId','==',CU.uid).get().catch(()=>({size:0,docs:[]}))
+    const[pDocs,sDocs]=await Promise.all([
+      safeGet(db.collection('posts').where('userId','==',CU.uid)),
+      safeGet(db.collection('startups').where('userId','==',CU.uid))
     ]);
     const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
-    setEl('st-posts',p.size);
-    setEl('st-startups',s.size);
+    setEl('st-posts',pDocs.length);
+    setEl('st-startups',sDocs.length);
     setEl('st-connections',UD?.connectionCount||0);
     setEl('st-followers',UD?.followerCount||0);
     const allP=[];db.collection('posts').orderBy('createdAt','desc').limit(5).get().then(snap=>{
@@ -1747,36 +1763,19 @@ function loadFeed(){
   if(feedUnsub){feedUnsub();feedUnsub=null}
   c.innerHTML='<div class="spinner"></div>';
 
-  // Always use simple queries (no composite index required)
-  // Client-side sort handles ordering
-  let query;
-  if(feedFilter==='mine'){
-    query=db.collection('posts').where('userId','==',CU.uid).limit(40);
-  }else{
-    query=db.collection('posts').limit(60);
-  }
+  const feedQuery=feedFilter==='mine'
+    ?db.collection('posts').where('userId','==',CU.uid).limit(40)
+    :db.collection('posts').limit(60);
 
-  feedUnsub=query.onSnapshot(snap=>{
-    const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    if(feedFilter==='mine'&&!posts.length){
-      c.innerHTML='<div class="empty-state"><p>You have not posted yet.</p></div>';return;
-    }
-    renderFeedPosts(posts,c);
-  },err=>{
-    console.error('[loadFeed] Error:',err.code,err.message);
-    // Last resort: one-time get
-    db.collection('posts').limit(40).get()
-      .then(snap=>{
-        const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
-          .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-        renderFeedPosts(posts,c);
-      })
-      .catch(e=>{
-        console.error('[loadFeed] get() also failed:',e.message);
-        c.innerHTML='<div class="empty-state"><p>Could not load feed. Pull to refresh.</p></div>';
-      });
-  });
+  feedUnsub=safeSnap(feedQuery,
+    snap=>{
+      const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
+        .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+      if(feedFilter==='mine'&&!posts.length){c.innerHTML='<div class="empty-state"><p>You have not posted yet.</p></div>';return}
+      renderFeedPosts(posts,c);
+    },
+    ()=>{c.innerHTML='<div class="empty-state"><p>Refresh to load feed.</p></div>'}
+  );
 }
 
 function mkPost(p){
@@ -1935,17 +1934,15 @@ async function submitStartup(){
 
 function loadStartups(){
   const g=document.getElementById('sc-grid');
-  const renderStartups=snap=>{
-    const items=snap.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.views||0)-(a.views||0));
+  const renderStItems=docs=>{
+    const items=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.views||0)-(a.views||0));
     if(!items.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. List yours!</p></div>';return}
     g.innerHTML='';items.forEach((s,i)=>g.insertAdjacentHTML('beforeend',mkSC(s,i+1)));
   };
-  db.collection('startups').limit(40).onSnapshot(renderStartups,err=>{
-    console.error('[loadStartups]',err.message);
-    db.collection('startups').limit(40).get().then(renderStartups)
-      .catch(()=>{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet.</p></div>'});
-  });
+  safeSnap(db.collection('startups').limit(40),
+    snap=>renderStItems(snap.docs),
+    ()=>safeGet(db.collection('startups').limit(40)).then(renderStItems)
+  );
 }
 
 function mkSC(s,rank){
@@ -2004,9 +2001,10 @@ async function sendGlob(){
 function switchChat(tab){const g=tab==='global';document.getElementById('ct-glob').classList.toggle('active',g);document.getElementById('ct-pers').classList.toggle('active',!g);document.getElementById('cp-glob').classList.toggle('hidden',!g);document.getElementById('cp-pers').classList.toggle('hidden',g)}
 
 async function loadChatUsers(){
-  const c=document.getElementById('chat-ulist');c.innerHTML='<div class="spinner"></div>';
-  try{const snap=await db.collection('users').limit(30).get();renderChatUsers(snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()})))}
-  catch(e){c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">Failed to load.</div>'}
+  const c=document.getElementById('chat-ulist');if(!c)return;
+  c.innerHTML='<div class="spinner"></div>';
+  const docs=await safeGet(db.collection('users').limit(40));
+  renderChatUsers(docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()})));
 }
 function renderChatUsers(users){
   const c=document.getElementById('chat-ulist');
@@ -2117,34 +2115,12 @@ function renderNetUsers(){
   g.innerHTML=users.map(mkNetCard).join('');
 }
 async function loadNetwork(){
-  const g=document.getElementById('net-grid');
-  if(!g)return;
+  const g=document.getElementById('net-grid');if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
-  try{
-    const snap=await db.collection('users').limit(60).get();
-    console.log('[loadNetwork] Got',snap.size,'users');
-    allNetUsers=snap.docs
-      .filter(d=>d.id!==CU?.uid)
-      .map(d=>({id:d.id,...d.data()}));
-    if(!allNetUsers.length){
-      g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;
-    }
-    renderNetUsers();
-  }catch(e){
-    console.error('[loadNetwork] Error:',e.message);
-    // Retry once after 2s
-    setTimeout(async()=>{
-      try{
-        const snap=await db.collection('users').limit(60).get();
-        allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
-        if(allNetUsers.length)renderNetUsers();
-        else g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';
-      }catch(e2){
-        console.error('[loadNetwork] Retry failed:',e2.message);
-        g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Network unavailable. Check your connection.</p></div>';
-      }
-    },2000);
-  }
+  const docs=await safeGet(db.collection('users').limit(60));
+  allNetUsers=docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
+  if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;}
+  renderNetUsers();
 }
 function mkNetCard(u){
   const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
@@ -2259,22 +2235,17 @@ function loadNotifs(){
     }).join('');
   }
 
-  // Primary query with orderBy
+  // Simple query - no composite index needed
+  if(notifUnsub){notifUnsub();notifUnsub=null}
   notifUnsub=db.collection('notifications')
     .where('userId','==',CU.uid)
-    .orderBy('createdAt','desc')
     .limit(50)
     .onSnapshot(renderNotifSnap, err=>{
-      // Fallback: no orderBy (avoids composite index requirement)
-      console.warn('Notif index fallback:',err.code);
-      if(notifUnsub){notifUnsub();notifUnsub=null}
-      notifUnsub=db.collection('notifications')
-        .where('userId','==',CU.uid)
-        .limit(50)
-        .onSnapshot(renderNotifSnap, err2=>{
-          console.error('Notif load failed:',err2);
-          c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';
-        });
+      console.error('[loadNotifs]',err.code,err.message);
+      // Last resort: one-time get
+      db.collection('notifications').where('userId','==',CU.uid).limit(50).get()
+        .then(renderNotifSnap)
+        .catch(()=>{c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';});
     });
 }
 
@@ -2300,13 +2271,10 @@ async function mkNotif(userId,type,data){try{await db.collection('notifications'
 // ── PROFILE ──
 function loadProfile(){
   if(!CU)return;
-  // If UD missing for any reason, fetch fresh
   if(!UD){
-    console.warn('[loadProfile] UD is null, fetching from Firestore...');
-    db.collection('users').doc(CU.uid).get().then(s=>{
-      if(s.exists){UD=s.data();loadProfile();}
-      else{UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();}
-    }).catch(e=>console.error('[loadProfile] Fetch failed:',e.message));
+    db.collection('users').doc(CU.uid).get()
+      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
+      .catch(()=>{UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();});
     return;
   }
   const{name='',handle='',role='user',bio='',about='',photoURL=''}=UD;
@@ -2913,7 +2881,7 @@ async function loadLeaderboard(){
       console.warn('[loadLeaderboard] orderBy failed, using fallback');
       snap=await db.collection('users').limit(40).get();
     }
-    const users=snap.docs.map((d,i)=>({rank:i+1,id:d.id,...d.data()}));
+    const users=[...snap.docs].sort((a,b)=>(b.data().coins||0)-(a.data().coins||0)).map((d,i)=>({rank:i+1,id:d.id,...d.data()}));
     const myRank=users.findIndex(u=>u.id===CU?.uid);
     const myBox=document.getElementById('my-rank-box');
     if(myRank>=0&&myBox){
@@ -3065,19 +3033,11 @@ function calcMatchScore(post){
 async function loadCFPosts(){
   const g=document.getElementById('cf-grid');if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
-  try{
-    const snap=await db.collection('cofounderPosts').limit(30).get()
-      .catch(()=>db.collection('cofounderPosts').limit(30).get());
-    if(snap.empty){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No co-founder opportunities yet.<br>Be the first to post!</p></div>';return}
-    const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-    const withScores=posts.map(p=>({...p,score:calcMatchScore(p)})).sort((a,b)=>b.score-a.score);
-    g.innerHTML=withScores.map(renderCFCard).join('');
-    console.log('[loadCFPosts]',posts.length,'posts loaded');
-  }catch(e){
-    console.error('[loadCFPosts]',e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Could not load opportunities. Try refreshing.</p></div>';
-  }
+  const docs=await safeGet(db.collection('cofounderPosts').limit(30));
+  if(!docs.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No co-founder opportunities yet.<br>Be the first to post!</p></div>';return}
+  const posts=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  const withScores=posts.map(p=>({...p,score:calcMatchScore(p)})).sort((a,b)=>b.score-a.score);
+  g.innerHTML=withScores.map(renderCFCard).join('');
 }
 
 function renderCFCard(p){
