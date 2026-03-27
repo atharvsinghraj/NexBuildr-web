@@ -1494,13 +1494,33 @@ function authMsg(code){const m={'auth/user-not-found':'No account with this emai
 // ── AUTH STATE ──
 auth.onAuthStateChanged(async u=>{
   CU=u||null;
-  if(u){await loadUD();updateNavbar()}
-  else{UD=null;updateNavbar();loadPublicExplore()}
+  if(u){
+    try{await loadUD()}catch(e){
+      console.warn('[Auth] loadUD failed, using fallback:',e.message);
+      // Create a safe fallback UD so dashboard still loads
+      UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
+    }
+    updateNavbar();
+  }else{UD=null;updateNavbar();loadPublicExplore()}
 });
 
 async function loadUD(){
-  const s=await db.collection('users').doc(CU.uid).get();
-  if(s.exists){UD=s.data()}else{UD={name:CU.displayName||'',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};await makeUserDoc(CU.uid,{...UD,createdAt:fv.serverTimestamp()})}
+  try{
+    const s=await db.collection('users').doc(CU.uid).get();
+    if(s.exists){
+      UD=s.data();
+      console.log('[loadUD] User loaded:',UD.name||UD.email);
+    }else{
+      UD={name:CU.displayName||'',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
+      await makeUserDoc(CU.uid,{...UD,createdAt:fv.serverTimestamp()});
+      console.log('[loadUD] New user doc created');
+    }
+  }catch(e){
+    console.error('[loadUD] Error:',e.message);
+    // Minimal safe fallback
+    UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
+    throw e; // re-throw so auth handler knows
+  }
 }
 
 function showDash(){
@@ -1518,8 +1538,22 @@ function showHomepage(){
 function cleanup(){[feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(u=>{if(u)u()});feedUnsub=globChatUnsub=activeChatUnsub=notifUnsub=cmtUnsub=null;viewedPosts.clear();activeChatUid=null}
 
 function initDash(){
-  document.getElementById('welcome-name').textContent=UD?.name||CU?.displayName||'Builder';
-  loadHomeStats();loadFeed();loadGlobChat();loadChatUsers();loadStartups();loadNetwork();loadNotifs();loadProfile();nav('home');
+  // Sync UD one more time if possible
+  if(CU&&!UD){
+    db.collection('users').doc(CU.uid).get()
+      .then(s=>{if(s.exists){UD=s.data();loadProfile();}})
+      .catch(()=>{});
+  }
+  const nm=UD?.name||CU?.displayName||'Builder';
+  const el=document.getElementById('welcome-name');if(el)el.textContent=nm;
+  console.log('[initDash] Starting dashboard for',nm);
+  // Stagger loads slightly to avoid hammering Firestore simultaneously
+  loadProfile();
+  loadHomeStats();
+  setTimeout(()=>{loadFeed();loadGlobChat();},100);
+  setTimeout(()=>{loadChatUsers();loadStartups();},200);
+  setTimeout(()=>{loadNetwork();loadNotifs();loadCoins();loadStreak();},300);
+  nav('home');
 }
 
 // ── NAVIGATION ──
@@ -1564,11 +1598,15 @@ document.addEventListener('click',e=>{if(!e.target.closest('#topbar-search-wrap'
 // ── HOME STATS ──
 async function loadHomeStats(){
   try{
-    const[p,s]=await Promise.all([db.collection('posts').where('userId','==',CU.uid).get(),db.collection('startups').where('userId','==',CU.uid).get()]);
-    document.getElementById('st-posts').textContent=p.size;
-    document.getElementById('st-startups').textContent=s.size;
-    document.getElementById('st-connections').textContent=UD?.connectionCount||0;
-    document.getElementById('st-followers').textContent=UD?.followerCount||0;
+    const[p,s]=await Promise.all([
+      db.collection('posts').where('userId','==',CU.uid).get().catch(()=>({size:0,docs:[]})),
+      db.collection('startups').where('userId','==',CU.uid).get().catch(()=>({size:0,docs:[]}))
+    ]);
+    const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+    setEl('st-posts',p.size);
+    setEl('st-startups',s.size);
+    setEl('st-connections',UD?.connectionCount||0);
+    setEl('st-followers',UD?.followerCount||0);
     const allP=[];db.collection('posts').orderBy('createdAt','desc').limit(5).get().then(snap=>{
       snap.forEach(d=>allP.push({id:d.id,...d.data()}));
       const c=document.getElementById('home-activity');
@@ -1685,48 +1723,60 @@ function setFeedFilter(f){
   const el=document.getElementById('ff-'+f);if(el)el.classList.add('active');
   loadFeed();
 }
-function loadFeed(){
-  const c=document.getElementById('feed-list');
-  if(feedUnsub){feedUnsub();feedUnsub=null}
-  c.innerHTML='<div class="spinner"></div>';
-  if(feedFilter==='mine'){
-    feedUnsub=db.collection('posts').where('userId','==',CU.uid).orderBy('createdAt','desc').limit(40).onSnapshot(snap=>{
-      if(snap.empty){c.innerHTML='<div class="empty-state"><p>You haven\'t posted yet.</p></div>';return}
-      c.innerHTML='';
-      snap.forEach(doc=>{const p={id:doc.id,...doc.data()};c.insertAdjacentHTML('beforeend',mkPost(p))});
-    },err=>{
-      // fallback without orderBy
-      feedUnsub=db.collection('posts').where('userId','==',CU.uid).limit(40).onSnapshot(snap=>{
-        const posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-        c.innerHTML='';
-        if(!posts.length){c.innerHTML='<div class="empty-state"><p>You haven\'t posted yet.</p></div>';return}
-        posts.forEach(p=>c.insertAdjacentHTML('beforeend',mkPost(p)));
-      },()=>{c.innerHTML='<div class="empty-state"><p>Failed to load.</p></div>'});
-    });
-  } else {
-    // newest or top - use onSnapshot
-    feedUnsub=db.collection('posts').orderBy('createdAt','desc').limit(40).onSnapshot(snap=>{
-      if(snap.empty){c.innerHTML='<div class="empty-state"><p>No posts yet. Be the first!</p></div>';return}
-      let posts=snap.docs.map(d=>({id:d.id,...d.data()}));
-      if(feedFilter==='top'){
-        posts=posts.sort((a,b)=>{
-          const scoreA=(Array.isArray(a.likes)?a.likes.length:0)*3+(Array.isArray(a.views)?a.views.length:0);
-          const scoreB=(Array.isArray(b.likes)?b.likes.length:0)*3+(Array.isArray(b.views)?b.views.length:0);
-          return scoreB-scoreA;
-        });
-      }
-      c.innerHTML='';
-      posts.forEach(p=>{c.insertAdjacentHTML('beforeend',mkPost(p));if(p.userId!==CU?.uid&&!viewedPosts.has(p.id)){viewedPosts.add(p.id);db.collection('posts').doc(p.id).update({views:fv.arrayUnion(CU.uid)}).catch(()=>{})}});
-    },err=>{
-      // fallback
-      db.collection('posts').limit(40).get().then(snap=>{
-        let posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-        c.innerHTML='';
-        if(!posts.length){c.innerHTML='<div class="empty-state"><p>No posts yet.</p></div>';return}
-        posts.forEach(p=>c.insertAdjacentHTML('beforeend',mkPost(p)));
-      }).catch(()=>{c.innerHTML='<div class="empty-state"><p>Failed to load feed.</p></div>'});
+function renderFeedPosts(posts,c){
+  c.innerHTML='';
+  if(!posts.length){c.innerHTML='<div class="empty-state"><p>No posts yet. Be the first!</p></div>';return}
+  if(feedFilter==='top'){
+    posts=posts.sort((a,b)=>{
+      return ((Array.isArray(b.likes)?b.likes.length:0)*3+(Array.isArray(b.views)?b.views.length:0))
+            -((Array.isArray(a.likes)?a.likes.length:0)*3+(Array.isArray(a.views)?a.views.length:0));
     });
   }
+  posts.forEach(p=>{
+    c.insertAdjacentHTML('beforeend',mkPost(p));
+    if(p.userId!==CU?.uid&&!viewedPosts.has(p.id)){
+      viewedPosts.add(p.id);
+      db.collection('posts').doc(p.id).update({views:fv.arrayUnion(CU.uid)}).catch(()=>{});
+    }
+  });
+}
+
+function loadFeed(){
+  const c=document.getElementById('feed-list');
+  if(!c)return;
+  if(feedUnsub){feedUnsub();feedUnsub=null}
+  c.innerHTML='<div class="spinner"></div>';
+
+  // Always use simple queries (no composite index required)
+  // Client-side sort handles ordering
+  let query;
+  if(feedFilter==='mine'){
+    query=db.collection('posts').where('userId','==',CU.uid).limit(40);
+  }else{
+    query=db.collection('posts').limit(60);
+  }
+
+  feedUnsub=query.onSnapshot(snap=>{
+    const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    if(feedFilter==='mine'&&!posts.length){
+      c.innerHTML='<div class="empty-state"><p>You have not posted yet.</p></div>';return;
+    }
+    renderFeedPosts(posts,c);
+  },err=>{
+    console.error('[loadFeed] Error:',err.code,err.message);
+    // Last resort: one-time get
+    db.collection('posts').limit(40).get()
+      .then(snap=>{
+        const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
+          .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        renderFeedPosts(posts,c);
+      })
+      .catch(e=>{
+        console.error('[loadFeed] get() also failed:',e.message);
+        c.innerHTML='<div class="empty-state"><p>Could not load feed. Pull to refresh.</p></div>';
+      });
+  });
 }
 
 function mkPost(p){
@@ -1885,11 +1935,17 @@ async function submitStartup(){
 
 function loadStartups(){
   const g=document.getElementById('sc-grid');
-  db.collection('startups').orderBy('views','desc').limit(40).onSnapshot(snap=>{
-    if(snap.empty){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. List yours!</p></div>';return}
-    g.innerHTML='';let r=1;
-    snap.forEach(doc=>{const s={id:doc.id,...doc.data()};g.insertAdjacentHTML('beforeend',mkSC(s,r++))});
-  },()=>{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load.</p></div>'});
+  const renderStartups=snap=>{
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.views||0)-(a.views||0));
+    if(!items.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. List yours!</p></div>';return}
+    g.innerHTML='';items.forEach((s,i)=>g.insertAdjacentHTML('beforeend',mkSC(s,i+1)));
+  };
+  db.collection('startups').limit(40).onSnapshot(renderStartups,err=>{
+    console.error('[loadStartups]',err.message);
+    db.collection('startups').limit(40).get().then(renderStartups)
+      .catch(()=>{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet.</p></div>'});
+  });
 }
 
 function mkSC(s,rank){
@@ -1910,12 +1966,14 @@ function mkSC(s,rank){
 // ── GLOBAL CHAT ──
 function loadGlobChat(){
   const c=document.getElementById('glob-msgs');
+  if(!c)return;
   if(globChatUnsub)globChatUnsub();
-  globChatUnsub=db.collection('globalMessages').orderBy('timestamp','asc').limit(100).onSnapshot(snap=>{
+  const renderGlobSnap=snap=>{
     c.innerHTML='';
-    if(snap.empty){c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet.</div>';return}
-    snap.forEach(doc=>{
-      const m=doc.data();const own=m.senderId===CU?.uid;
+    if(snap.empty){c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet. Say hello!</div>';return}
+    const msgs=snap.docs.map(d=>d.data()).sort((a,b)=>(a.timestamp?.seconds||0)-(b.timestamp?.seconds||0));
+    msgs.forEach(m=>{
+      const own=m.senderId===CU?.uid;
       const ph=m.senderPhoto?`<img src="${esc(m.senderPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(m.senderName||'U');
       c.insertAdjacentHTML('beforeend',`<div class="cmsg ${own?'own':'other'}">
         ${!own?`<div class="avatar" style="width:28px;height:28px;font-size:10px;flex-shrink:0;cursor:pointer;${m.senderPhoto?'background:none':''}" onclick="viewUser('${esc(m.senderId)}')">${ph}</div>`:''}
@@ -1927,7 +1985,13 @@ function loadGlobChat(){
       </div>`);
     });
     c.scrollTop=c.scrollHeight;
-  },()=>{});
+  };
+  // Use simple query (no orderBy = no index required), sort client-side
+  globChatUnsub=db.collection('globalMessages').limit(100)
+    .onSnapshot(renderGlobSnap, err=>{
+      console.error('[loadGlobChat]',err.message);
+      c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">Could not load chat.</div>';
+    });
 }
 
 async function sendGlob(){
@@ -2053,9 +2117,34 @@ function renderNetUsers(){
   g.innerHTML=users.map(mkNetCard).join('');
 }
 async function loadNetwork(){
-  const g=document.getElementById('net-grid');g.innerHTML='<div class="spinner"></div>';
-  try{const snap=await db.collection('users').limit(40).get();allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other users yet.</p></div>';return}renderNetUsers()}
-  catch(e){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load.</p></div>'}
+  const g=document.getElementById('net-grid');
+  if(!g)return;
+  g.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection('users').limit(60).get();
+    console.log('[loadNetwork] Got',snap.size,'users');
+    allNetUsers=snap.docs
+      .filter(d=>d.id!==CU?.uid)
+      .map(d=>({id:d.id,...d.data()}));
+    if(!allNetUsers.length){
+      g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;
+    }
+    renderNetUsers();
+  }catch(e){
+    console.error('[loadNetwork] Error:',e.message);
+    // Retry once after 2s
+    setTimeout(async()=>{
+      try{
+        const snap=await db.collection('users').limit(60).get();
+        allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
+        if(allNetUsers.length)renderNetUsers();
+        else g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';
+      }catch(e2){
+        console.error('[loadNetwork] Retry failed:',e2.message);
+        g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Network unavailable. Check your connection.</p></div>';
+      }
+    },2000);
+  }
 }
 function mkNetCard(u){
   const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
@@ -2210,7 +2299,16 @@ async function mkNotif(userId,type,data){try{await db.collection('notifications'
 
 // ── PROFILE ──
 function loadProfile(){
-  if(!CU||!UD)return;
+  if(!CU)return;
+  // If UD missing for any reason, fetch fresh
+  if(!UD){
+    console.warn('[loadProfile] UD is null, fetching from Firestore...');
+    db.collection('users').doc(CU.uid).get().then(s=>{
+      if(s.exists){UD=s.data();loadProfile();}
+      else{UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();}
+    }).catch(e=>console.error('[loadProfile] Fetch failed:',e.message));
+    return;
+  }
   const{name='',handle='',role='user',bio='',about='',photoURL=''}=UD;
   mySkills=[...(UD.skills||[])];
   const av=document.getElementById('my-av');
@@ -2485,23 +2583,18 @@ function loadMyPosts(){
 }
 
 // Patch nav to trigger profile posts & build path
-const _origNavFn=nav;
-nav=function(page){
-  _origNavFn(page);
-  if(page==='profile')setTimeout(loadMyPosts,80);
-  if(page==='buildpath'){loadBuildPath();loadStreak();const bc=document.getElementById('bp-coin-count');if(bc)bc.textContent=userCoins}
-  if(page==='leaderboard')loadLeaderboard();
-};
+// nav patch consolidated into _navBase above
 
 // Patch initDash to load coins
-const _origID=initDash;
-initDash=function(){_origID.call(this);loadCoins();loadStreak();};
+// initDash patch: coins+streak now handled inside initDash directly
 
 // ===== COINS =====
 let userCoins=0;
 function loadCoins(){
   if(!CU)return;
-  db.collection('users').doc(CU.uid).get().then(d=>{if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay()}});
+  db.collection('users').doc(CU.uid).get()
+    .then(d=>{if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay()}})
+    .catch(e=>console.warn('[loadCoins]',e.message));
 }
 function updateCoinDisplay(){
   const el=document.getElementById('coin-count'),el2=document.getElementById('bp-coin-count');
@@ -2790,20 +2883,22 @@ async function checkBP(chosen,evt){
 // ===== DAILY STREAK =====
 function loadStreak(){
   if(!CU)return;
-  db.collection('users').doc(CU.uid).get().then(d=>{
-    const data=d.data()||{};
-    let streak=data.streak||0;
-    const lastActive=data.lastActive;
-    const today=new Date().toDateString();
-    if(lastActive){
-      const last=new Date(lastActive).toDateString();
-      const yesterday=new Date(Date.now()-86400000).toDateString();
-      if(last===today){// already active today, keep streak
-      }else if(last===yesterday){streak+=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
-      else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
-    }else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
-    const el=document.getElementById('streak-count');if(el)el.textContent=streak;
-  });
+  db.collection('users').doc(CU.uid).get()
+    .then(d=>{
+      const data=d.data()||{};
+      let streak=data.streak||0;
+      const lastActive=data.lastActive;
+      const today=new Date().toDateString();
+      if(lastActive){
+        const last=new Date(lastActive).toDateString();
+        const yesterday=new Date(Date.now()-86400000).toDateString();
+        if(last===today){/* already active */}
+        else if(last===yesterday){streak+=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+        else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+      }else{streak=1;db.collection('users').doc(CU.uid).update({streak,lastActive:today}).catch(()=>{})}
+      const el=document.getElementById('streak-count');if(el)el.textContent=streak;
+    })
+    .catch(e=>console.warn('[loadStreak]',e.message));
 }
 
 // ===== LEADERBOARD =====
@@ -2811,7 +2906,13 @@ async function loadLeaderboard(){
   const lb=document.getElementById('lb-list');if(!lb)return;
   lb.innerHTML='<div class="spinner"></div>';
   try{
-    const snap=await db.collection('users').orderBy('coins','desc').limit(20).get();
+    // Try with orderBy first, fallback to client-side sort
+    let snap;
+    try{snap=await db.collection('users').orderBy('coins','desc').limit(20).get()}
+    catch(e){
+      console.warn('[loadLeaderboard] orderBy failed, using fallback');
+      snap=await db.collection('users').limit(40).get();
+    }
     const users=snap.docs.map((d,i)=>({rank:i+1,id:d.id,...d.data()}));
     const myRank=users.findIndex(u=>u.id===CU?.uid);
     const myBox=document.getElementById('my-rank-box');
@@ -2965,15 +3066,18 @@ async function loadCFPosts(){
   const g=document.getElementById('cf-grid');if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
   try{
-    let snap;
-    try{snap=await db.collection('cofounderPosts').orderBy('createdAt','desc').limit(30).get()}
-    catch(e){snap=await db.collection('cofounderPosts').limit(30).get()}
+    const snap=await db.collection('cofounderPosts').limit(30).get()
+      .catch(()=>db.collection('cofounderPosts').limit(30).get());
     if(snap.empty){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No co-founder opportunities yet.<br>Be the first to post!</p></div>';return}
-    const posts=snap.docs.map(d=>({id:d.id,...d.data()}));
-    // Add match scores and sort by score desc
+    const posts=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     const withScores=posts.map(p=>({...p,score:calcMatchScore(p)})).sort((a,b)=>b.score-a.score);
     g.innerHTML=withScores.map(renderCFCard).join('');
-  }catch(e){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load opportunities.</p></div>'}
+    console.log('[loadCFPosts]',posts.length,'posts loaded');
+  }catch(e){
+    console.error('[loadCFPosts]',e.message);
+    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Could not load opportunities. Try refreshing.</p></div>';
+  }
 }
 
 function renderCFCard(p){
@@ -3014,11 +3118,21 @@ function renderCFCard(p){
   </div>`;
 }
 
-// ── Patch nav to load cofounder page ──
-const _origNavG=nav;
+// ── CLEAN NAV OVERRIDE (consolidated all patches) ──
+// Override nav directly to handle all page-specific loads
+const _navBase=nav;
 nav=function(page){
-  _origNavG(page);
-  if(page==='cofounder')loadCFPosts();
+  try{_navBase(page)}catch(e){console.error('[nav] base error:',e)}
+  // Page-specific loads
+  switch(page){
+    case 'cofounder': loadCFPosts(); break;
+    case 'buildpath': loadBuildPath(); setTimeout(()=>{loadStreak();const bc=document.getElementById('bp-coin-count');if(bc)bc.textContent=userCoins},100); break;
+    case 'leaderboard': loadLeaderboard(); break;
+    case 'profile': setTimeout(loadMyPosts,100); break;
+    case 'feed': if(!feedUnsub)loadFeed(); break;
+    case 'network': if(!allNetUsers.length)loadNetwork(); break;
+    case 'notifications': if(!notifUnsub)loadNotifs(); break;
+  }
 };
 
 // ═══════════════════════════════════════════
@@ -3132,10 +3246,11 @@ async function sendAI(){
 }
 
 // Set AI status to live when dashboard loads
-const _origInitDash2=initDash;
+// AI status set on dashboard load
+const _aiInitPatch=initDash;
 initDash=function(){
-  _origInitDash2.call(this);
-  setTimeout(()=>aiSetStatus('live'),500);
+  _aiInitPatch.call(this);
+  setTimeout(()=>aiSetStatus('live'),800);
 };
 </script>
 </body>
