@@ -1413,12 +1413,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
 
+// ── STATE ── (declared first to avoid temporal dead zone)
+var CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
+
 // ── FIRESTORE HELPERS (resilient - no index required) ──
-// Safe get: always returns docs array, never throws
 async function safeGet(query){
   try{const s=await query.get();return s.docs}catch(e){console.warn('[safeGet]',e.code,e.message);return[]}
 }
-// Safe onSnapshot with auto-fallback to .get() if index missing
 function safeSnap(query,onData,onErr){
   let unsub=null;
   unsub=query.onSnapshot(onData,async err=>{
@@ -1430,8 +1431,6 @@ function safeSnap(query,onData,onErr){
 }
 
 // ── STATE ──
-let CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
-
 // ── HOMEPAGE ──
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
 function toggleMNav(){document.getElementById('mobile-nav').classList.toggle('open')}
