@@ -1430,7 +1430,6 @@ function safeSnap(query,onData,onErr){
   return unsub;
 }
 
-// ── STATE ──
 // ── HOMEPAGE ──
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
 function toggleMNav(){document.getElementById('mobile-nav').classList.toggle('open')}
@@ -1510,31 +1509,30 @@ function authMsg(code){const m={'auth/user-not-found':'No account with this emai
 auth.onAuthStateChanged(async u=>{
   CU=u||null;
   if(u){
+    console.log('[Auth] User signed in:',u.uid);
     try{await loadUD()}catch(e){
-      console.warn('[Auth] loadUD failed, using fallback:',e.message);
-      // Create a safe fallback UD so dashboard still loads
-      UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
+      console.warn('[Auth] loadUD fallback:',e.message);
+      UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
     updateNavbar();
-  }else{UD=null;updateNavbar();loadPublicExplore()}
+  }else{
+    UD=null;_dashLoaded=false;
+    // Unsub all listeners on logout
+    [feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(u=>{try{if(u)u()}catch(_){}});
+    feedUnsub=globChatUnsub=activeChatUnsub=notifUnsub=cmtUnsub=null;
+    updateNavbar();loadPublicExplore();
+  }
 });
 
 async function loadUD(){
-  try{
-    const s=await db.collection('users').doc(CU.uid).get();
-    if(s.exists){
-      UD=s.data();
-      console.log('[loadUD] User loaded:',UD.name||UD.email);
-    }else{
-      UD={name:CU.displayName||'',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
-      await makeUserDoc(CU.uid,{...UD,createdAt:fv.serverTimestamp()});
-      console.log('[loadUD] New user doc created');
-    }
-  }catch(e){
-    console.error('[loadUD] Error:',e.message);
-    // Minimal safe fallback
-    UD={name:CU.displayName||'Builder',handle:'user'+CU.uid.slice(0,6),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};
-    throw e; // re-throw so auth handler knows
+  const s=await db.collection('users').doc(CU.uid).get();
+  if(s.exists){
+    UD=s.data();
+    console.log('[loadUD] Loaded:',UD.name||UD.email||CU.uid);
+  }else{
+    UD={name:CU.displayName||'',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0,createdAt:new Date().toISOString()};
+    try{await db.collection('users').doc(CU.uid).set({...UD,createdAt:fv.serverTimestamp()});}catch(_){}
+    console.log('[loadUD] New user created');
   }
 }
 
@@ -1552,22 +1550,31 @@ function showHomepage(){
 }
 function cleanup(){[feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(u=>{if(u)u()});feedUnsub=globChatUnsub=activeChatUnsub=notifUnsub=cmtUnsub=null;viewedPosts.clear();activeChatUid=null}
 
+var _dashLoaded=false;
 function initDash(){
-  // Sync UD one more time if possible
+  if(_dashLoaded){
+    // Just refresh nav and profile data on re-open
+    const el=document.getElementById('welcome-name');if(el)el.textContent=UD?.name||CU?.displayName||'Builder';
+    nav('home');return;
+  }
+  _dashLoaded=true;
+
   if(CU&&!UD){
     db.collection('users').doc(CU.uid).get()
-      .then(s=>{if(s.exists){UD=s.data();loadProfile();}})
-      .catch(()=>{});
+      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
+      .catch(()=>{UD=UD||{name:CU.displayName||'Builder',coins:0};loadProfile();});
   }
   const nm=UD?.name||CU?.displayName||'Builder';
   const el=document.getElementById('welcome-name');if(el)el.textContent=nm;
-  console.log('[initDash] Starting dashboard for',nm);
-  // Stagger loads slightly to avoid hammering Firestore simultaneously
+  console.log('[initDash] Loading dashboard for:',nm);
   loadProfile();
   loadHomeStats();
-  setTimeout(()=>{loadFeed();loadGlobChat();},100);
-  setTimeout(()=>{loadChatUsers();loadStartups();},200);
-  setTimeout(()=>{loadNetwork();loadNotifs();loadCoins();loadStreak();},300);
+  setTimeout(()=>{loadFeed();},80);
+  setTimeout(()=>{loadGlobChat();loadChatUsers();},160);
+  setTimeout(()=>{loadStartups();},240);
+  setTimeout(()=>{loadNetwork();},320);
+  setTimeout(()=>{loadNotifs();},400);
+  setTimeout(()=>{loadCoins();loadStreak();},480);
   nav('home');
 }
 
@@ -2272,8 +2279,8 @@ function loadProfile(){
   if(!CU)return;
   if(!UD){
     db.collection('users').doc(CU.uid).get()
-      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
-      .catch(()=>{UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',connectionCount:0,followerCount:0,followingCount:0};loadProfile();});
+      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
+      .catch(()=>{UD={name:CU.displayName||'Builder',coins:0,connectionCount:0,followerCount:0,followingCount:0,skills:[]};loadProfile();});
     return;
   }
   const{name='',handle='',role='user',bio='',about='',photoURL=''}=UD;
@@ -3204,12 +3211,11 @@ async function sendAI(){
   }
 }
 
-// Set AI status to live when dashboard loads
-// AI status set on dashboard load
-const _aiInitPatch=initDash;
-initDash=function(){
-  _aiInitPatch.call(this);
-  setTimeout(()=>aiSetStatus('live'),800);
+// Set AI status live on nav to nexai page
+const _navForAI=nav;
+nav=function(page){
+  _navForAI(page);
+  if(page==='nexai')setTimeout(()=>aiSetStatus('live'),400);
 };
 </script>
 </body>
