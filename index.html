@@ -3104,7 +3104,106 @@ nav=function(page){
 // ═══════════════════════════════════════════
 // NEX AI — production-ready Groq integration
 // ═══════════════════════════════════════════
-const aiHistory=[];// conversation history [{role,content}]
+const aiHistory=[];
+const AI_FREE_LIMIT=10;// free users get 10 queries per day
+
+async function checkAILimit(){
+  if(!CU||!db)return{allowed:true};
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const ref=db.collection('users').doc(CU.uid);
+    const snap=await ref.get();
+    const data=snap.data()||{};
+    const plan=data.plan||'free';
+    if(plan==='pro'||plan==='premium')return{allowed:true,plan};
+    const usageKey='aiUsage_'+today;
+    const used=data[usageKey]||0;
+    if(used>=AI_FREE_LIMIT)return{allowed:false,used,limit:AI_FREE_LIMIT,plan:'free'};
+    // increment usage
+    await ref.update({[usageKey]:used+1}).catch(()=>{});
+    return{allowed:true,used:used+1,limit:AI_FREE_LIMIT,plan:'free'};
+  }catch(e){
+    console.warn('[AI limit check failed]',e.message);
+    return{allowed:true};// allow on error
+  }
+}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-inp');
+  const btn=document.getElementById('ai-send-btn');
+  if(!inp||!btn)return;
+  const msg=inp.value.trim();
+  if(!msg)return;
+  if(!CU){aiShowError('Please sign in to use Nex AI.');return}
+
+  // Check usage limit
+  const limit=await checkAILimit();
+  if(!limit.allowed){
+    aiShowError(`You have used all ${limit.limit} free AI queries for today. Upgrade to Pro for unlimited access.`);
+    return;
+  }
+
+  inp.value='';
+  inp.disabled=true;
+  btn.disabled=true;
+  aiAppendUser(msg);
+  aiShowTyping();
+  aiSetStatus('thinking');
+
+  aiHistory.push({role:'user',content:msg});
+  console.log('[NexAI] Sending →',msg.substring(0,60));
+
+  try{
+    const res=await fetch('/api/ai',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:aiHistory})
+    });
+
+    console.log('[NexAI] Status:',res.status);
+
+    if(!res.ok){
+      let errMsg='AI service unavailable. Try again.';
+      try{const d=await res.json();errMsg=d.error||errMsg;}catch(_){}
+      console.error('[NexAI] Error:',res.status,errMsg);
+      aiHistory.pop();
+      aiShowError(errMsg);
+      aiSetStatus('live');
+      return;
+    }
+
+    const data=await res.json();
+    if(!data.reply){
+      aiHistory.pop();
+      aiShowError('Empty response. Try again.');
+      aiSetStatus('live');
+      return;
+    }
+
+    aiHistory.push({role:'assistant',content:data.reply});
+    aiAppendBot(data.reply);
+    aiSetStatus('live');
+    console.log('[NexAI] Reply received, chars:',data.reply.length);
+
+    // Show remaining queries for free users
+    if(limit.plan==='free'&&limit.used){
+      const remaining=AI_FREE_LIMIT-limit.used;
+      if(remaining<=3&&remaining>0){
+        setTimeout(()=>aiShowError(`${remaining} free quer${remaining===1?'y':'ies'} remaining today. Upgrade to Pro for unlimited.`),1000);
+      }
+    }
+
+  }catch(err){
+    console.error('[NexAI] Fetch error:',err.message);
+    aiHistory.pop();
+    aiShowError('Connection error. Check your internet and try again.');
+    aiSetStatus('');
+  }finally{
+    inp.disabled=false;
+    btn.disabled=false;
+    inp.focus();
+  }
+}
 
 function aiSetStatus(state){
   const dot=document.getElementById('ai-status-dot');
@@ -3124,9 +3223,10 @@ function aiAppendUser(msg){
 
 function aiAppendBot(text){
   const c=document.getElementById('ai-msgs');
-  // Remove typing indicator
   const typing=document.getElementById('ai-typing-ind');if(typing)typing.remove();
-  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-bot"><div class="ai-av">AI</div><div class="bubble">${esc(text)}</div></div>`);
+  // Always coerce to string — prevents [object Object]
+  const safeText=typeof text==='string'?text:(text?.reply||text?.content||JSON.stringify(text)||'No response');
+  c.insertAdjacentHTML('beforeend',`<div class="ai-msg-bot"><div class="ai-av">AI</div><div class="bubble">${esc(safeText)}</div></div>`);
   c.scrollTop=c.scrollHeight;
 }
 
@@ -3143,73 +3243,6 @@ function aiShowError(msg){
   c.scrollTop=c.scrollHeight;
 }
 
-async function sendAI(){
-  const inp=document.getElementById('ai-inp');
-  const btn=document.getElementById('ai-send-btn');
-  if(!inp||!btn)return;
-  const msg=inp.value.trim();
-  if(!msg)return;
-  if(!CU){aiShowError('Please sign in to use Nex AI.');return}
-
-  // Update UI
-  inp.value='';
-  inp.disabled=true;
-  btn.disabled=true;
-  aiAppendUser(msg);
-  aiShowTyping();
-  aiSetStatus('thinking');
-
-  // Add to conversation history
-  aiHistory.push({role:'user',content:msg});
-
-  console.log('[NexAI] Sending request →', msg.substring(0,60));
-
-  try{
-    const res=await fetch('/api/ai',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:aiHistory})
-    });
-
-    console.log('[NexAI] Response status:', res.status);
-
-    if(!res.ok){
-      let errMsg='AI service unavailable. Try again.';
-      try{const d=await res.json();errMsg=d.error||errMsg}catch(_){}
-      console.error('[NexAI] API error:', res.status, errMsg);
-      // Remove failed message from history
-      aiHistory.pop();
-      aiShowError(errMsg);
-      aiSetStatus('live');
-      return;
-    }
-
-    const data=await res.json();
-    console.log('[NexAI] Reply received, chars:', data.reply?.length);
-
-    if(!data.reply){
-      aiHistory.pop();
-      aiShowError('Empty response from AI. Try again.');
-      aiSetStatus('live');
-      return;
-    }
-
-    // Add assistant reply to history
-    aiHistory.push({role:'assistant',content:data.reply});
-    aiAppendBot(data.reply);
-    aiSetStatus('live');
-
-  }catch(err){
-    console.error('[NexAI] Fetch failed:', err.message);
-    aiHistory.pop();
-    aiShowError('Connection error. Make sure you are online and try again.');
-    aiSetStatus('');
-  }finally{
-    inp.disabled=false;
-    btn.disabled=false;
-    inp.focus();
-  }
-}
 
 // Set AI status live on nav to nexai page
 const _navForAI=nav;
