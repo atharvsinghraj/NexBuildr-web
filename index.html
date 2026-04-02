@@ -8,7 +8,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0A0A0A;--bg2:#111111;--bg3:#141414;--bg4:#1a1a1a;
+  --bg:#000000;--bg2:#0A0A0A;--bg3:#0F0F0F;--bg4:#141414;
   --border:#1F1F1F;--border2:#2a2a2a;
   --text:#FFFFFF;--muted:#A1A1AA;--faint:#52525B;
   --grad:linear-gradient(135deg,#7C3AED,#EC4899);
@@ -25,7 +25,7 @@ button{cursor:pointer;font-family:var(--sans);border:none;background:none}
 input,textarea,select{font-family:var(--sans);background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);border-radius:var(--r);padding:10px 14px;width:100%;font-size:14px;outline:none;transition:border-color .2s}
 input:focus,textarea:focus,select:focus{border-color:var(--purple)}
 input::placeholder,textarea::placeholder{color:var(--faint)}
-select option{background:#1a1a24}
+select option{background:#0A0A0A}
 textarea{resize:vertical;min-height:90px}
 img{display:block}
 ::-webkit-scrollbar{width:5px;height:5px}
@@ -42,7 +42,7 @@ img{display:block}
 .btn-green:hover{background:rgba(16,185,129,.2)}
 .btn-red{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
 .btn-red:hover{background:rgba(239,68,68,.18)}
-.card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:22px;transition:border-color .2s}
+.card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:22px;transition:border-color .2s}
 .card:hover{border-color:#2a2a2a}
 .badge-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,.14);border:1px solid rgba(124,58,237,.28);color:#a78bfa;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px}
 .sec-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
@@ -67,7 +67,7 @@ img{display:block}
 
 /* ── CO-FOUNDER CARDS ── */
 .cf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-.cf-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:20px;transition:border-color .2s;display:flex;flex-direction:column;gap:10px}
+.cf-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:20px;transition:border-color .2s;display:flex;flex-direction:column;gap:10px}
 .cf-card:hover{border-color:#7C3AED}
 .cf-card-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .cf-title{font-size:15px;font-weight:700;margin-bottom:3px;line-height:1.3}
@@ -100,7 +100,7 @@ img{display:block}
 @keyframes slideR{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
 
 /* ══════════════════ NAVBAR ══════════════════ */
-#navbar{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:1140px;background:rgba(10,10,10,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid #1F1F1F;border-radius:14px;padding:0 22px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:1000;transition:border-color .2s}
+#navbar{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:1140px;background:rgba(0,0,0,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid #1F1F1F;border-radius:14px;padding:0 22px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:1000;transition:border-color .2s}
 #navbar.scrolled{border-color:#2a2a2a}
 .logo{font-family:var(--head);font-size:19px;font-weight:700;display:flex;align-items:center}
 .logo .nex{color:#fff}.logo .buildr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -145,9 +145,9 @@ img{display:block}
 .icard p{font-size:12px;color:var(--muted);line-height:1.6}
 
 /* ── EXPLORE PAGE ── */
-#explore-page{position:fixed;inset:0;background:#0A0A0A;z-index:1100;overflow-y:auto;display:none}
+#explore-page{position:fixed;inset:0;background:#000;z-index:1100;overflow-y:auto;display:none}
 #explore-page.open{display:block}
-.explore-page-nav{position:sticky;top:0;background:#0A0A0A;border-bottom:1px solid #1F1F1F;padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:1101}
+.explore-page-nav{position:sticky;top:0;background:#000;border-bottom:1px solid #1F1F1F;padding:12px 20px;display:flex;align-items:center;gap:12px;z-index:1101}
 .explore-pub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .exp-list-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;transition:all .2s;cursor:pointer}
 .exp-list-card:hover{border-color:rgba(124,58,237,.35);background:rgba(124,58,237,.04)}
@@ -222,7 +222,7 @@ img{display:block}
 .step-b h3{font-size:16px;font-weight:600;margin-bottom:5px}
 .step-b p{font-size:13px;color:var(--muted);line-height:1.65}
 .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px}
-.test-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:24px}
+.test-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:24px}
 .test-stars{display:flex;gap:2px;margin-bottom:14px}
 .test-stars svg{width:13px;height:13px;fill:#f59e0b;stroke:none}
 .test-q{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:18px;font-style:italic}
@@ -231,7 +231,7 @@ img{display:block}
 .test-name{font-size:13px;font-weight:600}
 .test-role{font-size:11px;color:var(--faint)}
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px;align-items:start}
-.price-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:28px;transition:border-color .2s}
+.price-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:28px;transition:border-color .2s}
 .price-card.pop{background:#161024;border-color:#7C3AED;transform:scale(1.02)}
 .ppop-badge{display:inline-block;background:var(--grad);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:100px;margin-bottom:18px}
 .price-name{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:7px}
@@ -249,7 +249,7 @@ img{display:block}
 .faq-item.open .faq-q svg{transform:rotate(180deg);stroke:var(--purple)}
 .faq-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
 .faq-body-in{padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.7}
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 30px}
+footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
 .foot-brand p{font-size:13px;color:var(--muted);line-height:1.65;max-width:240px;margin:10px 0 18px}
 .socials{display:flex;gap:8px}
@@ -266,7 +266,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .18s ease}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.modal{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r3);padding:28px;width:100%;max-width:420px;animation:slideUp .18s ease;box-shadow:0 16px 48px rgba(0,0,0,.7)}
+.modal{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r3);padding:28px;width:100%;max-width:420px;animation:slideUp .18s ease;box-shadow:0 16px 48px rgba(0,0,0,.7)}
 .modal-lg{max-width:580px}
 .modal-xl{max-width:740px}
 .modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
@@ -287,8 +287,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 .modal-div::before,.modal-div::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ══════════════════ DASHBOARD LAYOUT ══════════════════ */
-#dashboard{display:flex;min-height:100vh;background:var(--bg)}
-#sidebar{width:var(--sw);background:#0D0D0D;border-right:1px solid #1F1F1F;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto}
+#dashboard{display:flex;min-height:100vh;background:#000}
+#sidebar{width:var(--sw);background:#000;border-right:1px solid #1A1A1A;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto}
 .sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .sb-logo .logo{font-size:17px}
 .sb-close{display:none;background:none;border:none;color:var(--muted);cursor:pointer}
@@ -307,7 +307,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150}
 .sb-overlay.open{display:block}
 #main{flex:1;margin-left:var(--sw);display:flex;flex-direction:column;min-height:100vh}
-#topbar{height:var(--th);background:#0D0D0D;border-bottom:1px solid #1F1F1F;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:100}
+#topbar{height:var(--th);background:#000;border-bottom:1px solid #1A1A1A;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:100}
 #menu-btn{display:none;background:none;border:none;padding:5px;cursor:pointer;color:var(--muted)}
 #menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9}
 #page-title{font-size:14px;font-weight:600;color:var(--muted)}
@@ -349,7 +349,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
 /* ── FEED ── */
 .feed-wrap{display:flex;flex-direction:column;gap:16px;max-width:660px;margin:0 auto}
-.post-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);overflow:hidden;transition:border-color .2s}
+.post-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);overflow:hidden;transition:border-color .2s}
 .post-card:hover{border-color:#2a2a2a}
 .post-body{padding:18px 18px 0}
 .post-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -384,7 +384,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
 /* ── STARTUP SHOWCASE ── */
 .sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
-.sc-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:16px;transition:border-color .2s;display:flex;align-items:center;gap:14px}
+.sc-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:16px;transition:border-color .2s;display:flex;align-items:center;gap:14px}
 .sc-card:hover{border-color:#7C3AED}
 .sc-logo{width:46px;height:46px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:var(--head);font-size:17px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
 .sc-logo img{width:100%;height:100%;object-fit:cover}
@@ -442,7 +442,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
 /* ── PROFILE ── */
 .profile-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
-.profile-banner{height:130px;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(236,72,153,.12));position:relative}
+.profile-banner{height:140px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,0,0,.8));position:relative;background-size:cover;background-position:center;transition:background-image .3s}
 .profile-body{padding:0 22px 22px}
 .pav-wrap{margin-top:-38px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .pav-lg{width:72px;height:72px;font-size:26px;font-weight:700;border:3px solid var(--bg2);cursor:pointer;position:relative}
@@ -482,7 +482,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
 /* ── NETWORK ── */
 .net-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.net-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:18px;text-align:center;transition:border-color .2s}
+.net-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:18px;text-align:center;transition:border-color .2s}
 .net-card:hover{border-color:#7C3AED}
 .net-av{width:52px;height:52px;font-size:18px;font-weight:700;margin:0 auto 10px}
 .net-name{font-size:14px;font-weight:600;margin-bottom:2px;cursor:pointer}
@@ -492,7 +492,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
 /* ── NOTIFICATIONS ── */
 .notif-list{display:flex;flex-direction:column;gap:8px;max-width:660px}
-.notif-item{display:flex;align-items:flex-start;gap:12px;background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);padding:14px 16px;transition:border-color .2s}
+.notif-item{display:flex;align-items:flex-start;gap:12px;background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:14px 16px;transition:border-color .2s}
 .notif-item.unread{background:rgba(124,58,237,.06);border-color:rgba(124,58,237,.2)}
 .ni-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ni-icon.like{background:rgba(236,72,153,.12)}.ni-icon.comment{background:rgba(124,58,237,.12)}
@@ -902,7 +902,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
       <div class="foot-brand"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><p>The community platform for students and young entrepreneurs to build, connect, and launch.</p><div class="socials"><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a></div></div>
       <div class="foot-col"><h5>Legal</h5><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
       <div class="foot-col"><h5>Platform</h5><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a onclick="scrollToExplore()" style="cursor:pointer">Explore</a></li></ul></div>
-      <div class="foot-col"><h5>Contact</h5><ul><li><a href="/cdn-cgi/l/email-protection#1179747d7d7e517f74697364787d75633f727e7c"><span class="__cf_email__" data-cfemail="c3aba6afafac83ada6bba1b6aaafa7b1eda0acae">[email&#160;protected]</span></a></li><li><a href="/cdn-cgi/l/email-protection#ec9f999c9c839e98ac8289948e998580889ec28f8381"><span class="__cf_email__" data-cfemail="fd8e888d8d928f89bd9398859f889491998fd39e9290">[email&#160;protected]</span></a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><ul><li><a href="mailto:nexbuildrcorporation@gmail.com" style="color:var(--muted);transition:color .2s" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color=''">nexbuildrcorporation@gmail.com</a></li></ul></div>
     </div>
     <div class="foot-bottom">&copy; 2025 NexBuildr. All rights reserved.</div>
   </div>
@@ -1133,25 +1133,26 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
     <nav class="sb-nav">
       <div class="sb-sec">
         <button class="sb-link active" onclick="nav('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
-        <button class="sb-link" onclick="nav('feed')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Feed</button>
+        <button class="sb-link" onclick="nav('feed')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Community</button>
         <button class="sb-link" onclick="nav('nexai')"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Nex AI</button>
-        <button class="sb-link" onclick="nav('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>
+        <button class="sb-link" onclick="nav('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages</button>
         <button class="sb-link" onclick="nav('showcase')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Startup Showcase</button>
         <button class="sb-link" onclick="nav('network')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Network</button>
         <button class="sb-link" onclick="nav('cofounder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 11c1.66 0 3 1.34 3 3v1"/><path d="M21 11a2 2 0 0 1 0 4"/></svg>Find Co-founder</button>
-        <button class="sb-link" id="sb-notifs-btn" onclick="nav('notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications</button>
+
         <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Learn</button>
         <button class="sb-link" onclick="nav('leaderboard')"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Leaderboard</button>
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
-        <button class="sb-link" onclick="nav('feedback')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Feedback</button>
-        <button class="sb-link" onclick="nav('featurereq')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Feature Request</button>
+
+
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
         <button class="sb-link" onclick="nav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
-        <button class="sb-link danger" onclick="doLogout()"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
+        <button class="sb-link" onclick="nav('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+
       </div>
     </nav>
   </aside>
@@ -1163,22 +1164,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <span id="page-title">Home</span>
       </div>
       <div class="topbar-r">
-        <!-- Coins -->
-        <div id="coin-display" style="display:flex;align-items:center;gap:5px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);border-radius:var(--r);padding:5px 12px;font-size:13px;font-weight:700;color:#fcd34d" title="NexCoins"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fcd34d"><circle cx="12" cy="12" r="10"/></svg><span id="coin-count">0</span></div>
-        <!-- Search Icon -->
+        <!-- Coins hidden from topbar (visible in Learn/Leaderboard) -->
+        <!-- Expanded Search Bar -->
         <div style="position:relative" id="topbar-search-wrap">
-          <button class="notif-btn" id="tb-search-btn" onclick="toggleTbSearch()" title="Search users">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-          <div class="hidden" id="tb-search-panel" style="position:absolute;top:calc(100%+8px);right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;width:260px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:300">
-            <input type="text" id="tb-search" placeholder="Search by name or handle..." oninput="onTbSearch(this.value)" autocomplete="off" style="margin-bottom:8px">
-            <div id="tb-results"></div>
+          <div style="display:flex;align-items:center;gap:8px;background:#0F0F0F;border:1px solid #1F1F1F;border-radius:10px;padding:7px 14px;width:280px;transition:border-color .2s" onfocusin="this.style.borderColor='#7C3AED'" onfocusout="this.style.borderColor='#1F1F1F'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="tb-search" placeholder="Search builders..." oninput="onTbSearch(this.value)" autocomplete="off" style="background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff">
           </div>
+          <div class="hidden" id="tb-results" style="position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:300"></div>
         </div>
-        <button class="notif-btn" onclick="nav('notifications')" title="Notifications">
-          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <div class="notif-pip hidden" id="notif-pip"></div>
-        </button>
+
         <button class="btn btn-grad btn-sm">Upgrade Pro</button>
       </div>
     </header>
@@ -1201,7 +1196,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
       <!-- FEED -->
       <div class="page" id="page-feed">
-        <div class="page-hd"><div class="page-hd-l"><h1>Feed</h1><p>Discover what builders are sharing.</p></div><button class="btn btn-grad" onclick="openPost()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Post</button></div>
+        <div class="page-hd"><div class="page-hd-l"><h1>Community</h1><p>Discover what builders are sharing.</p></div><button class="btn btn-grad" onclick="openPost()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Post</button></div>
         <div class="feed-filters">
           <button class="ff-btn active" id="ff-newest" onclick="setFeedFilter('newest')">Newest</button>
           <button class="ff-btn" id="ff-top" onclick="setFeedFilter('top')">Top</button>
@@ -1235,7 +1230,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
 
       <!-- CHAT -->
       <div class="page" id="page-chat">
-        <div class="page-hd"><div class="page-hd-l"><h1>Chat</h1><p>Connect with the community in real time.</p></div></div>
+        <div class="page-hd"><div class="page-hd-l"><h1>Messages</h1><p>Connect with the community in real time.</p></div></div>
         <div class="ctabs"><button class="ctab active" id="ct-glob" onclick="switchChat('global')">Global Chat</button><button class="ctab" id="ct-pers" onclick="switchChat('personal')">Personal Messages</button></div>
         <!-- Global -->
         <div id="cp-glob" style="margin-top:14px">
@@ -1363,11 +1358,76 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
         <div class="fcard"><h3>Request a Feature</h3><p>Your ideas shape the roadmap.</p><div class="fgrid"><div class="fg"><label>Feature Title</label><input type="text" id="fr-title" placeholder="e.g. Dark mode for mobile"></div><div class="fg"><label>Description</label><textarea id="fr-desc" placeholder="Why would this be useful?"></textarea></div><div class="success-box hidden" id="fr-ok">Feature request submitted!</div><button class="btn btn-grad" id="fr-btn" onclick="submitFeatureReq()" style="align-self:flex-start">Submit Request</button></div></div>
       </div>
 
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="page-hd"><div class="page-hd-l"><h1>Settings</h1><p>Manage your account and preferences.</p></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:800px">
+
+          <!-- Profile Identity -->
+          <div class="card" style="grid-column:1/-1">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:16px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Profile Identity</h3>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+              <div class="avatar" id="settings-av" style="width:64px;height:64px;font-size:22px;cursor:pointer;flex-shrink:0" onclick="document.getElementById('photo-inp').click()" title="Change photo"></div>
+              <div><div style="font-size:15px;font-weight:700" id="settings-name">—</div><div style="font-size:13px;color:var(--muted)" id="settings-handle">—</div><button class="btn btn-ghost btn-xs" onclick="openEditProfile()" style="margin-top:4px;font-size:12px;color:#a78bfa">Edit Profile →</button></div>
+            </div>
+          </div>
+
+          <!-- Asset Management -->
+          <div class="card">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Asset Management</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:13px;font-weight:600">Profile Photo</div><div style="font-size:12px;color:var(--muted)">JPG, PNG up to 5MB</div></div>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('photo-inp').click()">Upload</button>
+              </div>
+              <div style="height:1px;background:#1F1F1F"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:13px;font-weight:600">Banner Image</div><div style="font-size:12px;color:var(--muted)">Wide format recommended</div></div>
+                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('banner-inp').click()">Upload</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Security -->
+          <div class="card">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Account Security</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:13px;font-weight:600">Email</div><div style="font-size:12px;color:var(--muted)" id="settings-email">—</div></div>
+                <span class="badge-pill" style="font-size:10px">Verified</span>
+              </div>
+              <div style="height:1px;background:#1F1F1F"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div><div style="font-size:13px;font-weight:600">Password</div><div style="font-size:12px;color:var(--muted)">Change your password</div></div>
+                <button class="btn btn-ghost btn-sm" onclick="showChangePw()">Change</button>
+              </div>
+              <div id="change-pw-form" class="hidden" style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+                <input type="password" id="new-pw" placeholder="New password (6+ chars)" style="font-size:13px">
+                <button class="btn btn-grad btn-sm" onclick="doChangePw()">Update Password</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone / Logout -->
+          <div class="card" style="grid-column:1/-1;border-color:rgba(239,68,68,.2)">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:14px;color:#f87171;text-transform:uppercase;letter-spacing:.06em">Account</h3>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div><div style="font-size:13px;font-weight:600">Sign Out</div><div style="font-size:12px;color:var(--muted)">Log out of your NexBuildr account</div></div>
+              <button class="btn btn-sm" style="background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.3)" onclick="doLogout()">Logout</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- PROFILE -->
       <div class="page" id="page-profile">
         <div class="page-hd"><div class="page-hd-l"><h1>Profile</h1><p>Your builder identity.</p></div></div>
         <div class="profile-card">
-          <div class="profile-banner"></div>
+          <div class="profile-banner" id="my-banner" onclick="triggerBanner()" title="Click to upload banner" style="cursor:pointer;position:relative">
+            <input type="file" id="banner-inp" accept="image/*" class="hidden" onchange="uploadBanner(event)">
+            <div id="banner-overlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;background:rgba(0,0,0,.5)" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span style="font-size:12px;color:#fff;margin-left:6px">Upload Banner</span></div>
+          </div>
           <div class="profile-body">
             <div class="pav-wrap">
               <div class="avatar pav-lg" id="my-av" style="cursor:default">
@@ -1377,7 +1437,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 3
             </div>
             <div class="profile-name" id="my-name">Loading...</div>
             <div class="profile-handle" id="my-handle"></div>
-            <div class="role-badge user" id="my-role">user</div>
+            <!-- role badge removed -->
             <div class="profile-bio" id="my-bio"></div>
             <div id="my-about-disp" style="font-size:13px;color:var(--muted);margin:4px 0 6px;font-style:italic"></div>
             <div id="my-exp-disp" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
@@ -1579,7 +1639,7 @@ function initDash(){
 }
 
 // ── NAVIGATION ──
-const PT={home:'Home',feed:'Feed',nexai:'Nex AI',chat:'Chat',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',feedback:'Feedback',featurereq:'Feature Request',profile:'Profile'};
+const PT={home:'Home',feed:'Community',nexai:'Nex AI',chat:'Messages',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',settings:'Settings',profile:'Profile'};
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
@@ -1594,15 +1654,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAuth();closePo
 
 // ── TOPBAR SEARCH ──
 let tbTimeout=null;
-function toggleTbSearch(){
-  const p=document.getElementById('tb-search-panel');
-  p.classList.toggle('hidden');
-  if(!p.classList.contains('hidden'))setTimeout(()=>document.getElementById('tb-search').focus(),50);
-}
+// toggleTbSearch removed - search bar is always visible
 function onTbSearch(q){
   clearTimeout(tbTimeout);
   const res=document.getElementById('tb-results');
-  if(!q){res.classList.add('hidden');return}
+  if(!q){res.classList.add('hidden');res.innerHTML='';return}
+  res.classList.remove('hidden');
   tbTimeout=setTimeout(async()=>{
     res.classList.remove('hidden');res.innerHTML='<div style="padding:10px;font-size:12px;color:var(--faint)">Searching...</div>';
     const snap=await db.collection('users').limit(60).get();
@@ -1703,7 +1760,7 @@ async function openPubStartup(sid){
         <div class="di"><div class="di-l">Stage</div><div class="di-v"><span class="stage-badge ${stageClass[s.stage]||'stage-idea'}">${(s.stage||'idea').toUpperCase()}</span></div></div>
         <div class="di"><div class="di-l">Founder</div><div class="di-v" style="cursor:pointer;color:var(--purple)" onclick="${CU?`closeSD();viewUser('${esc(s.userId)}')`:''}">${esc(s.founderName||'Unknown')}</div></div>
         <div class="di"><div class="di-l">Funding</div><div class="di-v">${s.fundingNeeded?'Seeking Funding':'Not Seeking'}</div></div>
-        <div class="di"><div class="di-l">Views</div><div class="di-v">${(s.views||0)+(CU&&s.userId!==CU?.uid?1:0)}</div></div>
+
         ${s.website?`<div class="di"><div class="di-l">Website</div><div class="di-v"><a href="${esc(s.website)}" target="_blank" rel="noopener" style="color:var(--purple)">${esc(s.website)}</a></div></div>`:''}
         ${s.twitter?`<div class="di"><div class="di-l">Twitter/X</div><div class="di-v"><a href="https://twitter.com/${esc(s.twitter.replace('@',''))}" target="_blank" rel="noopener" style="color:var(--purple)">@${esc(s.twitter.replace('@',''))}</a></div></div>`:''}
       </div>
@@ -2134,7 +2191,7 @@ function mkNetCard(u){
     <div class="avatar net-av" style="${u.photoURL?'background:none':''}">${ph}</div>
     <div class="net-name">${esc(u.name||'Builder')}</div>
     <div class="net-handle">@${esc(u.handle||'')}</div>
-    <div style="margin-bottom:8px"><span class="role-badge ${u.role||'user'}">${u.role||'user'}</span></div>
+
     <div class="net-btns" onclick="event.stopPropagation()">
       <button class="btn btn-ghost btn-xs" onclick="doConnectBtn('${esc(u.id)}',this)">Connect</button>
     </div>
@@ -2292,7 +2349,7 @@ function loadProfile(){
   const setH=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v};
   setT('my-name',name||'No name set');
   setT('my-handle',handle?'@'+handle:'');
-  const rb=document.getElementById('my-role');if(rb){rb.textContent=role;rb.className='role-badge '+role}
+  // role badge hidden from profile
   setT('my-bio',about||(bio||''));
   setT('my-conns',UD.connectionCount||0);
   setT('my-followers',UD.followerCount||0);
@@ -2439,12 +2496,14 @@ async function viewUser(uid){
     const followBtn=isFollowing?`<button class="btn btn-green btn-xs" disabled>Following</button>`:`<button class="btn btn-ghost btn-xs" onclick="doFollowBtn('${uid}',this)">Follow</button>`;
     const posts=postsSnap.docs.map(d=>({id:d.id,...d.data()}));
     const startups=startupsSnap.docs.map(d=>({id:d.id,...d.data()}));
+    const bannerBg=u.bannerURL?`background:url('${esc(u.bannerURL)}') center/cover no-repeat`:'background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(236,72,153,.12))';
     body.innerHTML=`
+      <div style="${bannerBg};height:90px;border-radius:var(--r2) var(--r2) 0 0;margin:-20px -20px 16px;"></div>
       <div class="up-header">
         <div class="avatar up-av" style="${u.photoURL?'background:none':''}">${ph}</div>
         <div class="up-info">
           <h2>${esc(u.name||'Builder')}</h2>
-          <p>@${esc(u.handle||'')} · <span class="role-badge ${u.role||'user'}" style="font-size:10px;display:inline">${u.role||'user'}</span></p>
+          <p style="color:var(--muted);font-size:13px">@${esc(u.handle||'')}</p>
           ${u.about?`<p style="font-size:12px;color:var(--muted);margin-top:2px">${esc(u.about)}</p>`:''}
           <div class="up-actions">
             ${CU?connBtn:''}
@@ -3098,6 +3157,7 @@ nav=function(page){
     case 'feed': if(!feedUnsub)loadFeed(); break;
     case 'network': if(!allNetUsers.length)loadNetwork(); break;
     case 'notifications': if(!notifUnsub)loadNotifs(); break;
+    case 'settings': setTimeout(loadSettingsPage,50); break;
   }
 };
 
@@ -3244,12 +3304,98 @@ function aiShowError(msg){
 }
 
 
-// Set AI status live on nav to nexai page
-const _navForAI=nav;
+// nav patch for AI merged into _navForSettings above
+
+// ── BANNER UPLOAD ──
+function triggerBanner(){document.getElementById('banner-inp')?.click()}
+async function uploadBanner(e){
+  const file=e.target.files[0];if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Please select an image','err');return}
+  if(file.size>5*1024*1024){toast('Banner max 5MB','err');return}
+  const localUrl=URL.createObjectURL(file);
+  const banner=document.getElementById('my-banner');
+  if(banner)banner.style.backgroundImage=`url('${localUrl}')`;
+  toast('Uploading banner...','info');
+  try{
+    const ref=storage.ref('banners/'+CU.uid+'/banner');
+    await ref.put(file,{contentType:file.type});
+    const url=await ref.getDownloadURL();
+    await db.collection('users').doc(CU.uid).update({bannerURL:url});
+    if(UD)UD.bannerURL=url;
+    URL.revokeObjectURL(localUrl);
+    toast('Banner updated!','ok');
+  }catch(err){
+    console.error('[uploadBanner]',err.message);
+    toast('Upload failed: '+err.message,'err');
+  }
+  e.target.value='';
+}
+
+// ── SETTINGS PAGE ──
+function loadSettingsPage(){
+  if(!CU||!UD)return;
+  const setT=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  setT('settings-name',UD.name||'—');
+  setT('settings-handle',UD.handle?'@'+UD.handle:'—');
+  setT('settings-email',CU.email||'—');
+  const av=document.getElementById('settings-av');
+  if(av){
+    if(UD.photoURL){av.style.background='none';av.innerHTML=`<img src="${esc(UD.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
+    else{av.style.background='';av.textContent=ini(UD.name||'U')}
+  }
+}
+function showChangePw(){
+  const f=document.getElementById('change-pw-form');
+  if(f){f.classList.toggle('hidden');f.style.display=f.classList.contains('hidden')?'none':'flex';}
+}
+async function doChangePw(){
+  const pw=document.getElementById('new-pw')?.value.trim();
+  if(!pw||pw.length<6){toast('Password must be at least 6 characters','err');return}
+  try{
+    await CU.updatePassword(pw);
+    toast('Password updated!','ok');
+    document.getElementById('change-pw-form').classList.add('hidden');
+    document.getElementById('new-pw').value='';
+  }catch(e){
+    if(e.code==='auth/requires-recent-login'){toast('Please log out and log back in first','err')}
+    else{toast('Failed: '+e.message,'err')}
+  }
+}
+
+// ── PATCH NAV to handle settings + load settings data ──
+const _navForSettings=nav;
 nav=function(page){
-  _navForAI(page);
+  _navForSettings(page);
+  if(page==='settings')setTimeout(loadSettingsPage,50);
   if(page==='nexai')setTimeout(()=>aiSetStatus('live'),400);
 };
+
+// ── FIX TOPBAR SEARCH — remove reference to toggleTbSearch ──
+// Search is now always visible, results panel shows/hides via data
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('topbar-search-wrap');
+  const results=document.getElementById('tb-results');
+  if(wrap&&results&&!wrap.contains(e.target)){
+    results.classList.add('hidden');
+    results.innerHTML='';
+  }
+});
+
+// ── LOAD BANNER ON PROFILE ──
+const _origLoadProfile=loadProfile;
+loadProfile=function(){
+  _origLoadProfile.call(this);
+  // Apply banner
+  const banner=document.getElementById('my-banner');
+  if(banner&&UD?.bannerURL){
+    banner.style.backgroundImage=`url('${UD.bannerURL}')`;
+    banner.style.backgroundSize='cover';
+    banner.style.backgroundPosition='center';
+  }
+};
+
+// ── UPDATE onTbSearch to show results panel ──
+// (overrides any existing handler if needed)
 </script>
 </body>
 </html>
