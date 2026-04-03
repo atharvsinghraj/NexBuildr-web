@@ -42,7 +42,7 @@ img{display:block}
 .btn-green:hover{background:rgba(16,185,129,.2)}
 .btn-red{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
 .btn-red:hover{background:rgba(239,68,68,.18)}
-.card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:22px;transition:border-color .2s}
+.card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:20px;transition:border-color .2s;overflow:hidden;word-break:break-word}
 .card:hover{border-color:#2a2a2a}
 .badge-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(124,58,237,.14);border:1px solid rgba(124,58,237,.28);color:#a78bfa;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px}
 .sec-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
@@ -553,19 +553,40 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;object-fit:contain}
 
 /* ══ RESPONSIVE ══ */
-@media(max-width:1024px){
+
+#change-pw-form:not(.hidden){display:flex!important;flex-direction:column;gap:8px}
+#change-pw-form.hidden{display:none!important}
+.topbar-r{flex-shrink:0}
+
+/* ── TOPBAR SEARCH ── */
+.tb-search-container{position:relative;flex-shrink:0}
+.tb-search-inner{display:flex;align-items:center;gap:8px;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:10px;padding:7px 13px;width:220px;transition:border-color .2s,width .2s}
+.tb-search-inner:focus-within{border-color:#7C3AED;width:260px}
+.tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff}
+.tb-search-inner input::placeholder{color:#52525B}
+#tb-results{position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.8);z-index:400;min-width:240px}
+.upgrade-btn{white-space:nowrap}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
   .feat-big-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:1024px){
   .intro-grid,.how-grid,.sd-grid{grid-template-columns:1fr}
-  .stats-grid,.home-grid{grid-template-columns:repeat(2,1fr)}
+  .home-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr 1fr 1fr}
   .foot-brand{grid-column:1/-1}
   .chat-layout{grid-template-columns:1fr}
   .chat-side{display:none}
+  .tb-search-inner{width:180px}
+  .tb-search-inner:focus-within{width:220px}
+  .upgrade-btn{display:none}
 }
 @media(max-width:768px){
   .nav-links,.nav-actions{display:none}
   .burger{display:flex}
-  .section{padding:60px 0}
+  .section{padding:50px 0}
   .intro-grid,.how-grid{grid-template-columns:1fr}
   .feat-big-grid,.test-grid,.price-grid{grid-template-columns:1fr}
   .price-card.pop{transform:none}
@@ -575,19 +596,35 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
   #sidebar.open{transform:translateX(0)}
   .sb-close{display:block}
   .sb-overlay.open{display:block}
-  #main{margin-left:0}
+  #main{margin-left:0!important}
   #menu-btn{display:block}
-  #pages{padding:14px 14px 32px}
+  #pages{padding:12px 12px 40px}
   .stats-grid{grid-template-columns:1fr 1fr}
   .pf-grid{grid-template-columns:1fr}
   .chat-layout{height:auto}
-  .topbar-search input{width:140px}
-  .topbar-search input:focus{width:170px}
+  .tb-search-inner{width:150px}
+  .tb-search-inner:focus-within{width:180px}
+  .upgrade-btn{display:none}
+  .hero-h{font-size:clamp(24px,6vw,44px)}
+  .cf-grid{grid-template-columns:1fr}
+  .net-grid{grid-template-columns:repeat(2,1fr)}
+  #topbar{padding:0 12px}
+  .page-hd{flex-wrap:wrap;gap:10px}
 }
 @media(max-width:480px){
-  .hero-stats{gap:20px}
+  .hero-stats{gap:14px;flex-wrap:wrap}
   .icards{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .net-grid{grid-template-columns:1fr}
+  .tb-search-inner{width:120px}
+  .tb-search-inner:focus-within{width:150px}
+  .pstats-row{flex-wrap:wrap;gap:10px}
+  .notif-btn{width:30px;height:30px}
+}
+@media(max-width:360px){
+  .tb-search-container{display:none}
+  #topbar{padding:0 10px}
 }
 </style>
 </head>
@@ -902,7 +939,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
       <div class="foot-brand"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><p>The community platform for students and young entrepreneurs to build, connect, and launch.</p><div class="socials"><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></a></div></div>
       <div class="foot-col"><h5>Legal</h5><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
       <div class="foot-col"><h5>Platform</h5><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a onclick="scrollToExplore()" style="cursor:pointer">Explore</a></li></ul></div>
-      <div class="foot-col"><h5>Contact</h5><ul><li><a href="mailto:nexbuildrcorporation@gmail.com" style="color:var(--muted);transition:color .2s" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color=''">nexbuildrcorporation@gmail.com</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><ul><li><a href="/cdn-cgi/l/email-protection#1f717a677d6a76737b6d7c706d6f706d7e6b7670715f78727e7673317c7072" style="color:var(--muted);transition:color .2s" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color=''"><span class="__cf_email__" data-cfemail="94faf1ecf6e1fdf8f0e6f7fbe6e4fbe6f5e0fdfbfad4f3f9f5fdf8baf7fbf9">[email&#160;protected]</span></a></li></ul></div>
     </div>
     <div class="foot-bottom">&copy; 2025 NexBuildr. All rights reserved.</div>
   </div>
@@ -1164,17 +1201,20 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
         <span id="page-title">Home</span>
       </div>
       <div class="topbar-r">
-        <!-- Coins hidden from topbar (visible in Learn/Leaderboard) -->
-        <!-- Expanded Search Bar -->
-        <div style="position:relative" id="topbar-search-wrap">
-          <div style="display:flex;align-items:center;gap:8px;background:#0F0F0F;border:1px solid #1F1F1F;border-radius:10px;padding:7px 14px;width:280px;transition:border-color .2s" onfocusin="this.style.borderColor='#7C3AED'" onfocusout="this.style.borderColor='#1F1F1F'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="tb-search" placeholder="Search builders..." oninput="onTbSearch(this.value)" autocomplete="off" style="background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff">
+        <!-- Search -->
+        <div class="tb-search-container" id="topbar-search-wrap">
+          <div class="tb-search-inner">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="tb-search" placeholder="Search builders..." oninput="onTbSearch(this.value)" autocomplete="off">
           </div>
-          <div class="hidden" id="tb-results" style="position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:300"></div>
+          <div class="hidden" id="tb-results"></div>
         </div>
-
-        <button class="btn btn-grad btn-sm">Upgrade Pro</button>
+        <!-- Notifications -->
+        <button class="notif-btn" onclick="nav('notifications')" title="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-pip hidden" id="notif-pip"></div>
+        </button>
+        <button class="btn btn-grad btn-sm upgrade-btn">Upgrade</button>
       </div>
     </header>
 
@@ -1465,7 +1505,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 </div>
 
 <!-- FIREBASE -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
@@ -1590,7 +1630,7 @@ async function loadUD(){
     UD=s.data();
     console.log('[loadUD] Loaded:',UD.name||UD.email||CU.uid);
   }else{
-    UD={name:CU.displayName||'',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0,createdAt:new Date().toISOString()};
+    UD={name:CU.displayName||'',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',bannerURL:'',coins:0,connectionCount:0,followerCount:0,followingCount:0,createdAt:new Date().toISOString()};
     try{await db.collection('users').doc(CU.uid).set({...UD,createdAt:fv.serverTimestamp()});}catch(_){}
     console.log('[loadUD] New user created');
   }
@@ -2378,27 +2418,33 @@ async function uploadPhoto(e){
   const file=e.target.files[0];
   if(!file)return;
   if(!file.type.startsWith('image/')){toast('Please select an image','err');return}
-  if(file.size>5*1024*1024){toast('Image too large. Max 5MB.','err');return}
-  // Show preview instantly from local file
+  if(file.size>5*1024*1024){toast('Image too large. Max 5MB','err');return}
+
+  // Instant local preview everywhere
   const localUrl=URL.createObjectURL(file);
-  const mainAv=document.getElementById('my-av');
-  const epAv=document.getElementById('ep-photo-av');
-  if(mainAv){mainAv.style.background='none';mainAv.innerHTML=`<img src="${localUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
-  if(epAv){epAv.style.background='none';epAv.innerHTML=`<img src="${localUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`}
+  const imgHtml=(src)=>`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  const applyPreview=(src)=>{
+    ['my-av','ep-photo-av','settings-av'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.style.background='none';el.innerHTML=imgHtml(src);}
+    });
+  };
+  applyPreview(localUrl);
   toast('Uploading photo...','info');
+
   try{
-    // Resize via canvas (200×200, JPEG 0.85)
+    // Canvas resize to 300×300 JPEG
     const dataUrl=await new Promise((res,rej)=>{
       const reader=new FileReader();
       reader.onload=ev=>{
         const img=new Image();
         img.onload=()=>{
-          const cv=document.createElement('canvas');cv.width=200;cv.height=200;
+          const cv=document.createElement('canvas');cv.width=300;cv.height=300;
           const ctx=cv.getContext('2d');
           const side=Math.min(img.width,img.height);
           const ox=(img.width-side)/2,oy=(img.height-side)/2;
-          ctx.drawImage(img,ox,oy,side,side,0,0,200,200);
-          res(cv.toDataURL('image/jpeg',0.85));
+          ctx.drawImage(img,ox,oy,side,side,0,0,300,300);
+          res(cv.toDataURL('image/jpeg',0.88));
         };
         img.onerror=rej;
         img.src=ev.target.result;
@@ -2406,28 +2452,32 @@ async function uploadPhoto(e){
       reader.onerror=rej;
       reader.readAsDataURL(file);
     });
+
     const blob=await(await fetch(dataUrl)).blob();
-    const ref=storage.ref('profiles/'+CU.uid+'/avatar');
-    await ref.put(blob,{contentType:'image/jpeg'});
-    const url=await ref.getDownloadURL();
+    const ref=storage.ref('profiles/'+CU.uid+'/avatar_'+Date.now());
+    const snap=await ref.put(blob,{contentType:'image/jpeg'});
+    const url=await snap.ref.getDownloadURL();
+
+    // Save to Firestore AND Firebase Auth profile
     await Promise.all([
       db.collection('users').doc(CU.uid).update({photoURL:url}),
       CU.updateProfile({photoURL:url})
     ]);
+
     if(UD)UD.photoURL=url;
     URL.revokeObjectURL(localUrl);
-    // Update all avatars with final URL
-    const finalImg=`<img src="${esc(url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-    if(mainAv){mainAv.style.background='none';mainAv.innerHTML=finalImg}
-    if(epAv){epAv.style.background='none';epAv.innerHTML=finalImg}
-    toast('Photo updated!','ok');
+    applyPreview(url);// update with final URL
+    toast('Profile photo saved!','ok');
+    console.log('[uploadPhoto] Saved URL:',url);
+
   }catch(err){
-    console.error('Upload error:',err);
+    console.error('[uploadPhoto] Error:',err.code,err.message);
     URL.revokeObjectURL(localUrl);
-    loadProfile();
-    toast('Upload failed. Check your connection.','err');
+    // Restore original on failure
+    const orig=UD?.photoURL||'';
+    if(orig){applyPreview(orig);}
+    toast('Upload failed: '+err.message,'err');
   }
-  // Reset input so same file can be picked again
   e.target.value='';
 }
 function renderSkillTags(){document.getElementById('pe-skills-tags').innerHTML=mySkills.map((s,i)=>`<span class="tag">${esc(s)}<button class="tag-rem" onclick="mySkills.splice(${i},1);renderSkillTags()">&times;</button></span>`).join('')}
@@ -2496,9 +2546,11 @@ async function viewUser(uid){
     const followBtn=isFollowing?`<button class="btn btn-green btn-xs" disabled>Following</button>`:`<button class="btn btn-ghost btn-xs" onclick="doFollowBtn('${uid}',this)">Follow</button>`;
     const posts=postsSnap.docs.map(d=>({id:d.id,...d.data()}));
     const startups=startupsSnap.docs.map(d=>({id:d.id,...d.data()}));
-    const bannerBg=u.bannerURL?`background:url('${esc(u.bannerURL)}') center/cover no-repeat`:'background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(236,72,153,.12))';
+    const bannerBg=u.bannerURL
+      ?`background-image:url('${esc(u.bannerURL)}');background-size:cover;background-position:center`
+      :'background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(0,0,0,.7))';
     body.innerHTML=`
-      <div style="${bannerBg};height:90px;border-radius:var(--r2) var(--r2) 0 0;margin:-20px -20px 16px;"></div>
+      <div style="${bannerBg};height:100px;border-radius:var(--r2) var(--r2) 0 0;margin:-20px -20px 16px;"></div>
       <div class="up-header">
         <div class="avatar up-av" style="${u.photoURL?'background:none':''}">${ph}</div>
         <div class="up-info">
@@ -3375,27 +3427,12 @@ nav=function(page){
 document.addEventListener('click',e=>{
   const wrap=document.getElementById('topbar-search-wrap');
   const results=document.getElementById('tb-results');
-  if(wrap&&results&&!wrap.contains(e.target)){
+  if(results&&wrap&&!wrap.contains(e.target)){
     results.classList.add('hidden');
-    results.innerHTML='';
+    const inp=document.getElementById('tb-search');if(inp)inp.value='';
   }
 });
 
-// ── LOAD BANNER ON PROFILE ──
-const _origLoadProfile=loadProfile;
-loadProfile=function(){
-  _origLoadProfile.call(this);
-  // Apply banner
-  const banner=document.getElementById('my-banner');
-  if(banner&&UD?.bannerURL){
-    banner.style.backgroundImage=`url('${UD.bannerURL}')`;
-    banner.style.backgroundSize='cover';
-    banner.style.backgroundPosition='center';
-  }
-};
-
-// ── UPDATE onTbSearch to show results panel ──
-// (overrides any existing handler if needed)
 </script>
 </body>
 </html>
