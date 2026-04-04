@@ -560,10 +560,10 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ── TOPBAR SEARCH ── */
 .tb-search-container{position:relative;flex-shrink:0}
-.tb-search-inner{display:flex;align-items:center;gap:8px;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:10px;padding:7px 13px;width:220px;transition:border-color .2s,width .2s}
-.tb-search-inner:focus-within{border-color:#7C3AED;width:260px}
+.tb-search-inner{display:flex;align-items:center;gap:8px;background:#0A0A0A;border:1px solid #242424;border-radius:22px;padding:7px 14px;width:200px;transition:width .25s ease,border-color .2s}
+.tb-search-inner:focus-within{border-color:#7C3AED;width:250px;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
 .tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff}
-.tb-search-inner input::placeholder{color:#52525B}
+.tb-search-inner input::placeholder{color:#4a4a4a}
 #tb-results{position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.8);z-index:400;min-width:240px}
 .upgrade-btn{white-space:nowrap}
 
