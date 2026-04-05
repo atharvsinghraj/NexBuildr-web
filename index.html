@@ -481,12 +481,15 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .up-startups{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto}
 
 /* ── NETWORK ── */
-.net-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
-.net-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:var(--r2);padding:18px;text-align:center;transition:border-color .2s}
-.net-card:hover{border-color:#7C3AED}
-.net-av{width:52px;height:52px;font-size:18px;font-weight:700;margin:0 auto 10px}
+.net-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.net-card{background:linear-gradient(160deg,#0D0D0D,#060606);border:1px solid #1A1A1A;border-radius:16px;padding:20px 18px;text-align:center;transition:transform .22s ease,border-color .22s,box-shadow .22s;cursor:pointer;position:relative;overflow:hidden}
+.net-card::before{content:'';position:absolute;inset:0;border-radius:16px;background:radial-gradient(ellipse at top,rgba(124,58,237,.06),transparent 70%);opacity:0;transition:opacity .22s}
+.net-card:hover{transform:translateY(-3px) scale(1.01);border-color:#7C3AED;box-shadow:0 8px 32px rgba(124,58,237,.18)}
+.net-card:hover::before{opacity:1}
+.net-av{width:56px;height:56px;font-size:19px;font-weight:700;margin:0 auto 11px;border:2px solid #1A1A1A;transition:border-color .22s}
+.net-card:hover .net-av{border-color:rgba(124,58,237,.5)}
 .net-name{font-size:14px;font-weight:600;margin-bottom:2px;cursor:pointer}
-.net-name:hover{text-decoration:underline}
+.net-name:hover{color:#a78bfa}
 .net-handle{font-size:12px;color:var(--faint);margin-bottom:6px}
 .net-btns{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 
@@ -558,12 +561,42 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 #change-pw-form.hidden{display:none!important}
 .topbar-r{flex-shrink:0}
 
+
+/* ── DAILY INSIGHTS ── */
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.news-card{background:linear-gradient(160deg,#0D0D0D,#060606);border:1px solid #1A1A1A;border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer;display:flex;flex-direction:column}
+.news-card:hover{transform:translateY(-3px);border-color:#7C3AED;box-shadow:0 8px 28px rgba(124,58,237,.15)}
+.news-thumb{width:100%;height:150px;object-fit:cover;background:#111;display:block}
+.news-thumb-placeholder{width:100%;height:150px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(236,72,153,.07));display:flex;align-items:center;justify-content:center}
+.news-thumb-placeholder svg{width:32px;height:32px;stroke:#333;fill:none;stroke-width:1.5}
+.news-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px}
+.news-topic{display:inline-flex;align-items:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 9px;border-radius:100px;background:rgba(124,58,237,.14);color:#a78bfa;border:1px solid rgba(124,58,237,.22);width:fit-content}
+.news-title{font-size:14px;font-weight:600;line-height:1.45;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news-desc{font-size:12px;color:#71717A;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.news-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #1A1A1A;margin-top:auto}
+.news-source{font-size:11px;font-weight:600;color:#52525B}
+.news-date{font-size:11px;color:#3F3F46}
+.ins-filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.ins-filter-group{display:flex;gap:5px;flex-wrap:wrap}
+.ins-chip{padding:5px 13px;font-size:12px;font-weight:500;border-radius:100px;border:1px solid #1F1F1F;background:transparent;color:#71717A;cursor:pointer;transition:all .15s;white-space:nowrap}
+.ins-chip:hover,.ins-chip.active{background:rgba(124,58,237,.12);border-color:#7C3AED;color:#fff}
+.ins-sep{width:1px;height:20px;background:#1F1F1F;margin:0 4px;align-self:center}
+/* Home insights mini */
+.home-news-mini{display:flex;flex-direction:column;gap:8px}
+.home-news-item{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:10px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit}
+.home-news-item:hover{background:rgba(255,255,255,.04)}
+.home-news-item-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#111}
+.home-news-item-body{flex:1;min-width:0}
+.home-news-item-title{font-size:13px;font-weight:500;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.home-news-item-meta{font-size:11px;color:#52525B;margin-top:2px}
+
 /* ── TOPBAR SEARCH ── */
 .tb-search-container{position:relative;flex-shrink:0}
-.tb-search-inner{display:flex;align-items:center;gap:8px;background:#0A0A0A;border:1px solid #242424;border-radius:22px;padding:7px 14px;width:200px;transition:width .25s ease,border-color .2s}
-.tb-search-inner:focus-within{border-color:#7C3AED;width:250px;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.tb-search-inner{display:flex;align-items:center;gap:7px;background:#080808;border:1px solid #222;border-radius:25px;padding:6px 14px;width:195px;transition:width .25s ease,border-color .2s,box-shadow .2s}
+.tb-search-inner:focus-within{border-color:#7C3AED;width:245px;box-shadow:0 0 0 3px rgba(124,58,237,.1)}
 .tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff}
-.tb-search-inner input::placeholder{color:#4a4a4a}
+.tb-search-inner input::placeholder{color:#444}
+#tb-results{position:absolute;top:calc(100%+8px);left:0;right:0;background:#080808;border:1px solid #1F1F1F;border-radius:14px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,.9);z-index:400;min-width:240px}
 #tb-results{position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.8);z-index:400;min-width:240px}
 .upgrade-btn{white-space:nowrap}
 
@@ -1179,6 +1212,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
         <button class="sb-link" onclick="nav('buildpath')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Learn</button>
         <button class="sb-link" onclick="nav('leaderboard')"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Leaderboard</button>
+        <button class="sb-link" onclick="nav('insights')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M8 3v6"/><path d="M7 13h10"/><path d="M7 17h6"/></svg>Daily Insights</button>
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
@@ -1214,6 +1248,8 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <div class="notif-pip hidden" id="notif-pip"></div>
         </button>
+        <!-- Profile avatar in topbar -->
+        <div id="tb-profile-av" onclick="nav('profile')" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;overflow:hidden;border:2px solid #1F1F1F;transition:border-color .2s" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='#1F1F1F'"></div>
         <button class="btn btn-grad btn-sm upgrade-btn">Upgrade</button>
       </div>
     </header>
@@ -1231,6 +1267,16 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
         <div class="home-grid">
           <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
           <div class="home-block"><h3>Quick Actions</h3><div class="qa-list"><button class="btn btn-grad btn-wide" onclick="openPost()">Create a Post</button><button class="btn btn-ghost btn-wide" onclick="openAS()">Add Startup</button><button class="btn btn-ghost btn-wide" onclick="nav('network')">Explore Network</button><button class="btn btn-ghost btn-wide" onclick="nav('profile')">Edit Profile</button></div></div>
+        </div>
+        <!-- Daily Insights mini -->
+        <div style="margin-top:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <h3 style="font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.06em">Daily Insights</h3>
+            <button class="btn btn-ghost btn-xs" onclick="nav('insights')" style="font-size:11px;color:#a78bfa">View All →</button>
+          </div>
+          <div class="home-news-mini" id="home-insights-list">
+            <div class="spinner"></div>
+          </div>
         </div>
       </div>
 
@@ -1398,6 +1444,42 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
         <div class="fcard"><h3>Request a Feature</h3><p>Your ideas shape the roadmap.</p><div class="fgrid"><div class="fg"><label>Feature Title</label><input type="text" id="fr-title" placeholder="e.g. Dark mode for mobile"></div><div class="fg"><label>Description</label><textarea id="fr-desc" placeholder="Why would this be useful?"></textarea></div><div class="success-box hidden" id="fr-ok">Feature request submitted!</div><button class="btn btn-grad" id="fr-btn" onclick="submitFeatureReq()" style="align-self:flex-start">Submit Request</button></div></div>
       </div>
 
+      <!-- DAILY INSIGHTS -->
+      <div class="page" id="page-insights">
+        <div class="page-hd">
+          <div class="page-hd-l"><h1>Daily Insights</h1><p>Stay ahead with curated startup and tech news.</p></div>
+          <button class="btn btn-ghost btn-sm" onclick="loadInsights(true)" style="color:#a78bfa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</button>
+        </div>
+        <!-- Filters -->
+        <div class="ins-filters">
+          <div class="ins-filter-group" id="ins-date-filters">
+            <button class="ins-chip active" data-days="7" onclick="setInsDateFilter(this,7)">7 Days</button>
+            <button class="ins-chip" data-days="14" onclick="setInsDateFilter(this,14)">14 Days</button>
+            <button class="ins-chip" data-days="30" onclick="setInsDateFilter(this,30)">30 Days</button>
+            <button class="ins-chip" data-days="90" onclick="setInsDateFilter(this,90)">90 Days</button>
+            <button class="ins-chip" data-days="365" onclick="setInsDateFilter(this,365)">1 Year</button>
+          </div>
+          <div class="ins-sep"></div>
+          <div class="ins-filter-group" id="ins-topic-filters">
+            <button class="ins-chip active" data-topic="all" onclick="setInsTopicFilter(this,'all')">All Topics</button>
+            <button class="ins-chip" data-topic="Startup" onclick="setInsTopicFilter(this,'Startup')">Startup</button>
+            <button class="ins-chip" data-topic="Technology" onclick="setInsTopicFilter(this,'Technology')">Technology</button>
+            <button class="ins-chip" data-topic="AI" onclick="setInsTopicFilter(this,'AI')">AI</button>
+            <button class="ins-chip" data-topic="Finance" onclick="setInsTopicFilter(this,'Finance')">Finance</button>
+            <button class="ins-chip" data-topic="Funding" onclick="setInsTopicFilter(this,'Funding')">Funding</button>
+            <button class="ins-chip" data-topic="Business" onclick="setInsTopicFilter(this,'Business')">Business</button>
+            <button class="ins-chip" data-topic="Marketing" onclick="setInsTopicFilter(this,'Marketing')">Marketing</button>
+          </div>
+        </div>
+        <!-- Grid -->
+        <div class="insights-grid" id="insights-grid">
+          <div class="spinner" style="grid-column:1/-1;padding:40px;text-align:center"></div>
+        </div>
+        <div id="insights-empty" class="empty-state hidden" style="grid-column:1/-1"><p>No insights found for the selected filters.</p></div>
+      </div>
+
+      <!-- DAILY INSIGHTS -->
+      
       <!-- SETTINGS -->
       <div class="page" id="page-settings">
         <div class="page-hd"><div class="page-hd-l"><h1>Settings</h1><p>Manage your account and preferences.</p></div></div>
@@ -1679,7 +1761,7 @@ function initDash(){
 }
 
 // ── NAVIGATION ──
-const PT={home:'Home',feed:'Community',nexai:'Nex AI',chat:'Messages',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',settings:'Settings',profile:'Profile'};
+const PT={home:'Home',feed:'Community',nexai:'Nex AI',chat:'Messages',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',insights:'Daily Insights',settings:'Settings',profile:'Profile'};
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
@@ -1830,6 +1912,8 @@ async function submitPost(){
     let imageUrl=null;
     if(imgFile){if(imgFile.size>5*1024*1024){err.textContent='Image max 5MB.';err.classList.remove('hidden');return}const ref=storage.ref(`posts/${CU.uid}/${Date.now()}_${imgFile.name}`);const sn=await ref.put(imgFile);imageUrl=await sn.ref.getDownloadURL()}
     await db.collection('posts').add({userId:CU.uid,authorName:UD?.name||CU.displayName||'Anonymous',authorHandle:UD?.handle||'',authorPhoto:UD?.photoURL||CU.photoURL||'',sector,title,content,imageUrl,likes:[],views:[],createdAt:fv.serverTimestamp()});
+    // Refresh authorPhoto in existing posts if photo was updated
+    if(UD?.photoURL){db.collection('posts').where('userId','==',CU.uid).limit(20).get().then(s=>{const b=db.batch();s.forEach(d=>b.update(d.ref,{authorPhoto:UD.photoURL}));b.commit().catch(()=>{})}).catch(()=>{})}
     closePost();toast('Post published!');
   }catch(e){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}
   finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Publish Post'}
@@ -2187,6 +2271,8 @@ async function sendPers(){
     await db.collection('messages').add({
       chatId,
       senderId:CU.uid,
+      senderName:UD?.name||CU.displayName||'User',
+      senderPhoto:UD?.photoURL||CU.photoURL||'',
       receiverId:activeChatUid,
       message:msg,
       timestamp:fv.serverTimestamp()
@@ -2428,6 +2514,9 @@ async function uploadPhoto(e){
       const el=document.getElementById(id);
       if(el){el.style.background='none';el.innerHTML=imgHtml(src);}
     });
+    // also update topbar avatar
+    const tbAv=document.getElementById('tb-profile-av');
+    if(tbAv){tbAv.style.background='none';tbAv.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;}
   };
   applyPreview(localUrl);
   toast('Uploading photo...','info');
@@ -2463,12 +2552,22 @@ async function uploadPhoto(e){
       db.collection('users').doc(CU.uid).update({photoURL:url}),
       CU.updateProfile({photoURL:url})
     ]);
-
     if(UD)UD.photoURL=url;
     URL.revokeObjectURL(localUrl);
-    applyPreview(url);// update with final URL
+    applyPreview(url);
     toast('Profile photo saved!','ok');
     console.log('[uploadPhoto] Saved URL:',url);
+    // Backfill photoURL in user's posts and global messages so they show updated avatar
+    try{
+      const[ps,gms]=await Promise.all([
+        db.collection('posts').where('userId','==',CU.uid).limit(20).get(),
+        db.collection('globalMessages').where('senderId','==',CU.uid).limit(30).get()
+      ]);
+      const b=db.batch();
+      ps.forEach(d=>b.update(d.ref,{authorPhoto:url}));
+      gms.forEach(d=>b.update(d.ref,{senderPhoto:url}));
+      await b.commit();
+    }catch(_){}
 
   }catch(err){
     console.error('[uploadPhoto] Error:',err.code,err.message);
@@ -3433,6 +3532,158 @@ document.addEventListener('click',e=>{
   }
 });
 
+
+// ═══════════════════════════════════════════════════════════════
+// DAILY INSIGHTS SYSTEM
+// Curated startup/tech news — stored in Firestore "news" collection
+// Seeded with curated articles. Admin can add more via Firebase console.
+// ═══════════════════════════════════════════════════════════════
+
+var insDateDays=7, insTopicFilter='all', allInsights=[], insLoaded=false;
+
+// ── Static seed articles (shown when Firestore "news" collection is empty)
+const SEED_INSIGHTS=[
+  {id:'s1',title:'India Startup Ecosystem Reaches $100B Valuation',description:"India startup ecosystem has reached a landmark $100 billion valuation, with over 100 unicorns active across fintech, edtech, and healthtech.",source:'Economic Times',date:new Date(Date.now()-1*86400000).toISOString(),topic:'Startup',image:'',link:'https://economictimes.indiatimes.com/tech/startups'},
+  {id:'s2',title:'OpenAI Releases GPT-5: What Founders Need to Know',description:"The latest model brings reasoning capabilities that could fundamentally change how startups approach product development and automation.",source:'TechCrunch',date:new Date(Date.now()-2*86400000).toISOString(),topic:'AI',image:'',link:'https://techcrunch.com'},
+  {id:'s3',title:'Sequoia India Backs 15 New Startups in Q4 2025',description:"The venture giant committed over $200M across 15 early-stage Indian startups, focusing on climate tech, fintech, and B2B SaaS.",source:'Entrackr',date:new Date(Date.now()-3*86400000).toISOString(),topic:'Funding',image:'',link:'https://entrackr.com'},
+  {id:'s4',title:'How To Validate Your Startup Idea in 48 Hours',description:"A practical framework used by Y Combinator alumni to validate ideas before writing a single line of code — using Google Forms, Reddit, and cold emails.",source:'First Round Review',date:new Date(Date.now()-4*86400000).toISOString(),topic:'Startup',image:'',link:'https://review.firstround.com'},
+  {id:'s5',title:'RBI Eases Payment Rules for Fintech Startups',description:"New guidelines significantly reduce compliance burden for early-stage fintech companies, opening doors for faster product launches.",source:'LiveMint',date:new Date(Date.now()-4*86400000).toISOString(),topic:'Finance',image:'',link:'https://livemint.com'},
+  {id:'s6',title:'Generative AI Market to Reach $1.3 Trillion by 2032',description:"Bloomberg Intelligence forecasts explosive growth in generative AI, with enterprise software and consumer apps driving the majority of value creation.",source:'Bloomberg',date:new Date(Date.now()-5*86400000).toISOString(),topic:'AI',image:'',link:'https://bloomberg.com/technology'},
+  {id:'s7',title:'Top 10 Growth Hacks for Early-Stage SaaS Startups in 2025',description:"Product-led growth, viral loops, and community-driven acquisition are the three pillars that successful SaaS startups used to reach their first 1000 customers.",source:'SaaStr',date:new Date(Date.now()-5*86400000).toISOString(),topic:'Marketing',image:'',link:'https://saastr.com'},
+  {id:'s8',title:"India EdTech Sector Bounces Back With 4000 Cr in Funding",description:"After a difficult 2023-24, Indian education technology companies saw renewed investor interest, with several late-stage rounds closing in Q3 2025.",source:'Inc42',date:new Date(Date.now()-6*86400000).toISOString(),topic:'Funding',image:'',link:'https://inc42.com'},
+  {id:'s9',title:"The Founder Guide to Building a Co-founder Relationship",description:"Research shows 65% of startups fail due to co-founder conflict. Top founders structure equity, roles, and decision-making from day one.",source:'HBR',date:new Date(Date.now()-7*86400000).toISOString(),topic:'Business',image:'',link:'https://hbr.org/startup'},
+  {id:'s10',title:'Meta Unveils Developer Tools That Cut App Build Time by 60%',description:"The Horizon OS SDK update includes AI-assisted code generation, drag-and-drop UI builder, and native Firebase integration targeting startup developers.",source:'The Verge',date:new Date(Date.now()-8*86400000).toISOString(),topic:'Technology',image:'',link:'https://theverge.com'},
+  {id:'s11',title:'5 Revenue Models That Bootstrapped Startups Swear By',description:"From freemium to consulting-to-product, these five monetization strategies helped founders reach profitability without VC funding.",source:'Indie Hackers',date:new Date(Date.now()-9*86400000).toISOString(),topic:'Business',image:'',link:'https://indiehackers.com'},
+  {id:'s12',title:'DPIIT Launches New Startup India 3.0 Program',description:"The flagship startup initiative now includes accelerated patent filing, tax holiday extensions, and a dedicated 500 Cr seed fund for student entrepreneurs.",source:'DPIIT',date:new Date(Date.now()-10*86400000).toISOString(),topic:'Startup',image:'',link:'https://dpiit.gov.in/startups'},
+  {id:'s13',title:'How Indian Founders Are Using AI to Cut Acquisition Costs',description:"A survey of 500 Indian startups reveals that AI-powered outreach tools have reduced customer acquisition costs by an average of 42% over 12 months.",source:'YourStory',date:new Date(Date.now()-12*86400000).toISOString(),topic:'AI',image:'',link:'https://yourstory.com'},
+  {id:'s14',title:'Venture Debt Emerges as Alternative Funding',description:"As equity dilution concerns grow, more Series A and B startups are turning to venture debt for working capital and investors are taking note.",source:'VCCircle',date:new Date(Date.now()-14*86400000).toISOString(),topic:'Finance',image:'',link:'https://vccircle.com'},
+  {id:'s15',title:'Building in Public: Why 200 Founders Share Revenue Online',description:"The build in public movement has moved from a niche strategy to a mainstream growth tactic, helping startups build audiences before launch.",source:'Product Hunt',date:new Date(Date.now()-15*86400000).toISOString(),topic:'Marketing',image:'',link:'https://producthunt.com'},
+];
+
+function setInsDateFilter(btn,days){
+  document.querySelectorAll('.ins-filter-group button.ins-chip').forEach(b=>{
+    if(['7','14','30','90','365'].includes(b.textContent.replace(' Days','').trim())||b.textContent==='1 Year')
+      b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  insDateDays=days;
+  renderInsights();
+}
+function setInsTopicFilter(btn,topic){
+  document.querySelectorAll('.ins-filter-group button.ins-chip').forEach(b=>{
+    const topics=['All','Startup','Technology','AI','Finance','Funding','Business','Marketing'];
+    if(topics.includes(b.textContent))b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  insTopicFilter=topic;
+  renderInsights();
+}
+
+function timeAgo(dateStr){
+  if(!dateStr)return'';
+  const d=new Date(dateStr);const now=Date.now();const diff=now-d.getTime();
+  const mins=Math.floor(diff/60000),hrs=Math.floor(diff/3600000),days=Math.floor(diff/86400000);
+  if(mins<60)return mins+'m ago';if(hrs<24)return hrs+'h ago';if(days<30)return days+'d ago';
+  return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+}
+
+function topicColor(topic){
+  const map={Startup:'rgba(124,58,237,.14)|#a78bfa|rgba(124,58,237,.22)',Technology:'rgba(59,130,246,.12)|#60a5fa|rgba(59,130,246,.2)',AI:'rgba(236,72,153,.12)|#f472b6|rgba(236,72,153,.2)',Finance:'rgba(16,185,129,.1)|#34d399|rgba(16,185,129,.18)',Funding:'rgba(245,158,11,.1)|#fbbf24|rgba(245,158,11,.18)',Business:'rgba(99,102,241,.12)|#818cf8|rgba(99,102,241,.2)',Marketing:'rgba(239,68,68,.1)|#f87171|rgba(239,68,68,.18)'};
+  const v=(map[topic]||'rgba(255,255,255,.06)|#71717A|rgba(255,255,255,.12)').split('|');
+  return `background:${v[0]};color:${v[1]};border:1px solid ${v[2]}`;
+}
+
+function renderNewsCard(a){
+  const thumb=a.image
+    ?`<img class="news-thumb" src="${esc(a.image)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=news-thumb-placeholder><svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/></svg></div>'">`
+    :`<div class="news-thumb-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M7 13h10"/><path d="M7 17h6"/></svg></div>`;
+  return `<div class="news-card" onclick="window.open('${esc(a.link||'#')}','_blank')">
+    ${thumb}
+    <div class="news-body">
+      <div class="news-topic" style="${topicColor(a.topic)}">${esc(a.topic||'News')}</div>
+      <div class="news-title">${esc(a.title||'')}</div>
+      <div class="news-desc">${esc(a.description||'')}</div>
+      <div class="news-foot">
+        <span class="news-source">${esc(a.source||'')}</span>
+        <span class="news-date">${timeAgo(a.date)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderInsights(){
+  const g=document.getElementById('insights-grid');if(!g)return;
+  const cutoff=new Date(Date.now()-insDateDays*86400000);
+  let filtered=allInsights.filter(a=>{
+    const d=new Date(a.date);
+    const dateOk=d>=cutoff;
+    const topicOk=insTopicFilter==='all'||(a.topic||'').toLowerCase()===insTopicFilter.toLowerCase();
+    return dateOk&&topicOk;
+  });
+  if(!filtered.length){
+    g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--faint)"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg><p>No insights found for these filters.</p></div>';
+    return;
+  }
+  g.innerHTML=filtered.map(renderNewsCard).join('');
+}
+
+async function loadInsights(force=false){
+  if(insLoaded&&!force)return;
+  insLoaded=true;
+  const g=document.getElementById('insights-grid');
+  if(g)g.innerHTML='<div class="spinner" style="grid-column:1/-1;text-align:center;padding:40px"></div>';
+  try{
+    const snap=await db.collection('news').orderBy('date','desc').limit(60).get().catch(async()=>{
+      return db.collection('news').limit(60).get();
+    });
+    if(!snap.empty){
+      allInsights=snap.docs.map(d=>({id:d.id,...d.data()}));
+    }else{
+      // Firestore empty — use seed data
+      allInsights=SEED_INSIGHTS;
+      // Seed to Firestore for future use (fire-and-forget)
+      const b=db.batch();
+      SEED_INSIGHTS.forEach(a=>{
+        const ref=db.collection('news').doc(a.id);
+        b.set(ref,{title:a.title,description:a.description,image:a.image,source:a.source,date:a.date,topic:a.topic,link:a.link});
+      });
+      b.commit().catch(()=>{});
+    }
+  }catch(e){
+    console.error('[loadInsights]',e.message);
+    allInsights=SEED_INSIGHTS;
+  }
+  renderInsights();
+  loadHomeInsights();
+}
+
+function loadHomeInsights(){
+  const c=document.getElementById('home-insights-list');if(!c)return;
+  const recent=[...allInsights].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  if(!recent.length){c.innerHTML='<div style="font-size:13px;color:var(--faint)">No insights yet.</div>';return}
+  c.innerHTML=recent.map(a=>`
+    <a class="home-news-item" href="${esc(a.link||'#')}" target="_blank" rel="noopener">
+      <div class="home-news-item-thumb" style="${a.image?'background:none':''}">${a.image?`<img src="${esc(a.image)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none'">`:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>'}</div>
+      <div class="home-news-item-body">
+        <div class="home-news-item-title">${esc(a.title||'')}</div>
+        <div class="home-news-item-meta">${esc(a.source||'')} · ${timeAgo(a.date)} · <span style="color:#a78bfa">${esc(a.topic||'')}</span></div>
+      </div>
+    </a>`).join('');
+}
+
+// ── Patch nav to load insights on page open ──
+const _navForInsights=nav;
+nav=function(page){
+  _navForInsights(page);
+  if(page==='insights')loadInsights();
+};
+
+// ── Load home insights when dashboard inits ──
+const _origInitDashIns=initDash;
+initDash=function(){
+  _origInitDashIns.call(this);
+  setTimeout(()=>loadInsights(),600);
+};
 </script>
 </body>
 </html>
