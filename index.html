@@ -481,15 +481,18 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .up-startups{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto}
 
 /* ── NETWORK ── */
-.net-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.net-card{background:linear-gradient(160deg,#0D0D0D,#060606);border:1px solid #1A1A1A;border-radius:16px;padding:20px 18px;text-align:center;transition:transform .22s ease,border-color .22s,box-shadow .22s;cursor:pointer;position:relative;overflow:hidden}
-.net-card::before{content:'';position:absolute;inset:0;border-radius:16px;background:radial-gradient(ellipse at top,rgba(124,58,237,.06),transparent 70%);opacity:0;transition:opacity .22s}
-.net-card:hover{transform:translateY(-3px) scale(1.01);border-color:#7C3AED;box-shadow:0 8px 32px rgba(124,58,237,.18)}
-.net-card:hover::before{opacity:1}
-.net-av{width:56px;height:56px;font-size:19px;font-weight:700;margin:0 auto 11px;border:2px solid #1A1A1A;transition:border-color .22s}
-.net-card:hover .net-av{border-color:rgba(124,58,237,.5)}
-.net-name{font-size:14px;font-weight:600;margin-bottom:2px;cursor:pointer}
-.net-name:hover{color:#a78bfa}
+/* net-grid defined in net-card section */
+.net-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.net-card{background:#080808;border:1px solid #1A1A1A;border-radius:14px;padding:16px;display:flex;align-items:flex-start;gap:12px;transition:border-color .2s,box-shadow .2s;cursor:pointer;position:relative;overflow:hidden}
+.net-card:hover{border-color:#7C3AED;box-shadow:0 4px 20px rgba(124,58,237,.12)}
+.net-av{width:46px;height:46px;font-size:16px;font-weight:700;flex-shrink:0;border:2px solid #1F1F1F;border-radius:50%}
+.net-card-body{flex:1;min-width:0}
+.net-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.net-role-line{font-size:12px;color:#71717A;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.net-startup-line{font-size:12px;color:#a78bfa;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.net-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.net-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;background:rgba(124,58,237,.1);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
+.net-loc{font-size:11px;color:#52525B;margin-bottom:8px}
 .net-handle{font-size:12px;color:var(--faint);margin-bottom:6px}
 .net-btns{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 
@@ -2231,8 +2234,14 @@ function switchChat(tab){const g=tab==='global';document.getElementById('ct-glob
 async function loadChatUsers(){
   const c=document.getElementById('chat-ulist');if(!c)return;
   c.innerHTML='<div class="spinner"></div>';
-  const docs=await safeGet(db.collection('users').limit(40));
-  renderChatUsers(docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()})));
+  try{
+    const docs=await safeGet(db.collection('users').limit(40));
+    const users=docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
+    if(!users.length){c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">No users yet.</div>';return}
+    renderChatUsers(users);
+  }catch(e){
+    c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">Could not load. Refresh to retry.</div>';
+  }
 }
 function renderChatUsers(users){
   const c=document.getElementById('chat-ulist');
@@ -2348,10 +2357,15 @@ function renderNetUsers(){
 async function loadNetwork(){
   const g=document.getElementById('net-grid');if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
-  const docs=await safeGet(db.collection('users').limit(60));
-  allNetUsers=docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
-  if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;}
-  renderNetUsers();
+  try{
+    const docs=await safeGet(db.collection('users').limit(60));
+    allNetUsers=docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
+    if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;}
+    renderNetUsers();
+  }catch(e){
+    console.error('[loadNetwork]',e.message);
+    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Tap to refresh</p></div>';
+  }
 }
 function mkNetCard(u){
   const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
@@ -2515,9 +2529,15 @@ function loadProfile(){
   const av=document.getElementById('my-av');
   if(photoSrc){av.style.background='none';av.innerHTML=`<img src="${esc(photoSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`}
   else{av.style.background='';av.innerHTML=ini(name)+'<div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>'}
-  // Banner
+  // Banner — apply immediately and persistently
   const banner=document.getElementById('my-banner');
-  if(banner&&bannerSrc){banner.style.backgroundImage=`url('${bannerSrc}')`;banner.style.backgroundSize='cover';banner.style.backgroundPosition='center';}
+  if(banner){
+    if(bannerSrc){
+      banner.style.cssText+=';background-image:url("'+bannerSrc+'");background-size:cover;background-position:center;background-repeat:no-repeat;';
+    }else{
+      banner.style.backgroundImage='';
+    }
+  }
   const setT=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
   const setH=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v};
   setT('my-name',name||'No name set');
@@ -2527,6 +2547,8 @@ function loadProfile(){
   setT('my-conns',UD.connectionCount||0);
   setT('my-followers',UD.followerCount||0);
   setT('my-following',UD.followingCount||0);
+  // Sync coins from UD if loaded (coins loaded separately via loadCoins)
+  if(typeof UD.coins!=='undefined'){userCoins=UD.coins||0;updateCoinDisplay();}
   setH('my-skills-disp',mySkills.map(s=>`<span class="tag">${esc(s)}</span>`).join(''));
   // Edit profile photo preview
   const epAv=document.getElementById('ep-photo-av');
@@ -2780,9 +2802,16 @@ function loadMyPosts(){
 let userCoins=0;
 function loadCoins(){
   if(!CU)return;
-  db.collection('users').doc(CU.uid).get()
-    .then(d=>{if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay()}})
-    .catch(e=>console.warn('[loadCoins]',e.message));
+  // Real-time listener so coins update immediately when earned
+  if(window._coinUnsub)window._coinUnsub();
+  window._coinUnsub=db.collection('users').doc(CU.uid).onSnapshot(d=>{
+    if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay();}
+  },()=>{
+    // fallback one-time get
+    db.collection('users').doc(CU.uid).get()
+      .then(d=>{if(d.exists){userCoins=d.data().coins||0;updateCoinDisplay()}})
+      .catch(()=>{});
+  });
 }
 function updateCoinDisplay(){
   const el=document.getElementById('coin-count'),el2=document.getElementById('bp-coin-count');
@@ -3598,9 +3627,10 @@ function topicColor(topic){
 }
 
 function renderNewsCard(a){
-  const thumb=a.image
-    ?`<img class="news-thumb" src="${esc(a.image)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=news-thumb-placeholder><svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/></svg></div>'">`
-    :`<div class="news-thumb-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M7 13h10"/><path d="M7 17h6"/></svg></div>`;
+  const _nimg=a.image||a.thumbnail||a.urlToImage||'';
+  const thumb=_nimg
+    ?`<img class="news-thumb" src="${esc(_nimg)}" alt="" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=news-thumb-placeholder style=height:150px><svg width=32 height=32 viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#333\" stroke-width=\"1.5\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/></svg></div>')">`
+    :`<div class="news-thumb-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="#2a2a2a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M7 13h10"/><path d="M7 17h6"/></svg></div>`;
   return `<div class="news-card" onclick="window.open('${esc(a.link||'#')}','_blank')">
     ${thumb}
     <div class="news-body">
