@@ -1596,6 +1596,39 @@ firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDom
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
 
 // ── STATE ── (declared first to avoid temporal dead zone)
+
+// ── BASE64 IMAGE HELPER (no Firebase Storage needed) ──
+// maxW: max width/height in px, quality: 0-1 JPEG quality
+async function imgToBase64(file,maxW,quality){
+  if(!file||!file.type.startsWith('image/'))throw new Error('Not an image');
+  return new Promise((res,rej)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW||h>maxW){if(w>h){h=Math.round(h*maxW/w);w=maxW}else{w=Math.round(w*maxW/h);h=maxW}}
+        const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+        cv.getContext('2d').drawImage(img,0,0,w,h);
+        const b64=cv.toDataURL('image/jpeg',quality);
+        // Firestore doc limit ~1MB; warn if too large
+        if(b64.length>900000)console.warn('[b64] Large image:',Math.round(b64.length/1024),'KB');
+        res(b64);
+      };
+      img.onerror=rej;
+      img.src=ev.target.result;
+    };
+    reader.onerror=rej;
+    reader.readAsDataURL(file);
+  });
+}
+// Get image src from user object — checks both new (profileImage) and old (photoURL) field
+function userPhoto(u){return u?.profileImage||u?.photoURL||''}
+// Get startup logo from startup object — checks both new (logo) and old (logoUrl) field
+function startupLogo(s){return s?.logo||s?.logoUrl||''}
+// Get post image — checks both new (image) and old (imageUrl) field
+function postImage(p){return p?.image||p?.imageUrl||''}
+
 var CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
 
 // ── FIRESTORE HELPERS (resilient - no index required) ──
@@ -1669,7 +1702,7 @@ async function doSignup(){
     if(!hs.empty){showAErr('Handle already taken.');return}
     const c=await auth.createUserWithEmailAndPassword(email,pass);
     await c.user.updateProfile({displayName:name});
-    await makeUserDoc(c.user.uid,{name,handle,email,role:'user',bio:'',about:'',skills:[],photoURL:'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()});
+    await makeUserDoc(c.user.uid,{name,handle,email,role:'user',bio:'',about:'',skills:[],photoURL:'',profileImage:'',bannerImage:'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()});
     closeAuth();
   }catch(e){if(!e.handled)showAErr(authMsg(e.code))}finally{setBtn('su-btn',false,'Create Account')}
 }
@@ -1679,7 +1712,7 @@ async function doGoogle(){
     const r=await auth.signInWithPopup(GP);
     const u=r.user;
     const s=await db.collection('users').doc(u.uid).get();
-    if(!s.exists){const handle='user'+u.uid.slice(0,6).toLowerCase();await makeUserDoc(u.uid,{name:u.displayName||'',handle,email:u.email||'',role:'user',bio:'',about:'',skills:[],photoURL:u.photoURL||'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()})}
+    if(!s.exists){const handle='user'+u.uid.slice(0,6).toLowerCase();await makeUserDoc(u.uid,{name:u.displayName||'',handle,email:u.email||'',role:'user',bio:'',about:'',skills:[],photoURL:u.photoURL||'',profileImage:u.photoURL||'',bannerImage:'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()})}
     closeAuth();
   }catch(e){showAErr(authMsg(e.code))}
 }
@@ -1694,7 +1727,7 @@ auth.onAuthStateChanged(async u=>{
     console.log('[Auth] User signed in:',u.uid);
     try{await loadUD()}catch(e){
       console.warn('[Auth] loadUD fallback:',e.message);
-      UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
+      UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
     updateNavbar();
   }else{
@@ -1743,7 +1776,7 @@ function initDash(){
 
   if(CU&&!UD){
     db.collection('users').doc(CU.uid).get()
-      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
+      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
       .catch(()=>{UD=UD||{name:CU.displayName||'Builder',coins:0};loadProfile();});
   }
   const nm=UD?.name||CU?.displayName||'Builder';
@@ -1844,8 +1877,9 @@ function renderExplore(items){
   if(!items.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups found.</p></div>';return}
   const stageClass={idea:'stage-idea',mvp:'stage-mvp',growth:'stage-growth',scale:'stage-scale'};
   g.innerHTML=items.map(s=>{
-    const logoH=s.logoUrl?`<img src="${esc(s.logoUrl)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
-    const bgS=s.logoUrl?'background:none':'';
+    const _sl=startupLogo(s);
+    const logoH=_sl?`<img src="${esc(_sl)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
+    const bgS=_sl?'background:none':'';
     const tags=(s.tags||'').split(',').map(t=>t.trim()).filter(Boolean).slice(0,4).map(t=>`<span class="tag" style="font-size:10px">${esc(t)}</span>`).join('');
     const short=(s.shortDesc||s.description||'').substring(0,120);
     return `<div class="exp-list-card" onclick="openPubStartup('${esc(s.id)}')">
@@ -1872,8 +1906,9 @@ async function openPubStartup(sid){
     if(!snap.exists){body.innerHTML='<p style="color:var(--faint)">Not found.</p>';return}
     const s={id:snap.id,...snap.data()};
     if(CU&&s.userId!==CU.uid){db.collection('startups').doc(sid).update({views:fv.increment(1)}).then(()=>{const nv=(s.views||0)+1;if([10,25,50,100,250,500].includes(nv))mkNotif(s.userId,'view',{fromName:'Platform',message:`Your startup "${s.name}" reached ${nv} views!`})}).catch(()=>{})}
-    const logoH=s.logoUrl?`<img src="${esc(s.logoUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:14px" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
-    const bgS=s.logoUrl?'background:none':'';
+    const _sl2=startupLogo(s);
+    const logoH=_sl2?`<img src="${esc(_sl2)}" style="width:100%;height:100%;object-fit:cover;border-radius:14px" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
+    const bgS=_sl2?'background:none':'';
     const tags=(s.tags||'').split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
     const stageClass={idea:'stage-idea',mvp:'stage-mvp',growth:'stage-growth',scale:'stage-scale'};
     body.innerHTML=`<div class="sd-grid">
@@ -1909,11 +1944,13 @@ async function submitPost(){
   if(!title||!content){err.textContent='Title and content are required.';err.classList.remove('hidden');return}
   const btn=document.getElementById('post-sub-btn');btn.disabled=true;btn.innerHTML='<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px"></div>Publishing...';
   try{
-    let imageUrl=null;
-    if(imgFile){if(imgFile.size>5*1024*1024){err.textContent='Image max 5MB.';err.classList.remove('hidden');return}const ref=storage.ref(`posts/${CU.uid}/${Date.now()}_${imgFile.name}`);const sn=await ref.put(imgFile);imageUrl=await sn.ref.getDownloadURL()}
-    await db.collection('posts').add({userId:CU.uid,authorName:UD?.name||CU.displayName||'Anonymous',authorHandle:UD?.handle||'',authorPhoto:UD?.photoURL||CU.photoURL||'',sector,title,content,imageUrl,likes:[],views:[],createdAt:fv.serverTimestamp()});
-    // Refresh authorPhoto in existing posts if photo was updated
-    if(UD?.photoURL){db.collection('posts').where('userId','==',CU.uid).limit(20).get().then(s=>{const b=db.batch();s.forEach(d=>b.update(d.ref,{authorPhoto:UD.photoURL}));b.commit().catch(()=>{})}).catch(()=>{})}
+    let postImg=null;
+    if(imgFile){
+      try{postImg=await imgToBase64(imgFile,800,0.70);}
+      catch(e){toast('Image error: '+e.message,'err');return}
+    }
+    const authorPhoto=userPhoto(UD)||CU.photoURL||'';
+    await db.collection('posts').add({userId:CU.uid,authorName:UD?.name||CU.displayName||'Anonymous',authorHandle:UD?.handle||'',authorPhoto,sector,title,content,image:postImg,imageUrl:postImg,likes:[],views:[],createdAt:fv.serverTimestamp()});
     closePost();toast('Post published!');
   }catch(e){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}
   finally{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Publish Post'}
@@ -1968,12 +2005,13 @@ function loadFeed(){
 function mkPost(p){
   const liked=Array.isArray(p.likes)&&p.likes.includes(CU?.uid);
   const lc=Array.isArray(p.likes)?p.likes.length:0,vc=Array.isArray(p.views)?p.views.length:0;
-  const photoH=p.authorPhoto?`<img src="${esc(p.authorPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(p.authorName||'U');
+  const _aph=p.authorPhoto||'';
+  const photoH=_aph?`<img src="${esc(_aph)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(p.authorName||'U');
   return `<div class="post-card" id="pc-${esc(p.id)}">
     <div class="post-body">
       <div class="post-meta">
         <div class="post-auth">
-          <div class="avatar post-av" style="${p.authorPhoto?'background:none':''}" onclick="viewUser('${esc(p.userId)}')">${photoH}</div>
+          <div class="avatar post-av" style="${_aph?'background:none':''}" onclick="viewUser('${esc(p.userId)}')">${photoH}</div>
           <div>
             <div class="post-aname" onclick="viewUser('${esc(p.userId)}')">${esc(p.authorName||'Anonymous')}</div>
             <div class="post-ahandle">${p.authorHandle?'@'+esc(p.authorHandle)+' · ':''} ${ft(p.createdAt)}</div>
@@ -1985,7 +2023,7 @@ function mkPost(p){
       <div class="post-title">${esc(p.title||'')}</div>
       <div class="post-content">${esc(p.content||'')}</div>
     </div>
-    ${p.imageUrl?`<div class="post-img-wrap" onclick="openLightbox('${esc(p.imageUrl)}')"><img src="${esc(p.imageUrl)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:''}
+    ${postImage(p)?`<div class="post-img-wrap" onclick="openLightbox('${esc(postImage(p))}')"><img src="${esc(postImage(p))}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:''}
     <div class="post-actions">
       <button class="pact ${liked?'liked':''}" id="lb-${esc(p.id)}" onclick="toggleLike('${esc(p.id)}',${liked})">
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -2059,7 +2097,7 @@ async function submitComment(){
   inp.value='';
   // Optimistic UI - show immediately
   const c=document.getElementById('cmt-list');
-  const ph=UD?.photoURL||CU.photoURL||'';
+  const ph=userPhoto(UD)||CU.photoURL||'';
   const nm=UD?.name||CU.displayName||'Anonymous';
   const tempId='tmp_'+Date.now();
   const phHtml=ph?`<img src="${esc(ph)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(nm);
@@ -2111,9 +2149,12 @@ async function submitStartup(){
   if(!name||!shortDesc||!desc){err.textContent='Name, short description, and full description are required.';err.classList.remove('hidden');return}
   const btn=document.getElementById('sf-sub-btn');btn.disabled=true;btn.innerHTML='<div style="width:13px;height:13px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle;margin-right:5px"></div>Submitting...';
   try{
-    let logoUrl=null;
-    if(logoFile){if(logoFile.size>3*1024*1024){err.textContent='Logo max 3MB.';err.classList.remove('hidden');return}const ref=storage.ref(`startups/${CU.uid}/${Date.now()}`);const sn=await ref.put(logoFile);logoUrl=await sn.ref.getDownloadURL()}
-    await db.collection('startups').add({userId:CU.uid,founderName:UD?.name||CU.displayName||'Anonymous',name,shortDesc,description:desc,stage,website:website||null,fundingNeeded,tags,twitter,logoUrl,views:0,isFeatured:false,createdAt:fv.serverTimestamp()});
+    let logoData=null;
+    if(logoFile){
+      try{logoData=await imgToBase64(logoFile,200,0.70);}
+      catch(e){toast('Logo error: '+e.message,'err');return}
+    }
+    await db.collection('startups').add({userId:CU.uid,founderName:UD?.name||CU.displayName||'Anonymous',name,shortDesc,description:desc,stage,website:website||null,fundingNeeded,tags,twitter,logo:logoData,logoUrl:logoData,views:0,isFeatured:false,createdAt:fv.serverTimestamp()});
     closeAS();document.getElementById('as-ov').querySelector('.mform').reset();document.getElementById('sf-logo-prev').style.display='none';toast('Startup listed!');
   }catch(e){err.textContent='Failed: '+e.message;err.classList.remove('hidden')}
   finally{btn.disabled=false;btn.textContent='Submit Startup'}
@@ -2180,7 +2221,7 @@ function loadGlobChat(){
 
 async function sendGlob(){
   const inp=document.getElementById('glob-inp');const msg=inp.value.trim();if(!msg||!CU)return;inp.value='';
-  try{await db.collection('globalMessages').add({senderId:CU.uid,senderName:UD?.name||CU.displayName||'Anonymous',senderPhoto:UD?.photoURL||CU.photoURL||'',message:msg,timestamp:fv.serverTimestamp()})}
+  try{await db.collection('globalMessages').add({senderId:CU.uid,senderName:UD?.name||CU.displayName||'Anonymous',senderPhoto:userPhoto(UD)||CU.photoURL||'',message:msg,timestamp:fv.serverTimestamp()})}
   catch(e){inp.value=msg}
 }
 
@@ -2197,7 +2238,8 @@ function renderChatUsers(users){
   const c=document.getElementById('chat-ulist');
   if(!users.length){c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">No users found.</div>';return}
   c.innerHTML=users.map(u=>{
-    const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
+    const _vuph=userPhoto(u);
+    const ph=_vuph?`<img src="${esc(_vuph)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
     return `<div class="chat-urow ${activeChatUid===u.id?'active':''}" onclick="openChat('${u.id}','${esc(u.name||'User')}','${esc(u.photoURL||'')}','${esc(u.handle||'')}')">
       <div class="avatar" style="width:34px;height:34px;font-size:12px;${u.photoURL?'background:none':''}">${ph}</div>
       <div style="flex:1;min-width:0"><div class="chat-uname">${esc(u.name||'User')}</div><div class="chat-upreview">@${esc(u.handle||'')}</div></div>
@@ -2314,7 +2356,7 @@ async function loadNetwork(){
 function mkNetCard(u){
   const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
   return `<div class="net-card" style="cursor:pointer" onclick="viewUser('${esc(u.id)}')">
-    <div class="avatar net-av" style="${u.photoURL?'background:none':''}">${ph}</div>
+    <div class="avatar net-av" style="${_uph?'background:none':''}">${ph}</div>
     <div class="net-name">${esc(u.name||'Builder')}</div>
     <div class="net-handle">@${esc(u.handle||'')}</div>
 
@@ -2333,7 +2375,7 @@ function netSearch(q){
     const users=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()})).filter(u=>(u.name||'').toLowerCase().includes(ql)||(u.handle||'').toLowerCase().includes(ql)).slice(0,6);
     if(!users.length){res.innerHTML='<div style="padding:9px;font-size:12px;color:var(--faint)">No results.</div>';return}
     res.innerHTML=users.map(u=>`<div class="sr-row" onclick="document.getElementById('net-results').classList.add('hidden');document.getElementById('net-search').value='';viewUser('${esc(u.id)}')">
-      <div class="avatar" style="width:28px;height:28px;font-size:10px;${u.photoURL?'background:none':''}">${u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(u.name)}</div>
+      <div class="avatar" style="width:28px;height:28px;font-size:10px;${userPhoto(u)?'background:none':''}">${userPhoto(u)?`<img src="${esc(userPhoto(u))}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(u.name)}</div>
       <div><div style="font-size:13px;font-weight:600">${esc(u.name)}</div><div style="font-size:11px;color:var(--faint)">@${esc(u.handle||'')}</div></div>
     </div>`).join('');
   },280);
@@ -2462,15 +2504,20 @@ function loadProfile(){
   if(!CU)return;
   if(!UD){
     db.collection('users').doc(CU.uid).get()
-      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
+      .then(s=>{UD=s.exists?s.data():{name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};loadProfile();})
       .catch(()=>{UD={name:CU.displayName||'Builder',coins:0,connectionCount:0,followerCount:0,followingCount:0,skills:[]};loadProfile();});
     return;
   }
-  const{name='',handle='',role='user',bio='',about='',photoURL=''}=UD;
+  const{name='',handle='',role='user',bio='',about=''}=UD;
+  const photoSrc=userPhoto(UD);// handles both profileImage and photoURL
+  const bannerSrc=UD.bannerImage||UD.bannerURL||'';
   mySkills=[...(UD.skills||[])];
   const av=document.getElementById('my-av');
-  if(photoURL){av.style.background='none';av.innerHTML=`<img src="${esc(photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`}
+  if(photoSrc){av.style.background='none';av.innerHTML=`<img src="${esc(photoSrc)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"><div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`}
   else{av.style.background='';av.innerHTML=ini(name)+'<div class="pav-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>'}
+  // Banner
+  const banner=document.getElementById('my-banner');
+  if(banner&&bannerSrc){banner.style.backgroundImage=`url('${bannerSrc}')`;banner.style.backgroundSize='cover';banner.style.backgroundPosition='center';}
   const setT=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
   const setH=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v};
   setT('my-name',name||'No name set');
@@ -2501,81 +2548,36 @@ function loadProfile(){
 }
 function triggerPhoto(){document.getElementById('photo-inp').click()}
 async function uploadPhoto(e){
-  const file=e.target.files[0];
-  if(!file)return;
-  if(!file.type.startsWith('image/')){toast('Please select an image','err');return}
-  if(file.size>5*1024*1024){toast('Image too large. Max 5MB','err');return}
-
-  // Instant local preview everywhere
-  const localUrl=URL.createObjectURL(file);
+  const file=e.target.files[0];if(!file)return;
+  if(file.size>8*1024*1024){toast('Image too large (max 8MB)','err');return}
   const imgHtml=(src)=>`<img src="${src}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   const applyPreview=(src)=>{
-    ['my-av','ep-photo-av','settings-av'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){el.style.background='none';el.innerHTML=imgHtml(src);}
-    });
-    // also update topbar avatar
+    ['my-av','ep-photo-av','settings-av'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.background='none';el.innerHTML=imgHtml(src)}});
     const tbAv=document.getElementById('tb-profile-av');
     if(tbAv){tbAv.style.background='none';tbAv.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;}
   };
+  // Show instant local preview
+  const localUrl=URL.createObjectURL(file);
   applyPreview(localUrl);
-  toast('Uploading photo...','info');
-
+  toast('Saving photo...','info');
   try{
-    // Canvas resize to 300×300 JPEG
-    const dataUrl=await new Promise((res,rej)=>{
-      const reader=new FileReader();
-      reader.onload=ev=>{
-        const img=new Image();
-        img.onload=()=>{
-          const cv=document.createElement('canvas');cv.width=300;cv.height=300;
-          const ctx=cv.getContext('2d');
-          const side=Math.min(img.width,img.height);
-          const ox=(img.width-side)/2,oy=(img.height-side)/2;
-          ctx.drawImage(img,ox,oy,side,side,0,0,300,300);
-          res(cv.toDataURL('image/jpeg',0.88));
-        };
-        img.onerror=rej;
-        img.src=ev.target.result;
-      };
-      reader.onerror=rej;
-      reader.readAsDataURL(file);
-    });
-
-    const blob=await(await fetch(dataUrl)).blob();
-    const ref=storage.ref('profiles/'+CU.uid+'/avatar_'+Date.now());
-    const snap=await ref.put(blob,{contentType:'image/jpeg'});
-    const url=await snap.ref.getDownloadURL();
-
-    // Save to Firestore AND Firebase Auth profile
-    await Promise.all([
-      db.collection('users').doc(CU.uid).update({photoURL:url}),
-      CU.updateProfile({photoURL:url})
-    ]);
-    if(UD)UD.photoURL=url;
+    const b64=await imgToBase64(file,300,0.72);
+    // Save base64 to Firestore (both fields for compatibility)
+    await db.collection('users').doc(CU.uid).update({profileImage:b64,photoURL:b64});
+    try{await CU.updateProfile({photoURL:b64})}catch(_){}
+    if(UD){UD.profileImage=b64;UD.photoURL=b64}
     URL.revokeObjectURL(localUrl);
-    applyPreview(url);
+    applyPreview(b64);
     toast('Profile photo saved!','ok');
-    console.log('[uploadPhoto] Saved URL:',url);
-    // Backfill photoURL in user's posts and global messages so they show updated avatar
-    try{
-      const[ps,gms]=await Promise.all([
-        db.collection('posts').where('userId','==',CU.uid).limit(20).get(),
-        db.collection('globalMessages').where('senderId','==',CU.uid).limit(30).get()
-      ]);
-      const b=db.batch();
-      ps.forEach(d=>b.update(d.ref,{authorPhoto:url}));
-      gms.forEach(d=>b.update(d.ref,{senderPhoto:url}));
-      await b.commit();
-    }catch(_){}
-
+    // Backfill author photo in posts
+    db.collection('posts').where('userId','==',CU.uid).limit(20).get()
+      .then(s=>{const bt=db.batch();s.forEach(d=>bt.update(d.ref,{authorPhoto:b64}));bt.commit()})
+      .catch(()=>{});
   }catch(err){
-    console.error('[uploadPhoto] Error:',err.code,err.message);
+    console.error('[uploadPhoto]',err.message);
     URL.revokeObjectURL(localUrl);
-    // Restore original on failure
-    const orig=UD?.photoURL||'';
-    if(orig){applyPreview(orig);}
-    toast('Upload failed: '+err.message,'err');
+    const prev=userPhoto(UD)||'';if(prev)applyPreview(prev);
+    toast('Photo save failed: '+err.message,'err');
   }
   e.target.value='';
 }
@@ -2640,18 +2642,20 @@ async function viewUser(uid){
     const u={id:uSnap.id,...uSnap.data()};
     const connStatus=connSnap.empty?'none':connSnap.docs[0].data().status;
     const isFollowing=!followSnap.empty;
-    const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
+    const _vuph=userPhoto(u);
+    const ph=_vuph?`<img src="${esc(_vuph)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
     const connBtn=connStatus==='accepted'?`<button class="btn btn-green btn-xs" disabled>Connected</button>`:connStatus==='pending'?`<button class="btn btn-ghost btn-xs" disabled>Requested</button>`:`<button class="btn btn-ghost btn-xs" onclick="doConnectBtn('${uid}',this)">Connect</button>`;
     const followBtn=isFollowing?`<button class="btn btn-green btn-xs" disabled>Following</button>`:`<button class="btn btn-ghost btn-xs" onclick="doFollowBtn('${uid}',this)">Follow</button>`;
     const posts=postsSnap.docs.map(d=>({id:d.id,...d.data()}));
     const startups=startupsSnap.docs.map(d=>({id:d.id,...d.data()}));
-    const bannerBg=u.bannerURL
-      ?`background-image:url('${esc(u.bannerURL)}');background-size:cover;background-position:center`
+    const _vub=u.bannerImage||u.bannerURL||'';
+    const bannerBg=_vub
+      ?`background-image:url('${esc(_vub)}');background-size:cover;background-position:center`
       :'background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(0,0,0,.7))';
     body.innerHTML=`
       <div style="${bannerBg};height:100px;border-radius:var(--r2) var(--r2) 0 0;margin:-20px -20px 16px;"></div>
       <div class="up-header">
-        <div class="avatar up-av" style="${u.photoURL?'background:none':''}">${ph}</div>
+        <div class="avatar up-av" style="${_vuph?'background:none':''}">${ph}</div>
         <div class="up-info">
           <h2>${esc(u.name||'Builder')}</h2>
           <p style="color:var(--muted);font-size:13px">@${esc(u.handle||'')}</p>
@@ -3109,7 +3113,7 @@ async function loadLeaderboard(){
       const medal=i===0?'style="color:#f59e0b;font-size:18px"':i===1?'style="color:#9ca3af;font-size:16px"':i===2?'style="color:#cd7c2e;font-size:14px"':'style="color:var(--faint);font-size:13px"';
       const rankNum=i===0?'#1':i===1?'#2':i===2?'#3':'#'+(i+1);
       const isMe=u.id===CU?.uid;
-      const ph=u.photoURL?'<img src="'+esc(u.photoURL)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display=\'none\'">':ini(u.name||'?');
+      const _lph=userPhoto(u);const ph=_lph?'<img src="'+esc(_lph)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display=\'none\'">':ini(u.name||'?');
       const tasks=Object.values(u.bpProgress||{}).filter(v=>v==='done').length;
       return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:'+(isMe?'rgba(124,58,237,.1)':'var(--card)')+';border:1px solid '+(isMe?'rgba(124,58,237,.3)':'var(--border)')+';border-radius:var(--r2);margin-bottom:8px;transition:all .2s" onmouseenter="this.style.borderColor=\'rgba(124,58,237,.25)\'" onmouseleave="this.style.borderColor=\''+(isMe?'rgba(124,58,237,.3)':'var(--border)')+'\';">'
         +'<div '+medal+' style="width:28px;text-align:center;font-weight:800;flex-shrink:0">'+rankNum+'</div>'
