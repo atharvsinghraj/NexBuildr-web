@@ -1095,9 +1095,16 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
   <div class="modal modal-lg">
     <div class="modal-hd"><h3>Edit Profile</h3><button class="modal-close" onclick="closeEditProfile()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="mform">
-      <div style="display:flex;align-items:center;gap:16px;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:4px">
-        <div class="avatar" id="ep-photo-av" style="width:52px;height:52px;font-size:18px;cursor:pointer;flex-shrink:0" onclick="document.getElementById('photo-inp').click()" title="Click to change photo"></div>
-        <div><div style="font-size:13px;font-weight:600;margin-bottom:3px">Profile Photo</div><div style="font-size:12px;color:var(--muted)">Click avatar to upload new photo</div></div>
+      <!-- Photo + Banner upload row -->
+      <div style="display:flex;gap:10px;margin-bottom:4px">
+        <div style="flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer" onclick="document.getElementById('photo-inp').click()">
+          <div class="avatar" id="ep-photo-av" style="width:44px;height:44px;font-size:16px;flex-shrink:0"></div>
+          <div><div style="font-size:12px;font-weight:600">Profile Photo</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
+        </div>
+        <div style="flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer" onclick="document.getElementById('banner-inp').click()">
+          <div id="ep-banner-prev" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
+          <div><div style="font-size:12px;font-weight:600">Banner Image</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
+        </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
@@ -1635,12 +1642,28 @@ function postImage(p){return p?.image||p?.imageUrl||''}
 var CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
 
 // ── FIRESTORE HELPERS (resilient - no index required) ──
-async function safeGet(query){
-  try{const s=await query.get();return s.docs}catch(e){console.warn('[safeGet]',e.code,e.message);return[]}
+async function safeGet(query,timeoutMs=8000){
+  try{
+    const p=query.get();
+    const t=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),timeoutMs));
+    const s=await Promise.race([p,t]);
+    return s.docs;
+  }catch(e){console.warn('[safeGet]',e.code||e.message);return[]}
 }
 function safeSnap(query,onData,onErr){
   let unsub=null;
-  unsub=query.onSnapshot(onData,async err=>{
+  let gotFirstSnap=false;
+  // Timeout: if no snapshot in 8s, fallback to .get()
+  const tmo=setTimeout(async()=>{
+    if(!gotFirstSnap){
+      console.warn('[safeSnap] timeout, falling back to .get()');
+      try{const s=await query.get();onData(s)}catch(e){if(onErr)onErr(e)}
+    }
+  },8000);
+  unsub=query.onSnapshot(snap=>{
+    gotFirstSnap=true;clearTimeout(tmo);onData(snap);
+  },async err=>{
+    clearTimeout(tmo);
     console.warn('[safeSnap fallback]',err.code);
     try{const s=await query.get();onData(s)}
     catch(e){if(onErr)onErr(e)}
@@ -1844,12 +1867,13 @@ async function loadHomeStats(){
     setEl('st-startups',sDocs.length);
     setEl('st-connections',UD?.connectionCount||0);
     setEl('st-followers',UD?.followerCount||0);
-    const allP=[];db.collection('posts').orderBy('createdAt','desc').limit(5).get().then(snap=>{
-      snap.forEach(d=>allP.push({id:d.id,...d.data()}));
+    safeGet(db.collection('posts').limit(5)).then(docs=>{
+      const allP=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
       const c=document.getElementById('home-activity');
+      if(!c)return;
       if(!allP.length){c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:8px 0">No recent activity.</div>';return}
       c.innerHTML=allP.map(p=>`<div class="act-item"><div class="act-dot"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title||'Untitled')}</div><div style="font-size:11px;color:var(--faint)">${ft(p.createdAt)}</div></div></div>`).join('');
-    });
+    }).catch(()=>{const c=document.getElementById('home-activity');if(c)c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:8px 0">No recent activity.</div>';});
   }catch(e){console.error(e)}
 }
 
@@ -2172,16 +2196,19 @@ function loadStartups(){
   };
   safeSnap(db.collection('startups').limit(40),
     snap=>renderStItems(snap.docs),
-    ()=>safeGet(db.collection('startups').limit(40)).then(renderStItems)
+    ()=>safeGet(db.collection('startups').limit(40)).then(docs=>{renderStItems(docs);}).catch(()=>{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. List yours!</p></div>';})
   );
+  // Timeout: if still spinner after 7s, show empty state
+  setTimeout(()=>{if(g&&(g.innerHTML.includes('spinner')||!g.children.length))g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. Be the first to list!</p></div>';},7000);
 }
 
 function mkSC(s,rank){
   const rc=rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
   const rl=rank<=3?`#${rank} Ranked`:`#${rank}`;
-  const lH=s.logoUrl?`<img src="${esc(s.logoUrl)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
+  const _sLogo=startupLogo(s);
+  const lH=_sLogo?`<img src="${esc(_sLogo)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" onerror="this.style.display='none'">`:esc((s.name||'S')[0]);
   return `<div class="sc-card">
-    <div class="sc-logo" style="${s.logoUrl?'background:none':''}">${lH}</div>
+    <div class="sc-logo" style="${_sLogo?'background:none':''}">${lH}</div>
     <div class="sc-info">
       <div class="sc-rank ${rc}">${rl} · ${s.views||0} views</div>
       <div class="sc-name">${esc(s.name||'Untitled')}</div>
@@ -2218,8 +2245,13 @@ function loadGlobChat(){
   globChatUnsub=db.collection('globalMessages').limit(100)
     .onSnapshot(renderGlobSnap, err=>{
       console.error('[loadGlobChat]',err.message);
-      c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">Could not load chat.</div>';
+      // Fallback: try one-time get
+      db.collection('globalMessages').limit(100).get()
+        .then(renderGlobSnap)
+        .catch(()=>{c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">Send a message to start the conversation!</div>';});
     });
+  // Timeout guard: if nothing renders in 6s, show empty state
+  setTimeout(()=>{if(c.innerHTML.includes('spinner')||!c.children.length)c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet. Say hello!</div>';},6000);
 }
 
 async function sendGlob(){
@@ -2364,7 +2396,13 @@ async function loadNetwork(){
     renderNetUsers();
   }catch(e){
     console.error('[loadNetwork]',e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Tap to refresh</p></div>';
+    // Auto-retry once
+    setTimeout(async()=>{
+      const retryDocs=await safeGet(db.collection('users').limit(60));
+      allNetUsers=retryDocs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
+      if(allNetUsers.length){renderNetUsers();}
+      else{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No builders yet. Invite friends to join!</p></div>';}
+    },2000);
   }
 }
 function mkNetCard(u){
@@ -2783,13 +2821,13 @@ loadProfile=function(){
 };
 
 // Load my posts on profile
-function loadMyPosts(){
+async function loadMyPosts(){
   const c=document.getElementById('my-posts-list');if(!c||!CU)return;
   c.innerHTML='<div class="spinner"></div>';
-  db.collection('posts').where('userId','==',CU.uid).orderBy('createdAt','desc').limit(10).get().then(snap=>{
-    if(snap.empty){c.innerHTML='<div class="empty-state" style="padding:12px">No posts yet.</div>';return}
-    c.innerHTML=snap.docs.map(d=>{const p={id:d.id,...d.data()};return '<div style="padding:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;cursor:pointer" onclick="nav(\'feed\')" onmouseenter="this.style.borderColor=\'rgba(124,58,237,.3)\'" onmouseleave="this.style.borderColor=\'\'"><div style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">'+esc(p.sector||'General')+'</div><div style="font-size:14px;font-weight:600;margin-bottom:3px">'+esc(p.title||'Untitled')+'</div><div style="font-size:12px;color:var(--muted)">'+esc((p.content||'').substring(0,90))+'</div><div style="font-size:11px;color:var(--faint);margin-top:4px">'+ft(p.createdAt)+'</div></div>';}).join('');
-  }).catch(()=>{c.innerHTML='<div class="empty-state">Could not load posts.</div>'});
+  const docs=await safeGet(db.collection('posts').where('userId','==',CU.uid).limit(10));
+  if(!docs.length){c.innerHTML='<div class="empty-state" style="padding:12px">No posts yet.</div>';return}
+  const posts=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+  c.innerHTML=posts.map(p=>`<div style="padding:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;cursor:pointer" onclick="nav('feed')" onmouseenter="this.style.borderColor='rgba(124,58,237,.3)'" onmouseleave="this.style.borderColor=''"><div style="font-size:10px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">${esc(p.sector||'General')}</div><div style="font-size:14px;font-weight:600;margin-bottom:3px">${esc(p.title||'Untitled')}</div><div style="font-size:12px;color:var(--muted)">${esc((p.content||'').substring(0,90))}</div><div style="font-size:11px;color:var(--faint);margin-top:4px">${ft(p.createdAt)}</div></div>`).join('');
 }
 
 // Patch nav to trigger profile posts & build path
@@ -3717,6 +3755,86 @@ const _origInitDashIns=initDash;
 initDash=function(){
   _origInitDashIns.call(this);
   setTimeout(()=>loadInsights(),600);
+};
+
+// ── GLOBAL SPINNER WATCHDOG ──
+// Kill any spinners still showing after 8 seconds
+function startSpinnerWatchdog(){
+  setTimeout(()=>{
+    document.querySelectorAll('.spinner').forEach(sp=>{
+      const page=sp.closest('.page');
+      if(page&&page.classList.contains('active')){
+        // Replace spinner with appropriate empty state
+        const grid=sp.closest('[id$="-grid"],[id$="-list"],[id="glob-msgs"],[id="home-activity"]');
+        if(grid&&grid.id!=='home-activity'){
+          if(grid.id==='glob-msgs')grid.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet. Say hello!</div>';
+          else if(grid.id==='chat-ulist')grid.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">No users found.</div>';
+          else grid.innerHTML='<div class="empty-state" style="grid-column:1/-1;padding:32px;text-align:center"><p>Nothing to show yet.</p></div>';
+        }else if(sp.parentElement){
+          sp.style.display='none';
+        }
+      }
+    });
+  },8000);
+}
+
+// ── FIX openEditProfile — sync ep-banner-prev ──
+const _origOEP=window.openEditProfile;
+window.openEditProfile=function(){
+  if(typeof _origOEP==='function')_origOEP.call(this);
+  else{document.getElementById('ep-ov').classList.remove('hidden');}
+  // Sync banner preview in modal
+  const epBanner=document.getElementById('ep-banner-prev');
+  if(epBanner&&UD){
+    const bs=UD.bannerImage||UD.bannerURL||'';
+    if(bs){
+      epBanner.style.backgroundImage=`url('${bs}')`;
+      epBanner.style.backgroundSize='cover';
+      epBanner.style.backgroundPosition='center';
+      epBanner.innerHTML='';
+    }
+  }
+};
+
+// ── Patch initDash to start watchdog ──
+const _prevInitDash=initDash;
+initDash=function(){
+  _prevInitDash.call(this);
+  startSpinnerWatchdog();
+};
+
+// ── Fix loadChatUsers timeout ──
+const _origLoadCU=loadChatUsers;
+loadChatUsers=async function(){
+  await _origLoadCU.call(this);
+  // Extra timeout guard
+  setTimeout(()=>{
+    const c=document.getElementById('chat-ulist');
+    if(c&&c.innerHTML.includes('spinner'))c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">No users yet.</div>';
+  },7000);
+};
+
+// ── Fix loadCFPosts timeout ──
+const _origLoadCFP=loadCFPosts;
+loadCFPosts=async function(){
+  await _origLoadCFP.call(this);
+  setTimeout(()=>{
+    const g=document.getElementById('cf-grid');
+    if(g&&g.innerHTML.includes('spinner'))g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No co-founder opportunities yet. Be the first to post!</p></div>';
+  },7000);
+};
+
+// ── Fix loadHomeStats zero values ──
+const _origLHS=loadHomeStats;
+loadHomeStats=async function(){
+  await _origLHS.call(this);
+  // Set 0 if still showing "—"
+  setTimeout(()=>{
+    ['st-posts','st-startups','st-connections','st-followers'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el&&el.textContent==='—')el.textContent='0';
+    });
+  },6000);
 };
 </script>
 </body>
