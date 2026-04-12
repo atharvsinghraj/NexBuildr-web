@@ -1755,15 +1755,10 @@ auth.onAuthStateChanged(async u=>{
       UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
     updateNavbar();
-    // AUTO-OPEN DASHBOARD: if dashboard is visible (page reload while logged in), load it
-    const dash=document.getElementById('dashboard');
-    if(dash&&!dash.classList.contains('hidden')){
-      console.log('[Auth] Dashboard visible → initDash()');
-      initDash();
-    }
+    // AUTO: always open dashboard when user is authenticated
+    showDash();
   }else{
     UD=null;_dashLoaded=false;
-    // Unsub all listeners on logout
     [feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(u=>{try{if(u)u()}catch(_){}});
     feedUnsub=globChatUnsub=activeChatUnsub=notifUnsub=cmtUnsub=null;
     updateNavbar();loadPublicExplore();
@@ -1787,7 +1782,6 @@ function showDash(){
   document.getElementById('explore-page').classList.remove('open');
   document.body.style.overflow='';
   document.getElementById('dashboard').classList.remove('hidden');
-  _dashLoaded=false; // reset so initDash always reloads fresh
   initDash();
 }
 function showHomepage(){
