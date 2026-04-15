@@ -1606,7 +1606,7 @@ if(!firebase.apps.length){
   firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 }
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
-db.settings({merge:true});
+  
 console.log('[Firebase] Initialized. DB:',!!db,'Auth:',!!auth);
 
 // ── STATE ── (declared first to avoid temporal dead zone)
