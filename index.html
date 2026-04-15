@@ -1606,7 +1606,7 @@ if(!firebase.apps.length){
   firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 }
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
-  
+db.settings({merge:true});
 console.log('[Firebase] Initialized. DB:',!!db,'Auth:',!!auth);
 
 // ── STATE ── (declared first to avoid temporal dead zone)
@@ -1857,25 +1857,36 @@ document.addEventListener('click',e=>{if(!e.target.closest('#topbar-search-wrap'
 
 // ── HOME STATS ──
 async function loadHomeStats(){
-  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v||'0'};
+  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=(v===null||v===undefined?'0':String(v))};
   try{
-    const[pSnap,sSnap]=await Promise.all([
+    // Fetch all stats in parallel — use exact collection names
+    const[pSnap,sSnap,connSnap,followSnap,recentSnap]=await Promise.all([
       db.collection('posts').where('userId','==',CU.uid).get(),
-      db.collection('startups').where('userId','==',CU.uid).get()
+      db.collection('startups').where('userId','==',CU.uid).get(),
+      db.collection('connections').where('fromUid','==',CU.uid).where('status','==','accepted').get().catch(()=>({size:0})),
+      db.collection('follows').where('followingUid','==',CU.uid).get().catch(()=>({size:0})),
+      db.collection('posts').limit(5).get()
     ]);
-    setEl('st-posts',pSnap.size);
-    setEl('st-startups',sSnap.size);
-    setEl('st-connections',UD?.connectionCount||0);
-    setEl('st-followers',UD?.followerCount||0);
-    console.log('[loadHomeStats] posts:',pSnap.size,'startups:',sSnap.size);
-    db.collection('posts').limit(5).get().then(docs=>{
-      const allP=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-      const c=document.getElementById('home-activity');
-      if(!c)return;
-      if(!allP.length){c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:8px 0">No recent activity.</div>';return}
-      c.innerHTML=allP.map(p=>`<div class="act-item"><div class="act-dot"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title||'Untitled')}</div><div style="font-size:11px;color:var(--faint)">${ft(p.createdAt)}</div></div></div>`).join('');
-    }).catch(()=>{const c=document.getElementById('home-activity');if(c)c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:8px 0">No recent activity.</div>';});
-  }catch(e){console.error(e)}
+    setEl('st-posts', pSnap.size);
+    setEl('st-startups', sSnap.size);
+    // Use real counts from connections/follows collections, fallback to UD
+    const connCount=connSnap.size||UD?.connectionCount||0;
+    const follCount=followSnap.size||UD?.followerCount||0;
+    setEl('st-connections', connCount);
+    setEl('st-followers', follCount);
+    console.log('[loadHomeStats] posts:',pSnap.size,'startups:',sSnap.size,'connections:',connCount,'followers:',follCount);
+    // Recent activity
+    const c=document.getElementById('home-activity');
+    if(c){
+      const allP=recentSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+      if(!allP.length){c.innerHTML='<div style="color:var(--faint);font-size:13px;padding:8px 0">No recent activity.</div>';}
+      else{c.innerHTML=allP.map(p=>`<div class="act-item"><div class="act-dot"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title||'Untitled')}</div><div style="font-size:11px;color:var(--faint)">${ft(p.createdAt)}</div></div></div>`).join('');}
+    }
+  }catch(e){
+    console.error('[loadHomeStats] error:',e.message);
+    // On error, at least show 0s
+    ['st-posts','st-startups','st-connections','st-followers'].forEach(id=>setEl(id,'0'));
+  }
 }
 
 // ── PUBLIC EXPLORE ──
@@ -1884,10 +1895,15 @@ async function loadPublicExplore(){
   if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
   try{
-    const snap=await db.collection('startups').orderBy('views','desc').limit(40).get();
-    allExpStartups=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const snap=await db.collection('startups').limit(40).get();
+    console.log('[loadPublicExplore] count:',snap.size);
+    allExpStartups=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.views||0)-(a.views||0));
+    if(!allExpStartups.length){g.innerHTML='<div class="empty-state"><p>No startups yet.</p></div>';return}
     renderExplore(allExpStartups);
-  }catch(e){g.innerHTML='<div class="empty-state"><p>Could not load startups.</p></div>'}
+  }catch(e){
+    console.error('[loadPublicExplore]',e.message);
+    g.innerHTML='<div class="empty-state"><p>Could not load startups.</p></div>';
+  }
 }
 function filterExplore(){
   const q=(document.getElementById('exp-search')?.value||'').toLowerCase();
@@ -2195,19 +2211,21 @@ async function submitStartup(){
   finally{btn.disabled=false;btn.textContent='Submit Startup'}
 }
 
-function loadStartups(){
+async function loadStartups(){
   const g=document.getElementById('sc-grid');
-  const renderStItems=docs=>{
-    const items=docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.views||0)-(a.views||0));
-    if(!items.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. List yours!</p></div>';return}
-    g.innerHTML='';items.forEach((s,i)=>g.insertAdjacentHTML('beforeend',mkSC(s,i+1)));
-  };
-  // Direct get for instant render + live listener
-  db.collection('startups').limit(40).get()
-    .then(snap=>renderStItems(snap.docs))
-    .catch(()=>{g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. Be the first!</p></div>';});
-  // Live listener for new additions
-  safeSnap(db.collection('startups').limit(40),snap=>renderStItems(snap.docs),null);
+  if(!g)return;
+  g.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection('startups').limit(40).get();
+    console.log('[loadStartups] count:',snap.size);
+    const items=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.views||0)-(a.views||0));
+    if(!items.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No startups yet. Be the first to list yours!</p></div>';return}
+    g.innerHTML='';
+    items.forEach((s,i)=>g.insertAdjacentHTML('beforeend',mkSC(s,i+1)));
+  }catch(e){
+    console.error('[loadStartups]',e.message);
+    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Could not load startups.<br><button class="btn btn-ghost btn-sm" onclick="loadStartups()" style="margin-top:8px">Retry</button></p></div>';
+  }
 }
 
 function mkSC(s,rank){
@@ -2249,13 +2267,20 @@ function loadGlobChat(){
     });
     c.scrollTop=c.scrollHeight;
   };
-  // Direct get() first for instant render, then live listener
+  // Get then live listener
   db.collection('globalMessages').limit(100).get()
-    .then(snap=>{renderGlobSnap(snap);})
-    .catch(()=>{c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet.</div>';});
-  // Live updates
+    .then(snap=>{
+      console.log('[loadGlobChat] messages:',snap.size);
+      renderGlobSnap(snap);
+    })
+    .catch(e=>{
+      console.error('[loadGlobChat]',e.message);
+      c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet. Say hello!</div>';
+    });
+  // Live updates for new messages
+  if(globChatUnsub)globChatUnsub();
   globChatUnsub=db.collection('globalMessages').limit(100)
-    .onSnapshot(renderGlobSnap,err=>console.warn('[globChat]',err.code));
+    .onSnapshot(renderGlobSnap, err=>console.warn('[globChat live]',err.code));
 }
 
 async function sendGlob(){
