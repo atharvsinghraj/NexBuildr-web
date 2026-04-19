@@ -1606,8 +1606,16 @@ if(!firebase.apps.length){
   firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 }
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
-db.settings({merge:true});
-console.log('[Firebase] Initialized. DB:',!!db,'Auth:',!!auth);
+console.log('[Firebase] Initialized. Project:nexbuildr-c2660 DB:',!!db,'Auth:',!!auth);
+
+// Global error catcher — surfaces silent JS failures
+window.onerror=function(msg,src,line,col,err){
+  console.error('[GLOBAL JS ERROR]',msg,'line:',line,err);
+  return false;
+};
+window.addEventListener('unhandledrejection',e=>{
+  console.error('[UNHANDLED PROMISE]',e.reason);
+});
 
 // ── STATE ── (declared first to avoid temporal dead zone)
 
@@ -1883,9 +1891,10 @@ async function loadHomeStats(){
       else{c.innerHTML=allP.map(p=>`<div class="act-item"><div class="act-dot"></div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title||'Untitled')}</div><div style="font-size:11px;color:var(--faint)">${ft(p.createdAt)}</div></div></div>`).join('');}
     }
   }catch(e){
-    console.error('[loadHomeStats] error:',e.message);
-    // On error, at least show 0s
+    console.error('[loadHomeStats] FAILED:',e.code||e.message);
     ['st-posts','st-startups','st-connections','st-followers'].forEach(id=>setEl(id,'0'));
+    const c=document.getElementById('home-activity');
+    if(c)c.innerHTML='<div style="color:var(--faint);font-size:13px">Could not load activity.</div>';
   }
 }
 
@@ -2047,10 +2056,14 @@ function loadFeed(){
   // Live updates
   if(feedUnsub){feedUnsub();feedUnsub=null}
   feedUnsub=feedQuery.onSnapshot(snap=>{
+    console.log('[loadFeed] live snap:',snap.size);
     const posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
     if(feedFilter==='mine'&&!posts.length){c.innerHTML='<div class="empty-state"><p>You have not posted yet.</p></div>';return}
     renderFeedPosts(posts,c);
-  },err=>console.warn('[feed onSnapshot]',err.code));
+  },err=>{
+    console.error('[feed onSnapshot] FAILED:',err.code||err.message);
+    if(c.innerHTML.includes('spinner'))c.innerHTML='<div class="empty-state"><p>Feed failed to load. <button class="btn btn-ghost btn-sm" onclick="loadFeed()">Retry</button></p></div>';
+  });
 }
 
 function mkPost(p){
@@ -2223,8 +2236,8 @@ async function loadStartups(){
     g.innerHTML='';
     items.forEach((s,i)=>g.insertAdjacentHTML('beforeend',mkSC(s,i+1)));
   }catch(e){
-    console.error('[loadStartups]',e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Could not load startups.<br><button class="btn btn-ghost btn-sm" onclick="loadStartups()" style="margin-top:8px">Retry</button></p></div>';
+    console.error('[loadStartups] FAILED:',e.code||e.message);
+    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load startups. <button class="btn btn-ghost btn-sm" onclick="loadStartups()" style="margin-top:6px">Retry</button></p></div>';
   }
 }
 
@@ -2267,20 +2280,21 @@ function loadGlobChat(){
     });
     c.scrollTop=c.scrollHeight;
   };
-  // Get then live listener
+  // Immediate get for instant render
   db.collection('globalMessages').limit(100).get()
     .then(snap=>{
-      console.log('[loadGlobChat] messages:',snap.size);
+      console.log('[loadGlobChat] initial:',snap.size,'messages');
       renderGlobSnap(snap);
     })
     .catch(e=>{
-      console.error('[loadGlobChat]',e.message);
-      c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">No messages yet. Say hello!</div>';
+      console.error('[loadGlobChat] FAILED:',e.code||e.message);
+      c.innerHTML='<div style="text-align:center;color:var(--faint);font-size:13px;padding:20px">Could not load chat.</div>';
     });
-  // Live updates for new messages
+  // Live listener for new messages
   if(globChatUnsub)globChatUnsub();
   globChatUnsub=db.collection('globalMessages').limit(100)
-    .onSnapshot(renderGlobSnap, err=>console.warn('[globChat live]',err.code));
+    .onSnapshot(snap=>{console.log('[globChat live]',snap.size);renderGlobSnap(snap);},
+    err=>console.error('[globChat live] FAILED:',err.code||err.message));
 }
 
 async function sendGlob(){
@@ -2302,8 +2316,8 @@ async function loadChatUsers(){
     renderChatUsers(users);
     console.log('[loadChatUsers]',users.length,'users');
   }catch(e){
-    console.error('[loadChatUsers]',e.message);
-    c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">Could not load users.</div>';
+    console.error('[loadChatUsers] FAILED:',e.code||e.message);
+    c.innerHTML='<div style="padding:12px;font-size:13px;color:var(--faint)">Failed to load users.</div>';
   }
 }
 function renderChatUsers(users){
@@ -2427,8 +2441,8 @@ async function loadNetwork(){
     renderNetUsers();
     console.log('[loadNetwork]',allNetUsers.length,'users loaded');
   }catch(e){
-    console.error('[loadNetwork]',e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Could not load network.<br><button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:8px">Try again</button></p></div>';
+    console.error('[loadNetwork] FAILED:',e.code||e.message);
+    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load network. <button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:6px">Retry</button></p></div>';
   }
 }
 function mkNetCard(u){
@@ -2546,15 +2560,17 @@ function loadNotifs(){
 
   // Simple query - no composite index needed
   if(notifUnsub){notifUnsub();notifUnsub=null}
+  // Get first for instant render
+  db.collection('notifications').where('userId','==',CU.uid).limit(50).get()
+    .then(snap=>{console.log('[loadNotifs] initial:',snap.size);renderNotifSnap(snap);})
+    .catch(e=>console.error('[loadNotifs] get failed:',e.code||e.message));
+  // Live listener
   notifUnsub=db.collection('notifications')
     .where('userId','==',CU.uid)
     .limit(50)
-    .onSnapshot(renderNotifSnap, err=>{
-      console.error('[loadNotifs]',err.code,err.message);
-      // Last resort: one-time get
-      db.collection('notifications').where('userId','==',CU.uid).limit(50).get()
-        .then(renderNotifSnap)
-        .catch(()=>{c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';});
+    .onSnapshot(snap=>{console.log('[loadNotifs] live:',snap.size);renderNotifSnap(snap);}, err=>{
+      console.error('[loadNotifs] FAILED:',err.code||err.message);
+      c.innerHTML='<div class="empty-state"><p>No notifications yet.</p></div>';
     });
 }
 
