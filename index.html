@@ -2458,65 +2458,155 @@ async function sendPers(){
 async function chatConnect(){if(!activeChatUid)return;const btn=document.getElementById('chat-connect-btn');btn.disabled=true;await doConnect(activeChatUid,btn)}
 function openChatWith(uid,name,photo,handle){nav('chat');switchChat('personal');openChat(uid,name,photo,handle||'')}
 
-// ── NETWORK ──
-let allNetUsers=[],netFilterRole='all';
+// ── // ───────── NETWORK SYSTEM ─────────
+
+let allNetUsers = [];
+let netFilterRole = 'all';
+
+// safe user photo
+function userPhoto(u){
+  return u.photoURL || "";
+}
+
+// filter buttons
 function setNetFilter(role){
-  netFilterRole=role;
-  document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById('nf-'+role.replace('/','-'));if(el)el.classList.add('active');
+  netFilterRole = role;
+
+  document.querySelectorAll('.nf-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById('nf-' + role.replace('/','-'));
+  if(el) el.classList.add('active');
+
   renderNetUsers();
 }
-function renderNetUsers(){
-  const g=document.getElementById('net-grid');
-  let users=allNetUsers;
-  if(netFilterRole!=='all'){
-    users=allNetUsers.filter(u=>(u.role||'').toLowerCase()===netFilterRole||(u.about||'').toLowerCase().includes(netFilterRole)||(u.skills||[]).some(s=>s.toLowerCase().includes(netFilterRole)));
-  }
-  if(!users.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No builders found for this filter.</p></div>';return}
-  g.innerHTML=users.map(mkNetCard).join('');
-}
-async function loadNetwork(){
-  const g=document.getElementById('net-grid');if(!g)return;
-  g.innerHTML='<div class="spinner"></div>';
-  try{
-    const snap=await db.collection('users').limit(60).get();
-    allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
-    if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;}
-    renderNetUsers();
-    console.log('[loadNetwork]',allNetUsers.length,'users loaded');
-  }catch(e){
-    console.error('[loadNetwork] FAILED:',e.code||e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load network. <button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:6px">Retry</button></p></div>';
-  }
-}
-function mkNetCard(u){
-  const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
-  return `<div class="net-card" style="cursor:pointer" onclick="viewUser('${esc(u.id)}')">
-    <div class="avatar net-av" style="${_uph?'background:none':''}">${ph}</div>
-    <div class="net-name">${esc(u.name||'Builder')}</div>
-    <div class="net-handle">@${esc(u.handle||'')}</div>
 
-    <div class="net-btns" onclick="event.stopPropagation()">
-      <button class="btn btn-ghost btn-xs" onclick="doConnectBtn('${esc(u.id)}',this)">Connect</button>
+// render users
+function renderNetUsers(){
+  const g = document.getElementById('net-grid');
+  if(!g) return;
+
+  let users = allNetUsers;
+
+  if(netFilterRole !== 'all'){
+    users = allNetUsers.filter(u =>
+      (u.role || '').toLowerCase() === netFilterRole ||
+      (u.about || '').toLowerCase().includes(netFilterRole) ||
+      (u.skills || []).some(s => s.toLowerCase().includes(netFilterRole))
+    );
+  }
+
+  if(!users.length){
+    g.innerHTML = `<div class="empty-state"><p>No builders found.</p></div>`;
+    return;
+  }
+
+  g.innerHTML = users.map(u => `
+    <div class="net-card" onclick="viewUser('${u.id}')">
+
+      <div class="avatar net-av" style="${userPhoto(u) ? 'background:none' : ''}">
+        ${userPhoto(u)
+          ? `<img src="${userPhoto(u)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+          : (u.name ? u.name[0].toUpperCase() : 'U')
+        }
+      </div>
+
+      <div class="net-name">${u.name || 'Builder'}</div>
+      <div class="net-handle">@${u.handle || ''}</div>
+
+      <div class="net-btns" onclick="event.stopPropagation()">
+        <button onclick="doConnectBtn('${u.id}', this)" class="btn btn-ghost btn-xs">
+          Connect
+        </button>
+      </div>
+
     </div>
-  </div>`;
+  `).join('');
 }
-let netST=null;
+
+// MAIN LOAD FUNCTION (MOST IMPORTANT)
+async function loadNetwork(){
+  const g = document.getElementById('net-grid');
+  if(!g) return;
+
+  g.innerHTML = `<div class="spinner"></div>`;
+
+  try{
+    const user = firebase.auth().currentUser;
+
+    if(!user){
+      g.innerHTML = `<p>Please login first</p>`;
+      return;
+    }
+
+    const snap = await db.collection('users').limit(50).get();
+
+    allNetUsers = snap.docs
+      .filter(d => d.id !== user.uid)
+      .map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+
+    if(!allNetUsers.length){
+      g.innerHTML = `<p>No users found</p>`;
+      return;
+    }
+
+    renderNetUsers();
+
+  } catch(e){
+    console.error("NETWORK ERROR:", e);
+
+    g.innerHTML = `
+      <div class="empty-state">
+        <p>Error: ${e.code || e.message}</p>
+        <button onclick="loadNetwork()">Retry</button>
+      </div>
+    `;
+  }
+}
+
+// SEARCH
+let netST = null;
+
 function netSearch(q){
-  clearTimeout(netST);const res=document.getElementById('net-results');
-  if(!q){res.classList.add('hidden');return}
-  netST=setTimeout(async()=>{
-    res.classList.remove('hidden');res.innerHTML='<div style="padding:9px;font-size:12px;color:var(--faint)">Searching...</div>';
-    const snap=await db.collection('users').limit(50).get();const ql=q.toLowerCase();
-    const users=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()})).filter(u=>(u.name||'').toLowerCase().includes(ql)||(u.handle||'').toLowerCase().includes(ql)).slice(0,6);
-    if(!users.length){res.innerHTML='<div style="padding:9px;font-size:12px;color:var(--faint)">No results.</div>';return}
-    res.innerHTML=users.map(u=>`<div class="sr-row" onclick="document.getElementById('net-results').classList.add('hidden');document.getElementById('net-search').value='';viewUser('${esc(u.id)}')">
-      <div class="avatar" style="width:28px;height:28px;font-size:10px;${userPhoto(u)?'background:none':''}">${userPhoto(u)?`<img src="${esc(userPhoto(u))}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:ini(u.name)}</div>
-      <div><div style="font-size:13px;font-weight:600">${esc(u.name)}</div><div style="font-size:11px;color:var(--faint)">@${esc(u.handle||'')}</div></div>
-    </div>`).join('');
-  },280);
+  clearTimeout(netST);
+
+  const res = document.getElementById('net-results');
+  if(!res) return;
+
+  if(!q){
+    res.classList.add('hidden');
+    return;
+  }
+
+  netST = setTimeout(async () => {
+    res.classList.remove('hidden');
+    res.innerHTML = "Searching...";
+
+    const snap = await db.collection('users').limit(50).get();
+    const ql = q.toLowerCase();
+
+    const users = snap.docs
+      .map(d => ({id: d.id, ...d.data()}))
+      .filter(u =>
+        (u.name || '').toLowerCase().includes(ql) ||
+        (u.handle || '').toLowerCase().includes(ql)
+      )
+      .slice(0,6);
+
+    if(!users.length){
+      res.innerHTML = "No results";
+      return;
+    }
+
+    res.innerHTML = users.map(u => `
+      <div onclick="viewUser('${u.id}')">
+        ${u.name}
+      </div>
+    `).join('');
+
+  }, 300);
 }
-document.addEventListener('click',e=>{if(!e.target.closest('#page-network'))document.getElementById('net-results')?.classList.add('hidden')});
 
 // ── CONNECT / FOLLOW ──
 async function doConnect(targetUid,btn){
