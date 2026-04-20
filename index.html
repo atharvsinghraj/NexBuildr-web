@@ -1753,25 +1753,66 @@ async function doLogout(){cleanup();await auth.signOut()}
 async function makeUserDoc(uid,data){await db.collection('users').doc(uid).set(data,{merge:true})}
 function authMsg(code){const m={'auth/user-not-found':'No account with this email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already in use.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password min 6 chars.','auth/too-many-requests':'Too many attempts.','auth/popup-closed-by-user':'Popup closed.','auth/invalid-credential':'Invalid email or password.'};return m[code]||'Error. Please try again.'}
 
-// ── AUTH STATE ──
+// ── AUTH STATE — single entry point, fires app ONCE ──
+var _appBooted=false;
 auth.onAuthStateChanged(async u=>{
   CU=u||null;
   if(u){
+    // Prevent duplicate boot if Firebase fires auth event twice
+    if(_appBooted){
+      console.log('[Auth] Already booted, skipping duplicate trigger');
+      return;
+    }
+    _appBooted=true;
     console.log('[Auth] User signed in:',u.uid);
-    try{await loadUD()}catch(e){
-      console.warn('[Auth] loadUD fallback:',e.message);
+    // Step 1: Load user data first — everything else depends on UD
+    try{await loadUD();}catch(e){
+      console.error('[Auth] loadUD failed:',e.code||e.message);
       UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
+    // Step 2: Show dashboard UI (does NOT trigger loads)
     updateNavbar();
-    // AUTO: always open dashboard when user is authenticated
     showDash();
+    // Step 3: Load all features — UD is guaranteed to exist here
+    console.log('[Auth] Starting all feature loaders...');
+    _loadAllFeatures();
   }else{
-    UD=null;_dashLoaded=false;
-    [feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(u=>{try{if(u)u()}catch(_){}});
+    _appBooted=false;
+    UD=null;
+    [feedUnsub,globChatUnsub,activeChatUnsub,notifUnsub,cmtUnsub].forEach(fn=>{try{if(fn)fn()}catch(_){}});
     feedUnsub=globChatUnsub=activeChatUnsub=notifUnsub=cmtUnsub=null;
-    updateNavbar();loadPublicExplore();
+    updateNavbar();
+    loadPublicExplore();
+    console.log('[Auth] User signed out');
   }
 });
+
+// All feature loaders — called ONCE after auth+UD ready
+function _loadAllFeatures(){
+  // Profile (sync, uses UD)
+  try{loadProfile();}catch(e){console.error('[loadAllFeatures] loadProfile:',e.message)}
+  // Stats (async, fire-and-forget)
+  loadHomeStats().catch(e=>console.error('[loadAllFeatures] loadHomeStats:',e.message));
+  // Feed (async)
+  loadFeed();
+  // Chat (async, slight delay avoids Firestore connection saturation)
+  setTimeout(()=>{
+    try{loadGlobChat();}catch(e){console.error('[loadAllFeatures] loadGlobChat:',e.message)}
+    loadChatUsers().catch(e=>console.error('[loadAllFeatures] loadChatUsers:',e.message));
+  },100);
+  // Startups + Network
+  setTimeout(()=>{
+    loadStartups().catch(e=>console.error('[loadAllFeatures] loadStartups:',e.message));
+    loadNetwork().catch(e=>console.error('[loadAllFeatures] loadNetwork:',e.message));
+  },200);
+  // Notifs + Coins (lowest priority)
+  setTimeout(()=>{
+    try{loadNotifs();}catch(e){console.error('[loadAllFeatures] loadNotifs:',e.message)}
+    loadCoins();
+    loadStreak();
+  },350);
+  console.log('[loadAllFeatures] All loaders fired. UD:',UD?.name||'(no name)');
+}
 
 async function loadUD(){
   const s=await db.collection('users').doc(CU.uid).get();
@@ -1790,7 +1831,10 @@ function showDash(){
   document.getElementById('explore-page').classList.remove('open');
   document.body.style.overflow='';
   document.getElementById('dashboard').classList.remove('hidden');
-  initDash();
+  // Update welcome name — loaders already running via _loadAllFeatures
+  const el=document.getElementById('welcome-name');
+  if(el)el.textContent=UD?.name||CU?.displayName||'Builder';
+  nav('home');
 }
 function showHomepage(){
   document.getElementById('homepage').classList.remove('hidden');
