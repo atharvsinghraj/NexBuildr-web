@@ -2521,16 +2521,40 @@ async function loadNetwork(){
     g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load network. <button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:6px">Retry</button></p></div>';
   }
 }
-function mkNetCard(u){
-  const ph=u.photoURL?`<img src="${esc(u.photoURL)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'">`:ini(u.name||'U');
-  return `<div class="net-card" style="cursor:pointer" onclick="viewUser('${esc(u.id)}')">
-    <div class="avatar net-av" style="${_uph?'background:none':''}">${ph}</div>
-    <div class="net-name">${esc(u.name||'Builder')}</div>
-    <div class="net-handle">@${esc(u.handle||'')}</div>
-
-    <div class="net-btns" onclick="event.stopPropagation()">
-      <button class="btn btn-ghost btn-xs" onclick="doConnectBtn('${esc(u.id)}',this)">Connect</button>
+function mkNetCard(u,connSet){
+  const cs=connSet||_myConnSet||new Set();
+  const uph=userPhoto(u)||u.photoURL||'';
+  const avHtml=uph
+    ?`<img src="${esc(uph)}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.remove()">`
+    :`<span style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff">${ini(u.name||'U')}</span>`;
+  const roleStr=(u.role||u.about||'Builder').toUpperCase().slice(0,28);
+  const startup=u.startupName||u.startup||'Stealth Startup';
+  const location=u.location||'Remote';
+  const skills=(u.skills||[]).slice(0,3);
+  const uid=u.id||u.uid||'';
+  const isConn=cs.has(uid);
+  const isPend=cs.has('pending_'+uid);
+  let btnHTML;
+  if(isConn){
+    btnHTML=`<button class="net-connect-btn connected" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>CONNECTED</button>`;
+  }else if(isPend){
+    btnHTML=`<button class="net-connect-btn pending" disabled>REQUEST SENT</button>`;
+  }else{
+    btnHTML=`<button class="net-connect-btn connect" onclick="event.stopPropagation();_netConnect('${uid}',this)"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>CONNECT PROFILE</button>`;
+  }
+  const tagsHTML=skills.length?`<div class="net-tags">${skills.map(s=>`<span class="net-tag">${esc(s)}</span>`).join('')}</div>`:'';
+  return `<div class="net-card" onclick="viewUser('${uid}')">
+    <div class="net-card-top">
+      <div class="net-av" style="${uph?'background:none':'background:linear-gradient(135deg,#7C3AED,#EC4899)'}">${avHtml}</div>
+      <div class="net-card-info">
+        <div class="net-name">${esc(u.name||'Builder')}</div>
+        <div class="net-role-badge">${esc(roleStr)}</div>
+        <div class="net-startup-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>${esc(startup)}</div>
+        <div class="net-loc-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(location)}</div>
+      </div>
     </div>
+    ${tagsHTML}
+    <div onclick="event.stopPropagation()">${btnHTML}</div>
   </div>`;
 }
 let netST=null;
@@ -3726,10 +3750,11 @@ function loadHomeInsights(){
 function _syncNavbarPhoto(){
   const av=document.getElementById('tb-profile-av');
   if(!av)return;
-  const src=userPhoto(UD)||CU?.photoURL||'';
+  // Priority: Firestore profileImage → Firestore photoURL → Auth photoURL → initials
+  const src=(UD&&(UD.profileImage||UD.photoURL))||CU?.photoURL||'';
   if(src){
     av.style.background='none';
-    av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.style.display='none'">`;
+    av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.innerHTML='${ini(UD?.name||CU?.displayName||'U')}'">`;
   }else{
     av.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';
     av.textContent=ini(UD?.name||CU?.displayName||'U');
