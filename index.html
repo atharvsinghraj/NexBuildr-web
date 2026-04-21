@@ -2507,18 +2507,44 @@ function renderNetUsers(){
   if(!users.length){g.innerHTML='<div style="text-align:center;padding:32px;color:var(--faint)"><p>No builders found for this filter.</p></div>';return}
   g.innerHTML=users.map(u=>mkNetCard(u,_myConnSet)).join('');
 }
+var _myConnSet=new Set();
 async function loadNetwork(){
+  if(!CU){console.warn('[loadNetwork] No auth, skipping');return;}
   const g=document.getElementById('net-grid');if(!g)return;
   g.innerHTML='<div class="spinner"></div>';
   try{
-    const snap=await db.collection('users').limit(60).get();
-    allNetUsers=snap.docs.filter(d=>d.id!==CU?.uid).map(d=>({id:d.id,...d.data()}));
-    if(!allNetUsers.length){g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No other builders yet.</p></div>';return;}
+    const[usersSnap,sentSnap,recvSnap]=await Promise.all([
+      db.collection('users').limit(80).get(),
+      db.collection('connections').where('fromUid','==',CU.uid).get(),
+      db.collection('connections').where('toUid','==',CU.uid).where('status','==','accepted').get()
+    ]);
+    _myConnSet=new Set();
+    sentSnap.docs.forEach(d=>{const data=d.data();if(data.status==='accepted')_myConnSet.add(data.toUid);else _myConnSet.add('pending_'+data.toUid);});
+    recvSnap.docs.forEach(d=>_myConnSet.add(d.data().fromUid));
+    allNetUsers=usersSnap.docs.filter(d=>d.id!==CU.uid).map(d=>({id:d.id,...d.data()}));
+    console.log('[loadNetwork]',allNetUsers.length,'users,',_myConnSet.size,'connections');
+    if(!allNetUsers.length){g.innerHTML='<div style="text-align:center;padding:48px;color:var(--faint)"><p>No builders yet.</p></div>';return;}
     renderNetUsers();
-    console.log('[loadNetwork]',allNetUsers.length,'users loaded');
   }catch(e){
     console.error('[loadNetwork] FAILED:',e.code||e.message);
-    g.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>Failed to load network. <button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:6px">Retry</button></p></div>';
+    g.innerHTML=`<div style="text-align:center;padding:32px;color:var(--faint)"><p>Failed to load network.</p><button class="btn btn-ghost btn-sm" onclick="loadNetwork()" style="margin-top:12px">↻ Retry</button></div>`;
+  }
+}
+async function _netConnect(uid,btn){
+  if(!CU){toast('Sign in to connect','err');return;}
+  btn.disabled=true;const orig=btn.innerHTML;btn.textContent='Sending...';
+  try{
+    const ex=await db.collection('connections').where('fromUid','==',CU.uid).where('toUid','==',uid).limit(1).get();
+    if(!ex.empty){btn.outerHTML=`<button class="net-connect-btn pending" disabled>REQUEST SENT</button>`;return;}
+    await db.collection('connections').add({fromUid:CU.uid,fromName:UD?.name||'Someone',toUid:uid,status:'pending',createdAt:fv.serverTimestamp()});
+    await mkNotif(uid,'connect',{fromUid:CU.uid,fromName:UD?.name||'Someone',message:`${UD?.name||'Someone'} sent you a connection request`,connReq:true});
+    _myConnSet.add('pending_'+uid);
+    btn.outerHTML=`<button class="net-connect-btn pending" disabled>REQUEST SENT</button>`;
+    toast('Connection request sent!','info');
+  }catch(e){
+    console.error('[_netConnect]',e.message);
+    btn.disabled=false;btn.innerHTML=orig;
+    toast('Could not send request. Try again.','err');
   }
 }
 function mkNetCard(u,connSet){
