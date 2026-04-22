@@ -288,7 +288,8 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ══════════════════ DASHBOARD LAYOUT ══════════════════ */
 #dashboard{display:flex;min-height:100vh;background:#000}
-#sidebar{width:var(--sw);background:#000;border-right:1px solid #111;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto}
+#sidebar{width:var(--sw);background:#000;border-right:1px solid #111;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto;transform:translateX(calc(-1 * var(--sw)))}
+#sidebar.open{transform:translateX(0)}
 .sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .sb-logo .logo{font-size:17px}
 .sb-close{display:none;background:none;border:none;color:var(--muted);cursor:pointer}
@@ -306,9 +307,9 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .sb-dot{position:absolute;right:10px;width:7px;height:7px;border-radius:50%;background:var(--pink);border:1.5px solid var(--bg2)}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150}
 .sb-overlay.open{display:block}
-#main{flex:1;margin-left:var(--sw);display:flex;flex-direction:column;min-height:100vh}
+#main{flex:1;margin-left:0;display:flex;flex-direction:column;min-height:100vh}
 #topbar{height:var(--th);background:#000;border-bottom:1px solid #1A1A1A;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:100}
-#menu-btn{display:none;background:none;border:none;padding:5px;cursor:pointer;color:var(--muted)}
+#menu-btn{display:flex;background:none;border:none;padding:5px;cursor:pointer;color:var(--muted);align-items:center;justify-content:center}
 #menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9}
 #page-title{display:none}
 .topbar-r{display:flex;align-items:center;gap:8px}
@@ -604,8 +605,8 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ── TOPBAR SEARCH ── */
 .tb-search-container{position:relative;flex-shrink:0}
-.tb-search-inner{display:flex;align-items:center;gap:7px;background:#080808;border:1px solid #222;border-radius:25px;padding:6px 14px;width:195px;transition:width .25s ease,border-color .2s,box-shadow .2s}
-.tb-search-inner:focus-within{border-color:#7C3AED;width:245px;box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.tb-search-inner{display:flex;align-items:center;gap:7px;background:#0A0A0A;border:1px solid #222;border-radius:8px;padding:6px 13px;width:100%;transition:border-color .2s,box-shadow .2s}
+.tb-search-inner:focus-within{border-color:#7C3AED;box-shadow:0 0 0 2px rgba(124,58,237,.12)}
 .tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff}
 .tb-search-inner input::placeholder{color:#444}
 #tb-results{position:absolute;top:calc(100%+8px);left:0;right:0;background:#080808;border:1px solid #1F1F1F;border-radius:14px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,.9);z-index:400;min-width:240px}
@@ -645,12 +646,9 @@ input,select,textarea,button{max-width:100%}
   .price-card.pop{transform:none}
   .foot-grid{grid-template-columns:1fr 1fr}
   .foot-brand{grid-column:1/-1}
-  #sidebar{transform:translateX(calc(-1 * var(--sw)))}
-  #sidebar.open{transform:translateX(0)}
   .sb-close{display:block}
   .sb-overlay.open{display:block}
   #main{margin-left:0!important}
-  #menu-btn{display:block}
   #pages{padding:12px 12px 40px}
   .stats-grid{grid-template-columns:1fr 1fr}
   .pf-grid{grid-template-columns:1fr}
@@ -1228,7 +1226,7 @@ input,select,textarea,button{max-width:100%}
     <div class="sb-logo"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><button class="sb-close" onclick="closeSB()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <nav class="sb-nav">
       <div class="sb-sec">
-        <button class="sb-link active" onclick="nav('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
+        <button class="sb-link active" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
         <button class="sb-link" onclick="nav('feed')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Community</button>
         <button class="sb-link" onclick="nav('nexai')"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Nex AI</button>
         <button class="sb-link" onclick="nav('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages</button>
@@ -1256,19 +1254,16 @@ input,select,textarea,button{max-width:100%}
 
   <div id="main">
     <header id="topbar">
-      <div style="display:flex;align-items:center;gap:10px">
-        <button id="menu-btn" onclick="toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-        <!-- Search bar left of centre -->
-        <div class="tb-search-container" id="topbar-search-wrap-left">
-          <div class="tb-search-inner" style="width:160px">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="tb-search" placeholder="Search..." oninput="onTbSearch(this.value)" autocomplete="off">
-          </div>
-          <div class="hidden" id="tb-results"></div>
+      <button id="menu-btn" onclick="toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <!-- Full-width search bar -->
+      <div class="tb-search-container" id="topbar-search-wrap-left" style="flex:1;margin:0 10px">
+        <div class="tb-search-inner" style="width:100%;border-radius:8px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="tb-search" placeholder="Search builders..." oninput="onTbSearch(this.value)" autocomplete="off">
         </div>
+        <div class="hidden" id="tb-results"></div>
       </div>
       <div class="topbar-r">
-        <!-- Search moved to left side of topbar -->
         <!-- Notifications -->
         <button class="notif-btn" onclick="nav('notifications')" title="Notifications">
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -1283,14 +1278,22 @@ input,select,textarea,button{max-width:100%}
     <main id="pages">
       <!-- HOME -->
       <div class="page active" id="page-home">
-        <div class="dash-welcome"><h2>Welcome back, <span class="grad-text" id="welcome-name">Builder</span> 👋</h2><p>Here's what's happening in your community today.</p></div>
+        <div class="dash-welcome"><h2>Welcome back, <span class="grad-text" id="welcome-name">Builder</span></h2></div>
         <div class="stats-grid">
           <div class="stat-box"><div class="stat-box-l">Your Posts</div><div class="stat-box-v" id="st-posts">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Startups</div><div class="stat-box-v" id="st-startups">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Connections</div><div class="stat-box-v" id="st-connections">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Followers</div><div class="stat-box-v" id="st-followers">—</div></div>
         </div>
-        <!-- Daily Insights TOP -->
+        <!-- Recent Activity FIRST -->
+        <div class="home-grid" style="margin-bottom:18px">
+          <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
+          <div class="home-block"><h3>Stats</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-posts-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Posts</div></div>
+            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-conns-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Connections</div></div>
+          </div></div>
+        </div>
+        <!-- Daily Insights SECOND (below Recent Activity) -->
         <div style="margin-bottom:18px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
             <h3 style="font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.06em">Daily Insights</h3>
@@ -1298,22 +1301,14 @@ input,select,textarea,button{max-width:100%}
           </div>
           <div id="home-insights-list"><div class="spinner" style="padding:20px;text-align:center"></div></div>
         </div>
-        <!-- Stats + Activity -->
-        <div class="home-grid" style="margin-bottom:18px">
-          <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
-          <div class="home-block"><h3>Your Stats</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-posts-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Posts</div></div>
-            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-conns-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Connections</div></div>
-          </div></div>
-        </div>
-        <!-- Quick Actions BOTTOM -->
+        <!-- Quick Actions LAST -->
         <div class="home-block" style="margin-bottom:18px">
           <h3>Quick Actions</h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <button class="btn btn-grad" onclick="openPost()">✏️ Create Post</button>
-            <button class="btn btn-ghost" onclick="openAS()">🚀 Add Startup</button>
-            <button class="btn btn-ghost" onclick="nav('network')">🌐 Network</button>
-            <button class="btn btn-ghost" onclick="nav('nexai')">🤖 Nex AI</button>
+            <button class="btn btn-grad" onclick="openPost()" style="display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Create Post</button>
+            <button class="btn btn-ghost" onclick="openAS()" style="display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Add Startup</button>
+            <button class="btn btn-ghost" onclick="nav('network')" style="display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Network</button>
+            <button class="btn btn-ghost" onclick="nav('nexai')" style="display:flex;align-items:center;justify-content:center;gap:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Nex AI</button>
           </div>
         </div>
       </div>
@@ -1742,14 +1737,14 @@ function hideExplorePage(){
 }
 function scrollToExplore(){showExplorePage()}
 function toggleFaq(el){const i=el.parentElement,b=i.querySelector('.faq-body'),o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-body').style.maxHeight='0'});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
-function heroCTA(){CU?showDash():openAuth('signup')}
+function heroCTA(){if(CU){showDash();_loadAllFeaturesOnce();}else{openAuth('signup');}}
 
 // Update navbar based on auth state
 function updateNavbar(){
   const na=document.getElementById('nav-actions'),ma=document.getElementById('mnav-auth');
   if(CU){
-    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="showDash()">Dashboard</button>`;
-    ma.innerHTML=`<button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();showDash()">Dashboard</button>`;
+    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
+    ma.innerHTML=`<button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
     document.getElementById('hero-cta-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Open Dashboard';
   }else{
     na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="openAuth('login')">Login</button><button class="btn btn-grad btn-sm" onclick="openAuth('signup')">Start Free</button>`;
@@ -1884,10 +1879,15 @@ function showDash(){
   document.getElementById('explore-page').classList.remove('open');
   document.body.style.overflow='';
   document.getElementById('dashboard').classList.remove('hidden');
-  // Update welcome name — loaders already running via _loadAllFeatures
   const el=document.getElementById('welcome-name');
   if(el)el.textContent=UD?.name||CU?.displayName||'Builder';
   nav('home');
+}
+function _loadAllFeaturesOnce(){
+  // Only load once per session
+  if(window._featuresLoaded)return;
+  window._featuresLoaded=true;
+  _loadAllFeatures();
 }
 function showHomepage(){
   document.getElementById('homepage').classList.remove('hidden');
