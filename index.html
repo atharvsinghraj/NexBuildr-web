@@ -288,7 +288,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ══════════════════ DASHBOARD LAYOUT ══════════════════ */
 #dashboard{display:flex;min-height:100vh;background:#000}
-#sidebar{width:var(--sw);background:#000;border-right:1px solid #1A1A1A;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto}
+#sidebar{width:var(--sw);background:#000;border-right:1px solid #111;position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:200;transition:transform .3s ease;overflow-y:auto}
 .sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .sb-logo .logo{font-size:17px}
 .sb-close{display:none;background:none;border:none;color:var(--muted);cursor:pointer}
@@ -296,7 +296,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .sb-nav{padding:14px 10px;flex:1;display:flex;flex-direction:column}
 .sb-sec{display:flex;flex-direction:column;gap:1px}
 .sb-div{height:1px;background:var(--border);margin:10px 6px}
-.sb-link{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;position:relative}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left;position:relative}
 .sb-link svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;flex-shrink:0}
 .sb-link:hover{color:var(--text);background:var(--card)}
 .sb-link.active{color:#fff;background:rgba(124,58,237,.15)}
@@ -310,7 +310,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 #topbar{height:var(--th);background:#000;border-bottom:1px solid #1A1A1A;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:100}
 #menu-btn{display:none;background:none;border:none;padding:5px;cursor:pointer;color:var(--muted)}
 #menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9}
-#page-title{font-size:14px;font-weight:600;color:var(--muted)}
+#page-title{display:none}
 .topbar-r{display:flex;align-items:center;gap:8px}
 /* topbar search */
 .topbar-search{position:relative;display:flex;align-items:center}
@@ -578,12 +578,10 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ── DAILY INSIGHTS ── */
 .insights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.news-card{background:linear-gradient(160deg,#0D0D0D,#060606);border:1px solid #1A1A1A;border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer;display:flex;flex-direction:column}
-.news-card:hover{transform:translateY(-3px);border-color:#7C3AED;box-shadow:0 8px 28px rgba(124,58,237,.15)}
-.news-thumb{width:100%;height:150px;object-fit:cover;background:#111;display:block}
-.news-thumb-placeholder{width:100%;height:150px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(236,72,153,.07));display:flex;align-items:center;justify-content:center}
-.news-thumb-placeholder svg{width:32px;height:32px;stroke:#333;fill:none;stroke-width:1.5}
-.news-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:8px}
+.news-card{background:#0A0A0A;border:1px solid #1A1A1A;border-radius:14px;transition:border-color .2s,box-shadow .2s;cursor:pointer;display:flex;flex-direction:column;overflow:hidden}
+.news-card:hover{border-color:#7C3AED;box-shadow:0 4px 20px rgba(124,58,237,.12)}
+.news-thumb,.news-thumb-placeholder{display:none}
+.news-body{padding:16px;flex:1;display:flex;flex-direction:column;gap:8px}
 .news-topic{display:inline-flex;align-items:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 9px;border-radius:100px;background:rgba(124,58,237,.14);color:#a78bfa;border:1px solid rgba(124,58,237,.22);width:fit-content}
 .news-title{font-size:14px;font-weight:600;line-height:1.45;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .news-desc{font-size:12px;color:#71717A;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
@@ -596,13 +594,13 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .ins-chip:hover,.ins-chip.active{background:rgba(124,58,237,.12);border-color:#7C3AED;color:#fff}
 .ins-sep{width:1px;height:20px;background:#1F1F1F;margin:0 4px;align-self:center}
 /* Home insights mini */
-.home-news-mini{display:flex;flex-direction:column;gap:8px}
-.home-news-item{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:10px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit}
-.home-news-item:hover{background:rgba(255,255,255,.04)}
-.home-news-item-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#111}
+.home-news-mini{display:flex;flex-direction:column;gap:6px}
+.home-news-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit;background:#0A0A0A;border:1px solid #1A1A1A}
+.home-news-item:hover{border-color:#7C3AED}
+.home-news-item-thumb{display:none}
 .home-news-item-body{flex:1;min-width:0}
-.home-news-item-title{font-size:13px;font-weight:500;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
-.home-news-item-meta{font-size:11px;color:#52525B;margin-top:2px}
+.home-news-item-title{font-size:13px;font-weight:500;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:#fff}
+.home-news-item-meta{font-size:11px;color:#52525B;margin-top:3px}
 
 /* ── TOPBAR SEARCH ── */
 .tb-search-container{position:relative;flex-shrink:0}
@@ -619,6 +617,10 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .feat-big-grid{grid-template-columns:repeat(2,1fr)}
 }
+/* ── Extra responsive fixes ── */
+*{box-sizing:border-box}
+img{max-width:100%}
+input,select,textarea,button{max-width:100%}
 @media(max-width:1024px){
   .intro-grid,.how-grid,.sd-grid{grid-template-columns:1fr}
   .home-grid{grid-template-columns:1fr}
@@ -629,6 +631,10 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
   .tb-search-inner{width:180px}
   .tb-search-inner:focus-within{width:220px}
   .upgrade-btn{display:none}
+}
+@media(max-width:900px){
+  .home-grid{grid-template-columns:1fr!important}
+  .net-grid{grid-template-columns:1fr!important}
 }
 @media(max-width:768px){
   .nav-links,.nav-actions{display:none}
@@ -718,8 +724,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
       <p class="hero-sub">Validate faster, connect smarter, and build with confidence using AI and the right network.</p>
       <div class="hero-btns">
         <button class="btn btn-grad" id="hero-cta-btn" onclick="heroCTA()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-          Start Free
+          Start Free&nbsp;<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
         <button class="btn btn-ghost" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">Learn More</button>
       </div>
@@ -1242,7 +1247,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
       </div>
       <div class="sb-div"></div>
       <div class="sb-sec">
-        <button class="sb-link" onclick="nav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+        <!-- Profile removed from sidebar - use topbar avatar -->
         <button class="sb-link" onclick="nav('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
 
       </div>
@@ -1253,17 +1258,17 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
     <header id="topbar">
       <div style="display:flex;align-items:center;gap:10px">
         <button id="menu-btn" onclick="toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-        <span id="page-title">Home</span>
-      </div>
-      <div class="topbar-r">
-        <!-- Search -->
-        <div class="tb-search-container" id="topbar-search-wrap">
-          <div class="tb-search-inner">
+        <!-- Search bar left of centre -->
+        <div class="tb-search-container" id="topbar-search-wrap-left">
+          <div class="tb-search-inner" style="width:160px">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#52525B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="tb-search" placeholder="Search builders..." oninput="onTbSearch(this.value)" autocomplete="off">
+            <input type="text" id="tb-search" placeholder="Search..." oninput="onTbSearch(this.value)" autocomplete="off">
           </div>
           <div class="hidden" id="tb-results"></div>
         </div>
+      </div>
+      <div class="topbar-r">
+        <!-- Search moved to left side of topbar -->
         <!-- Notifications -->
         <button class="notif-btn" onclick="nav('notifications')" title="Notifications">
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -1278,25 +1283,37 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
     <main id="pages">
       <!-- HOME -->
       <div class="page active" id="page-home">
-        <div class="dash-welcome"><h2>Welcome back, <span class="grad-text" id="welcome-name">Builder</span></h2><p>Here is what is happening in your community today.</p></div>
+        <div class="dash-welcome"><h2>Welcome back, <span class="grad-text" id="welcome-name">Builder</span> 👋</h2><p>Here's what's happening in your community today.</p></div>
         <div class="stats-grid">
           <div class="stat-box"><div class="stat-box-l">Your Posts</div><div class="stat-box-v" id="st-posts">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Startups</div><div class="stat-box-v" id="st-startups">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Connections</div><div class="stat-box-v" id="st-connections">—</div></div>
           <div class="stat-box"><div class="stat-box-l">Followers</div><div class="stat-box-v" id="st-followers">—</div></div>
         </div>
-        <div class="home-grid">
-          <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
-          <div class="home-block"><h3>Quick Actions</h3><div class="qa-list"><button class="btn btn-grad btn-wide" onclick="openPost()">Create a Post</button><button class="btn btn-ghost btn-wide" onclick="openAS()">Add Startup</button><button class="btn btn-ghost btn-wide" onclick="nav('network')">Explore Network</button><button class="btn btn-ghost btn-wide" onclick="nav('profile')">Edit Profile</button></div></div>
-        </div>
-        <!-- Daily Insights mini -->
-        <div style="margin-top:18px">
+        <!-- Daily Insights TOP -->
+        <div style="margin-bottom:18px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
             <h3 style="font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.06em">Daily Insights</h3>
             <button class="btn btn-ghost btn-xs" onclick="nav('insights')" style="font-size:11px;color:#a78bfa">View All →</button>
           </div>
-          <div class="home-news-mini" id="home-insights-list">
-            <div class="spinner"></div>
+          <div id="home-insights-list"><div class="spinner" style="padding:20px;text-align:center"></div></div>
+        </div>
+        <!-- Stats + Activity -->
+        <div class="home-grid" style="margin-bottom:18px">
+          <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
+          <div class="home-block"><h3>Your Stats</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-posts-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Posts</div></div>
+            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-conns-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Connections</div></div>
+          </div></div>
+        </div>
+        <!-- Quick Actions BOTTOM -->
+        <div class="home-block" style="margin-bottom:18px">
+          <h3>Quick Actions</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button class="btn btn-grad" onclick="openPost()">✏️ Create Post</button>
+            <button class="btn btn-ghost" onclick="openAS()">🚀 Add Startup</button>
+            <button class="btn btn-ghost" onclick="nav('network')">🌐 Network</button>
+            <button class="btn btn-ghost" onclick="nav('nexai')">🤖 Nex AI</button>
           </div>
         </div>
       </div>
@@ -1843,6 +1860,10 @@ function _loadAllFeatures(){
     loadCoins();
     loadStreak();
   },350);
+  // Ensure navbar photo is synced after all loaders fire
+  setTimeout(()=>{try{_syncNavbarPhoto();}catch(_){}},500);
+  // Ensure navbar photo is synced after all loaders fire
+  setTimeout(()=>{try{_syncNavbarPhoto();}catch(_){}},500);
   console.log('[loadAllFeatures] All loaders fired. UD:',UD?.name||'(no name)');
 }
 
@@ -1904,7 +1925,7 @@ function initDash(){
 }
 
 // ── NAVIGATION ──
-const PT={home:'Home',feed:'Community',nexai:'Nex AI',chat:'Messages',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',insights:'Daily Insights',settings:'Settings',profile:'Profile'};
+const PT={home:'Dashboard',feed:'Community',nexai:'Nex AI',chat:'Messages',showcase:'Startup Showcase',network:'Network',notifications:'Notifications',buildpath:'Learn',leaderboard:'Leaderboard',cofounder:'Find Co-founder',insights:'Daily Insights',settings:'Settings',profile:'Profile'};
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
@@ -1953,11 +1974,13 @@ async function loadHomeStats(){
     ]);
     setEl('st-posts', pSnap.size);
     setEl('st-startups', sSnap.size);
-    // Use real counts from connections/follows collections, fallback to UD
     const connCount=connSnap.size||UD?.connectionCount||0;
     const follCount=followSnap.size||UD?.followerCount||0;
     setEl('st-connections', connCount);
     setEl('st-followers', follCount);
+    // Sync small dashboard stat boxes
+    setEl('st-posts-sm', pSnap.size);
+    setEl('st-conns-sm', connCount);
     console.log('[loadHomeStats] posts:',pSnap.size,'startups:',sSnap.size,'connections:',connCount,'followers:',follCount);
     // Recent activity
     const c=document.getElementById('home-activity');
@@ -3616,7 +3639,7 @@ function renderCFCard(p){
 
   // ── Topbar search click-outside handler ──
   document.addEventListener('click',e=>{
-    const wrap=document.getElementById('topbar-search-wrap');
+    const wrap=document.getElementById('topbar-search-wrap-left');
     const results=document.getElementById('tb-results');
     if(results&&wrap&&!wrap.contains(e.target)){results.classList.add('hidden');const inp=document.getElementById('tb-search');if(inp)inp.value='';}
   });
@@ -3693,8 +3716,6 @@ function _renderInsCard(a){
   const ts=_insTopicStyle(a.topic);
   const preview=(a.description||'').slice(0,120)+(a.description&&a.description.length>120?'…':'');
   return `<div class="news-card" onclick="openInsightModal('${esc(a.id)}')">
-    ${a.image?`<img class="news-thumb" src="${esc(a.image)}" alt="" loading="lazy" onerror="this.style.display='none'">`:
-    `<div class="news-thumb-placeholder"></div>`}
     <div class="news-body">
       <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:100px;background:${ts.bg};color:${ts.color};border:1px solid ${ts.border}">${esc(a.topic||'News')}</span>
       <div class="news-title">${esc(a.title||'No title')}</div>
@@ -3760,10 +3781,6 @@ function loadHomeInsights(){
   if(!recent.length){c.innerHTML='<div style="font-size:13px;color:var(--faint)">No insights yet.</div>';return}
   c.innerHTML=recent.map(a=>`
     <div class="home-news-item" onclick="nav('insights');setTimeout(()=>openInsightModal('${esc(a.id)}'),200)" style="cursor:pointer">
-      <div class="home-news-item-thumb" style="${a.image?'background:none':''}">
-        ${a.image?`<img src="${esc(a.image)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.style.display='none'">`:
-        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>`}
-      </div>
       <div class="home-news-item-body">
         <div class="home-news-item-title">${esc(a.title||'No title')}</div>
         <div class="home-news-item-meta">${esc(a.source||'')} · ${_insTimeAgo(a.date)} · <span style="color:#a78bfa">${esc(a.topic||'')}</span></div>
