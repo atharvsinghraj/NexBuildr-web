@@ -500,9 +500,9 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .net-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.05);color:#A1A1AA;border:1px solid #252525;display:flex;align-items:center;gap:4px}
 .net-tag svg{width:10px;height:10px;stroke:currentColor;fill:none}
 .net-connect-btn{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:.03em;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
-.net-connect-btn.connect{background:linear-gradient(135deg,#16A34A,#22C55E);color:#fff}
-.net-connect-btn.connect:hover{background:linear-gradient(135deg,#15803D,#16A34A);transform:scale(1.01)}
-.net-connect-btn.connected{background:rgba(34,197,94,.08);color:#22C55E;border:1.5px solid rgba(34,197,94,.25);cursor:default}
+.net-connect-btn.connect{background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff}
+.net-connect-btn.connect:hover{opacity:.88;transform:scale(1.01)}
+.net-connect-btn.connected{background:rgba(124,58,237,.08);color:#a78bfa;border:1.5px solid rgba(124,58,237,.25);cursor:default}
 .net-connect-btn.pending{background:rgba(255,255,255,.04);color:#71717A;border:1.5px solid #252525;cursor:default}
 .net-connect-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
 .net-handle{font-size:12px;color:var(--faint);margin-bottom:6px}
@@ -1226,7 +1226,7 @@ input,select,textarea,button{max-width:100%}
     <div class="sb-logo"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><button class="sb-close" onclick="closeSB()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <nav class="sb-nav">
       <div class="sb-sec">
-        <button class="sb-link active" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+        <button class="sb-link active" onclick="nav('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="12" width="4" height="10" rx="1"/><rect x="10" y="7" width="4" height="15" rx="1"/><rect x="18" y="3" width="4" height="19" rx="1"/></svg>Dashboard</button>
         <button class="sb-link" onclick="nav('feed')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Community</button>
         <button class="sb-link" onclick="nav('nexai')"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Nex AI</button>
         <button class="sb-link" onclick="nav('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages</button>
@@ -1288,10 +1288,7 @@ input,select,textarea,button{max-width:100%}
         <!-- Recent Activity FIRST -->
         <div class="home-grid" style="margin-bottom:18px">
           <div class="home-block"><h3>Recent Activity</h3><div id="home-activity"><div class="spinner"></div></div></div>
-          <div class="home-block"><h3>Stats</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-posts-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Posts</div></div>
-            <div style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:700;color:#fff" id="st-conns-sm">—</div><div style="font-size:10px;color:#52525B;text-transform:uppercase;letter-spacing:.05em">Connections</div></div>
-          </div></div>
+
         </div>
         <!-- Daily Insights SECOND (below Recent Activity) -->
         <div style="margin-bottom:18px">
@@ -1814,12 +1811,11 @@ auth.onAuthStateChanged(async u=>{
       console.error('[Auth] loadUD failed:',e.code||e.message);
       UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
-    // Step 2: Show dashboard UI (does NOT trigger loads)
+    // Step 2: Update navbar only — stay on landing page until user clicks Start
     updateNavbar();
-    showDash();
-    // Step 3: Load all features — UD is guaranteed to exist here
-    console.log('[Auth] Starting all feature loaders...');
-    _loadAllFeatures();
+    try{_syncNavbarPhoto();}catch(_){}
+    console.log('[Auth] User ready. Waiting for user action (Start button).');
+    // Do NOT call showDash() or _loadAllFeatures() here — user must click Start
   }else{
     _appBooted=false;
     UD=null;
@@ -1979,8 +1975,8 @@ async function loadHomeStats(){
     setEl('st-connections', connCount);
     setEl('st-followers', follCount);
     // Sync small dashboard stat boxes
-    setEl('st-posts-sm', pSnap.size);
-    setEl('st-conns-sm', connCount);
+
+
     console.log('[loadHomeStats] posts:',pSnap.size,'startups:',sSnap.size,'connections:',connCount,'followers:',follCount);
     // Recent activity
     const c=document.getElementById('home-activity');
