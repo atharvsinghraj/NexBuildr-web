@@ -742,7 +742,6 @@ input,select,textarea,button{max-width:100%}
 }
 
 /* App always shows dashboard */
-body{overflow:hidden}
 #dashboard{display:flex!important}
 </style>
 </head>
@@ -1352,15 +1351,20 @@ auth.onAuthStateChanged(async u=>{
     }
     // Show dashboard immediately
     document.getElementById('dashboard').classList.remove('hidden');
+    // Update welcome name with real user name
+    const el=document.getElementById('welcome-name');
+    if(el)el.textContent=UD?.name||CU?.displayName||'Builder';
     try{_syncNavbarPhoto();}catch(_){}
+    // Load all features
     _loadAllFeaturesOnce();
+    // nav to home
+    nav('home');
   }else{
     console.log('[App] Not logged in → redirecting to landing');
     window.location.href='index.html';
   }
 });
 
-// Logout goes back to landing
 function doLogout(){
   auth.signOut().then(()=>{window.location.href='index.html';}).catch(e=>console.error(e));
 }
@@ -3325,17 +3329,26 @@ function loadHomeInsights(){
 
 // ── NAVBAR PROFILE ICON (always in sync with Firestore) ──
 function _syncNavbarPhoto(){
-  const av=document.getElementById('tb-profile-av');
-  if(!av)return;
-  // Priority: Firestore profileImage → Firestore photoURL → Auth photoURL → initials
   const src=(UD&&(UD.profileImage||UD.photoURL))||CU?.photoURL||'';
-  if(src){
-    av.style.background='none';
-    av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.innerHTML='${ini(UD?.name||CU?.displayName||'U')}'">`;
-  }else{
-    av.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';
-    av.textContent=ini(UD?.name||CU?.displayName||'U');
+  const ini_text=ini(UD?.name||CU?.displayName||'U');
+  // Topbar avatar
+  const av=document.getElementById('tb-profile-av');
+  if(av){
+    if(src){av.style.background='none';av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.remove()">`;}
+    else{av.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';av.textContent=ini_text;}
   }
+  // Settings avatar
+  const sav=document.getElementById('settings-av');
+  if(sav){
+    if(src){sav.style.background='none';sav.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.remove()">`;}
+    else{sav.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';sav.textContent=ini_text;}
+  }
+  // Settings name/handle/email
+  const sn=document.getElementById('settings-name');if(sn)sn.textContent=UD?.name||'—';
+  const sh=document.getElementById('settings-handle');if(sh)sh.textContent=UD?.handle?'@'+UD.handle:'—';
+  const se=document.getElementById('settings-email');if(se)se.textContent=CU?.email||'—';
+  // Welcome name
+  const wn=document.getElementById('welcome-name');if(wn)wn.textContent=UD?.name||CU?.displayName||'Builder';
 }
 // Patch loadProfile to always sync navbar photo
 const __origLP=loadProfile;
