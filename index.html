@@ -6,6 +6,7 @@
 <title>NexBuildr — Build. Connect. Grow.</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#000000;--bg2:#0A0A0A;--bg3:#0F0F0F;--bg4:#141414;
@@ -739,11 +740,11 @@ input,select,textarea,button{max-width:100%}
   .tb-search-container{display:none}
   #topbar{padding:0 10px}
 }
+
 </style>
 </head>
 <body>
 
-<!-- ════════════ HOMEPAGE ════════════ -->
 <div id="homepage">
 
 <nav id="navbar">
@@ -1083,7 +1084,7 @@ input,select,textarea,button{max-width:100%}
     <div class="person-card">
       <span class="person-badge-pill">THE VISIONARY</span>
       <div class="person-photo-col">
-        <img src="IMG_20260420_233920_203.webp" alt="Atharv Singh Raj" class="person-photo-circle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <img src="/images/me.jpg" alt="Atharv Singh Raj" class="person-photo-circle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="person-photo-circle-fallback" style="display:none">A</div>
       </div>
       <div style="margin-bottom:20px">
@@ -1912,7 +1913,7 @@ function hideAboutPage(){
 }
 function scrollToExplore(){showExplorePage()}
 function toggleFaq(el){const i=el.parentElement,b=i.querySelector('.faq-body'),o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-body').style.maxHeight='0'});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
-function heroCTA(){if(CU){showDash();_loadAllFeaturesOnce();}else{openAuth('signup');}}
+function heroCTA(){if(CU){window.location.href="app.html";}else{openAuth('signup');}}
 
 // Update navbar based on auth state
 function updateNavbar(){
@@ -4132,6 +4133,195 @@ loadProfile=function(){
   _obOrigLP.call(this);
   try{updateProfileCompletion();}catch(_){}
 };
+
+</script>
+</body>
+</html
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script>
+window.onerror=function(msg,src,line,col,err){console.error('[JS ERROR]',msg,'line:',line,err);return false;};
+window.addEventListener('unhandledrejection',e=>{console.error('[PROMISE]',e.reason);});
+
+
+if(!firebase.apps.length){
+  firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
+}
+const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
+console.log('[Firebase] Initialized. Project:nexbuildr-c2660 DB:',!!db,'Auth:',!!auth);
+
+// Global error catcher — surfaces silent JS failures
+window.onerror=function(msg,src,line,col,err){
+  console.error('[GLOBAL JS ERROR]',msg,'line:',line,err);
+  return false;
+};
+window.addEventListener('unhandledrejection',e=>{
+  console.error('[UNHANDLED PROMISE]',e.reason);
+});
+
+// ── STATE ── (declared first to avoid temporal dead zone)
+
+// ── BASE64 IMAGE HELPER (no Firebase Storage needed) ──
+// maxW: max width/height in px, quality: 0-1 JPEG quality
+async function imgToBase64(file,maxW,quality){
+  if(!file||!file.type.startsWith('image/'))throw new Error('Not an image');
+  return new Promise((res,rej)=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW||h>maxW){if(w>h){h=Math.round(h*maxW/w);w=maxW}else{w=Math.round(w*maxW/h);h=maxW}}
+        const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+        cv.getContext('2d').drawImage(img,0,0,w,h);
+        const b64=cv.toDataURL('image/jpeg',quality);
+        // Firestore doc limit ~1MB; warn if too large
+        if(b64.length>900000)console.warn('[b64] Large image:',Math.round(b64.length/1024),'KB');
+        res(b64);
+      };
+      img.onerror=rej;
+      img.src=ev.target.result;
+    };
+    reader.onerror=rej;
+    reader.readAsDataURL(file);
+  });
+}
+// Get image src from user object — checks both new (profileImage) and old (photoURL) field
+function userPhoto(u){return u?.profileImage||u?.photoURL||''}
+// Get startup logo from startup object — checks both new (logo) and old (logoUrl) field
+function startupLogo(s){return s?.logo||s?.logoUrl||''}
+// Get post image — checks both new (image) and old (imageUrl) field
+function postImage(p){return p?.image||p?.imageUrl||''}
+
+var CU=null,UD=null,mySkills=[],viewedPosts=new Set(),activeChatUid=null,activeChatUnsub=null,globChatUnsub=null,feedUnsub=null,notifUnsub=null,cmtUnsub=null,activePostId=null,allExpStartups=[];
+
+// ── FIRESTORE HELPERS (resilient - no index required) ──
+async function safeGet(query,timeoutMs=5000){
+  try{
+    const s=await Promise.race([query.get(),new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),timeoutMs))]);
+    return s.docs||[];
+  }catch(e){console.warn('[safeGet]',e.code||e.message);return[]}
+}
+function safeSnap(query,onData,onErr){
+  let gotFirst=false;
+  const tmo=setTimeout(async()=>{
+    if(!gotFirst){
+      console.warn('[safeSnap] timeout fallback');
+      try{const s=await query.get();onData(s)}catch(e){if(onErr)onErr(e)}
+    }
+  },5000);
+  const unsub=query.onSnapshot(snap=>{
+    gotFirst=true;clearTimeout(tmo);onData(snap);
+  },async err=>{
+    clearTimeout(tmo);
+    console.warn('[safeSnap err]',err.code);
+    try{const s=await query.get();onData(s)}catch(e){if(onErr)onErr(e)}
+  });
+  return unsub;
+}
+
+// ── HOMEPAGE ──
+window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
+function toggleMNav(){document.getElementById('mobile-nav').classList.toggle('open')}
+function showExplorePage(){
+  document.getElementById('explore-page').classList.add('open');
+  document.body.style.overflow='hidden';
+  loadPublicExplore();
+  if(document.getElementById('mobile-nav').classList.contains('open'))toggleMNav();
+}
+function hideExplorePage(){
+  document.getElementById('explore-page').classList.remove('open');
+  document.body.style.overflow='';
+}
+function showAboutPage(){
+  document.getElementById('about-page').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(document.getElementById('mobile-nav').classList.contains('open'))toggleMNav();
+}
+function hideAboutPage(){
+  document.getElementById('about-page').classList.remove('open');
+  document.body.style.overflow='';
+}
+function scrollToExplore(){showExplorePage()}
+function toggleFaq(el){const i=el.parentElement,b=i.querySelector('.faq-body'),o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-body').style.maxHeight='0'});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
+function heroCTA(){if(CU){window.location.href='app.html';}else{openAuth('signup');}}
+
+// Update navbar based on auth state
+function updateNavbar(){
+  const na=document.getElementById('nav-actions'),ma=document.getElementById('mnav-auth');
+  if(CU){
+    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
+    ma.innerHTML=`<button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
+    document.getElementById('hero-cta-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Open Dashboard';
+  }else{
+    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="openAuth('login')">Login</button><button class="btn btn-grad btn-sm" onclick="openAuth('signup')">Start Free</button>`;
+    ma.innerHTML=`<button class="btn btn-ghost" style="font-size:16px" onclick="toggleMNav();openAuth('login')">Login</button><button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();openAuth('signup')">Start Free</button>`;
+    document.getElementById('hero-cta-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Start Free';
+  }
+}
+
+// ── AUTH ──
+function openAuth(tab){document.getElementById('auth-ov').classList.remove('hidden');switchAuth(tab||'login');clearAErr()}
+function closeAuth(){document.getElementById('auth-ov').classList.add('hidden')}
+function switchAuth(t){const l=t==='login';['login','signup'].forEach(x=>{document.getElementById('atab-'+x).classList.toggle('active',x===t);document.getElementById('af-'+x).classList.toggle('hidden',x!==t)});clearAErr()}
+function showAErr(m){const e=document.getElementById('auth-err');e.textContent=m;e.classList.remove('hidden')}
+function clearAErr(){document.getElementById('auth-err').classList.add('hidden')}
+function setBtn(id,loading,def){const b=document.getElementById(id);b.disabled=loading;b.textContent=loading?'Please wait...':def}
+
+async function doLogin(){
+  const email=gi('li-email'),pass=gi('li-pass');
+  if(!email||!pass)return showAErr('Please fill all fields.');
+  setBtn('li-btn',true,'Login');clearAErr();
+  try{await auth.signInWithEmailAndPassword(email,pass);closeAuth()}
+  catch(e){showAErr(authMsg(e.code))}finally{setBtn('li-btn',false,'Login')}
+}
+async function doSignup(){
+  const name=gi('su-name'),handle=gi('su-handle').replace('@','').toLowerCase(),email=gi('su-email'),pass=gi('su-pass');
+  if(!name||!handle||!email||!pass)return showAErr('Please fill all fields.');
+  if(!/^[a-z0-9_]+$/.test(handle))return showAErr('Handle: only lowercase letters, numbers, underscores.');
+  if(pass.length<6)return showAErr('Password min. 6 characters.');
+  setBtn('su-btn',true,'Create Account');clearAErr();
+  try{
+    const hs=await db.collection('users').where('handle','==',handle).limit(1).get();
+    if(!hs.empty){showAErr('Handle already taken.');return}
+    const c=await auth.createUserWithEmailAndPassword(email,pass);
+    await c.user.updateProfile({displayName:name});
+    await makeUserDoc(c.user.uid,{name,handle,email,role:'user',bio:'',about:'',skills:[],photoURL:'',profileImage:'',bannerImage:'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()});
+    closeAuth();
+  }catch(e){if(!e.handled)showAErr(authMsg(e.code))}finally{setBtn('su-btn',false,'Create Account')}
+}
+async function doGoogle(){
+  clearAErr();
+  try{
+    const r=await auth.signInWithPopup(GP);
+    const u=r.user;
+    const s=await db.collection('users').doc(u.uid).get();
+    if(!s.exists){const handle='user'+u.uid.slice(0,6).toLowerCase();await makeUserDoc(u.uid,{name:u.displayName||'',handle,email:u.email||'',role:'user',bio:'',about:'',skills:[],photoURL:u.photoURL||'',profileImage:u.photoURL||'',bannerImage:'',connectionCount:0,followerCount:0,followingCount:0,createdAt:fv.serverTimestamp()})}
+    closeAuth();
+  }catch(e){showAErr(authMsg(e.code))}
+}
+async function doLogout(){cleanup();await auth.signOut()}
+async function makeUserDoc(uid,data){await db.collection('users').doc(uid).set(data,{merge:true})}
+function authMsg(code){const m={'auth/user-not-found':'No account with this email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already in use.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password min 6 chars.','auth/too-many-requests':'Too many attempts.','auth/popup-closed-by-user':'Popup closed.','auth/invalid-credential':'Invalid email or password.'};return m[code]||'Error. Please try again.'}
+
+// ── AUTH — redirect to app.html if logged in ──
+auth.onAuthStateChanged(async u=>{
+  if(u){
+    console.log('[Auth] Logged in, redirecting to app...');
+    window.location.href='app.html';
+  }else{
+    console.log('[Auth] Not logged in, staying on landing');
+    updateNavbar();
+    loadPublicExplore();
+  }
+});
+
 
 </script>
 </body>
