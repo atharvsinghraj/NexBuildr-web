@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NexBuildr — Dashboard</title>
+<title>NexBuildr — Build. Connect. Grow.</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#000000;--bg2:#0A0A0A;--bg3:#0F0F0F;--bg4:#141414;
@@ -740,14 +739,635 @@ input,select,textarea,button{max-width:100%}
   .tb-search-container{display:none}
   #topbar{padding:0 10px}
 }
-
-/* App always shows dashboard */
-#dashboard{display:flex!important}
 </style>
 </head>
 <body>
 
-<div id="dashboard" class="hidden">
+<!-- ════════════ HOMEPAGE ════════════ -->
+<div id="homepage" class="hidden" style="display:none">
+
+<nav id="navbar">
+  <a href="#" class="logo" onclick="event.preventDefault();scrollTo({top:0,behavior:'smooth'})"><span class="nex">Nex</span><span class="buildr">Buildr</span></a>
+  <ul class="nav-links">
+    <li><a onclick="showExplorePage()">Explore</a></li>
+    <li><a onclick="showAboutPage()">About Us</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-actions" id="nav-actions">
+    <button class="btn btn-ghost btn-sm" onclick="openAuth('login')">Login</button>
+    <button class="btn btn-grad btn-sm" onclick="heroCTA()">Start Free</button>
+  </div>
+  <button class="burger" onclick="toggleMNav()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <button class="mnav-close" onclick="toggleMNav()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <a onclick="toggleMNav();showExplorePage()">Explore</a>
+  <a onclick="toggleMNav();showAboutPage()">About Us</a>
+  <a href="#features" onclick="toggleMNav()">Features</a>
+  <a href="#how" onclick="toggleMNav()">How it Works</a>
+  <a href="#pricing" onclick="toggleMNav()">Pricing</a>
+  <div class="mnav-div"></div>
+  <div id="mnav-auth">
+    <button class="btn btn-ghost btn-wide" style="font-size:15px;margin-bottom:8px" onclick="toggleMNav();openAuth('login')">Login</button>
+    <button class="btn btn-grad btn-wide" style="font-size:15px" onclick="toggleMNav();heroCTA()">Start Free</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="orb orb1"></div><div class="orb orb2"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="badge-pill" style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);color:#c4b5fd;font-size:11px;font-weight:600;letter-spacing:.04em"><span style="background:linear-gradient(90deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:14px;line-height:1">✦</span>&nbsp;Build. Connect. Launch. — India's Startup Community</div>
+      <h1 class="hero-h" style="font-size:clamp(36px,8vw,68px)">Where ideas turn into<br><span class="grad-text">real startups.</span></h1>
+      <p class="hero-sub">Validate faster, connect smarter, and build with confidence using AI and the right network.</p>
+      <div class="hero-btns">
+        <button class="btn btn-grad" id="hero-cta-btn" onclick="heroCTA()">
+          Start Free&nbsp;<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="btn btn-ghost" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">Learn More</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-n">2K+</div><div class="stat-l">Builders</div></div>
+        <div><div class="stat-n">500+</div><div class="stat-l">Startups</div></div>
+        <div><div class="stat-n">10K+</div><div class="stat-l">Ideas Shared</div></div>
+        <div><div class="stat-n">99%</div><div class="stat-l">Satisfaction</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section id="intro" class="section">
+  <div class="container">
+    <div class="intro-grid">
+      <div>
+        <div class="sec-label">What is NexBuildr</div>
+        <h2 class="sec-title">Built for the <span class="grad-text">next generation</span> of entrepreneurs</h2>
+        <p class="sec-sub">NexBuildr is a community platform where students and young entrepreneurs connect, collaborate, and launch their ideas. From your first idea to your first product — we are with you.</p>
+        <p class="sec-sub" style="margin-top:14px">Our mission is to lower the barrier for young builders across India and help them find co-founders, mentors, and early users — all in one place.</p>
+      </div>
+      <div class="icards">
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h4>For Students</h4><p>Turn your college project into a real venture with peer support and mentorship.</p></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><h4>For Founders</h4><p>Showcase your startup, get feedback, connect with co-founders and early users.</p></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h4>Nex AI</h4><p>Get AI-powered insights and assistance for your startup journey.</p></div>
+        <div class="icard"><div class="icard-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h4>Our Mission</h4><p>Democratize entrepreneurship for every young builder across India.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES (Insayy-style big illustrative cards) -->
+<section id="features" class="section">
+  <div class="container">
+    <div style="text-align:center;max-width:560px;margin:0 auto 52px">
+      <div class="sec-label">Platform Features</div>
+      <h2 class="sec-title">Everything you need to <span class="grad-text">build and grow</span></h2>
+    </div>
+    <div class="feat-big-grid">
+
+      <!-- Feed -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Live Feed</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Community Feed</div><div class="mock-badge purple">New</div></div>
+            <div class="mock-line w90"></div>
+            <div class="mock-line w60" style="margin-bottom:10px"></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+              <span class="mock-chip on">&#10084; 24</span>
+              <span class="mock-chip">&#128172; Comment</span>
+              <span class="mock-chip">&#8680; Share</span>
+            </div>
+            <div class="mock-line w80"></div>
+            <div class="mock-line w45"></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Community Feed</h3>
+          <p>Share ideas, progress updates, and learnings. Like, comment, and share posts with the entire builder community.</p>
+        </div>
+      </div>
+
+      <!-- Nex AI -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>AI Powered</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Nex AI</div><div class="mock-badge pink">Smart</div></div>
+            <div class="mock-bubbles">
+              <div class="mock-bubble ai">How can I validate my startup idea?</div>
+              <div class="mock-bubble user">Try market sizing + competitor gap analysis first...</div>
+              <div class="mock-bubble ai" style="font-size:11px;opacity:.7">Analyzing your sector...</div>
+            </div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Nex AI Assistant</h3>
+          <p>Your intelligent startup co-pilot. Get pitch feedback, validate ideas, and get AI-powered insights to grow faster.</p>
+        </div>
+      </div>
+
+      <!-- Startup Showcase -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>Ranked</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Startup Showcase</div><div class="mock-badge purple">Top 3</div></div>
+            <div class="mock-row"><div class="mock-av">🥇</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">EduTrack</div><div class="mock-line w60" style="margin:3px 0 0"></div></div><div class="mock-pct" style="font-size:10px;color:#fcd34d">1.2K views</div></div>
+            <div class="mock-row"><div class="mock-av" style="background:rgba(255,255,255,.15)">🥈</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">GreenCart</div><div class="mock-line w45" style="margin:3px 0 0"></div></div><div class="mock-pct" style="font-size:10px;color:#9ca3af">890</div></div>
+            <div class="mock-row"><div class="mock-av" style="background:rgba(255,255,255,.1)">🥉</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">FinStack</div><div class="mock-line w80" style="margin:3px 0 0"></div></div><div class="mock-pct" style="font-size:10px;color:#78716c">542</div></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Startup Showcase</h3>
+          <p>List your startup, gain visibility, and attract early adopters. Startups are ranked by views — the more eyes, the higher you go.</p>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>2K+ Builders</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Network</div><div class="mock-badge purple">Connect</div></div>
+            <div class="mock-row"><div class="mock-av">RK</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Rohan Kumar</div><div style="font-size:10px;color:rgba(255,255,255,.4)">Founder · EdTech</div></div><span class="mock-chip on" style="font-size:9px;padding:2px 7px">+ Connect</span></div>
+            <div class="mock-row"><div class="mock-av">PS</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Priya Sharma</div><div style="font-size:10px;color:rgba(255,255,255,.4)">Designer · B2C</div></div><span class="mock-chip" style="font-size:9px;padding:2px 7px">Follow</span></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Builder Network</h3>
+          <p>Discover founders, developers, and designers across India. Connect, follow, and collaborate to build your dream team.</p>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Instant</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Messages</div><div class="mock-badge pink">Live</div></div>
+            <div class="mock-bubbles">
+              <div class="mock-bubble user" style="font-size:11px">Hey! Saw your startup, loved it 🔥</div>
+              <div class="mock-bubble ai" style="font-size:11px">Thanks! Would love to connect and collaborate</div>
+              <div class="mock-bubble user" style="font-size:11px;opacity:.6">Sounds great, let's chat...</div>
+            </div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Real-time Chat</h3>
+          <p>DM any builder or jump into the global community chat. Collaborate, get feedback, and build relationships instantly.</p>
+        </div>
+      </div>
+
+      <!-- Grants Access -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>12 New</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Available Grants</div><div class="mock-badge purple">12 New</div></div>
+            <div class="mock-grant-row top"><div><div class="mock-grant-name">Startup India</div><div class="mock-grant-sub">&#8377;50L</div></div><div class="mock-grant-pct">95%</div></div>
+            <div class="mock-grant-row"><div><div class="mock-grant-name">MSME Grant</div><div class="mock-grant-sub">&#8377;25L</div></div><div class="mock-grant-pct">88%</div></div>
+            <div class="mock-grant-row"><div><div class="mock-grant-name">Tech Fund</div><div class="mock-grant-sub">&#8377;1Cr</div></div><div class="mock-grant-pct">82%</div></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Grants &amp; Funding Access</h3>
+          <p>Discover grants and funding opportunities you are eligible for — filtered by your stage, sector, and location across India.</p>
+        </div>
+      </div>
+
+      <!-- Find Co-founder -->
+      <div class="feat-big-card">
+        <div class="feat-mock">
+          <div class="feat-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 11c1.66 0 3 1.34 3 3v1"/><path d="M21 11a2 2 0 0 1 0 4"/></svg>Live</div>
+          <div class="mock-box" style="max-width:280px">
+            <div class="mock-hd"><div class="mock-title">Co-founder Match</div><div class="mock-badge pink">New</div></div>
+            <div class="mock-row"><div class="mock-av">RK</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Rohan Kumar</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Developer · EdTech</div></div><div class="mock-pct" style="font-size:10px;color:#34d399">92%</div></div>
+            <div class="mock-row"><div class="mock-av">PS</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Priya Sharma</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Designer · B2C</div></div><div class="mock-pct" style="font-size:10px;color:#a78bfa">78%</div></div>
+            <div class="mock-row"><div class="mock-av">AM</div><div style="flex:1"><div style="font-size:11px;font-weight:600;color:#fff">Arjun Mehta</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Seeking Marketer · SaaS</div></div><div class="mock-pct" style="font-size:10px;color:#a78bfa">71%</div></div>
+          </div>
+        </div>
+        <div class="feat-bottom">
+          <h3>Find Your Co-founder</h3>
+          <p>Discover the right people to build your startup with. Post your requirements or apply to join exciting ideas.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="section" style="background:linear-gradient(180deg,transparent,rgba(124,58,237,.03),transparent)">
+  <div class="container">
+    <div class="how-grid">
+      <div><div class="sec-label">How it Works</div><h2 class="sec-title">Five steps to <span class="grad-text">launch your journey</span></h2><p class="sec-sub">From sign-up to startup — fast, intuitive, and powerful.</p></div>
+      <div class="steps">
+        <div class="step"><div class="step-l"><div class="step-n">1</div><div class="step-line"></div></div><div class="step-b"><h3>Create Your Account</h3><p>Sign up with email or Google in seconds. No credit card required.</p></div></div>
+        <div class="step"><div class="step-l"><div class="step-n">2</div><div class="step-line"></div></div><div class="step-b"><h3>Build Your Profile</h3><p>Add your handle, skills, bio, and photo. Make yourself discoverable.</p></div></div>
+        <div class="step"><div class="step-l"><div class="step-n">3</div><div class="step-line"></div></div><div class="step-b"><h3>Share Your Ideas</h3><p>Post your thoughts, progress, and learnings to the community feed.</p></div></div>
+        <div class="step"><div class="step-l"><div class="step-n">4</div><div class="step-line"></div></div><div class="step-b"><h3>Showcase Your Startup</h3><p>List your startup and connect with early adopters and investors.</p></div></div>
+        <div class="step"><div class="step-l"><div class="step-n">5</div><div class="step-line"></div></div><div class="step-b"><h3>Grow and Connect</h3><p>Chat, follow, connect, and grow your builder network.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:52px"><div class="sec-label">Testimonials</div><h2 class="sec-title">Trusted by <span class="grad-text">builders like you</span></h2></div>
+    <div class="test-grid">
+      <div class="test-card"><div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="test-q">"NexBuildr gave me the community I was looking for. I found my co-founder here and we launched within three months."</p><div class="test-auth"><div class="avatar test-av">RK</div><div><div class="test-name">Rohan Kumar</div><div class="test-role">Founder, EduTrack</div></div></div></div>
+      <div class="test-card"><div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="test-q">"The startup showcase helped us get our first 50 users before launch. The community feedback was invaluable."</p><div class="test-auth"><div class="avatar test-av">PS</div><div><div class="test-name">Priya Sharma</div><div class="test-role">CEO, GreenCart</div></div></div></div>
+      <div class="test-card"><div class="test-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><p class="test-q">"NexBuildr connected me with designers and business folks who completed my team. Could not have done it without this."</p><div class="test-auth"><div class="avatar test-av">AM</div><div><div class="test-name">Arjun Mehta</div><div class="test-role">Developer, FinStack</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section" style="background:linear-gradient(180deg,transparent,rgba(124,58,237,.03),transparent)">
+  <div class="container">
+    <div style="text-align:center;max-width:500px;margin:0 auto 52px"><div class="sec-label">Pricing</div><h2 class="sec-title">Simple, <span class="grad-text">transparent pricing</span></h2><p class="sec-sub">Start free. Upgrade when you are ready to scale.</p></div>
+    <div class="price-grid">
+      <div class="price-card"><div class="price-name">Free</div><div class="price-price">&#8377;0<span> / forever</span></div><div class="price-desc">Everything to get started</div><ul class="price-feats"><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Feed access</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Global chat</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>1 startup listing</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Basic profile</li></ul><button class="btn btn-ghost btn-wide" onclick="openAuth('signup')">Get Started</button></div>
+      <div class="price-card pop"><div class="ppop-badge">Most Popular</div><div class="price-name">Pro</div><div class="price-price">&#8377;99<span> / month</span></div><div class="price-desc">For serious builders</div><ul class="price-feats"><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Free</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Nex AI access</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Personal chat</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>5 startup listings</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li></ul><button class="btn btn-grad btn-wide" onclick="openAuth('signup')">Upgrade to Pro</button></div>
+      <div class="price-card"><div class="price-name">Premium</div><div class="price-price">&#8377;199<span> / month</span></div><div class="price-desc">For teams and power users</div><ul class="price-feats"><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Everything in Pro</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Featured listing</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Unlimited startups</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Analytics dashboard</li><li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Dedicated support</li></ul><button class="btn btn-ghost btn-wide" onclick="openAuth('signup')">Get Premium</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <div class="container">
+    <div style="text-align:center"><div class="sec-label">FAQ</div><h2 class="sec-title">Frequently asked <span class="grad-text">questions</span></h2></div>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is NexBuildr?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-body"><div class="faq-body-in">NexBuildr is a community platform for students and young entrepreneurs in India. Connect with builders, showcase your startup, share ideas, and collaborate through chat and AI tools.</div></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who can use NexBuildr?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-body"><div class="faq-body-in">NexBuildr is for students, young entrepreneurs, developers, designers, and anyone who wants to build something meaningful. Whether you have an idea or a fully launched startup, there is a place for you here.</div></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is NexBuildr free?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-body"><div class="faq-body-in">Yes. The Free plan gives you access to the feed, global chat, one startup listing, and a basic profile — completely free, forever.</div></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How does the Startup Showcase work?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-body"><div class="faq-body-in">List your startup with a name, description, stage, and website. Builders can browse and view your listing — startups are ranked by their view count. The Explore page is public so anyone can discover your startup.</div></div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is Nex AI available on the free plan?<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-body"><div class="faq-body-in">Nex AI is available on Pro and Premium plans. The API integration is currently in progress and will be available soon.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOX -->
+<section class="section" style="padding:60px 0">
+  <div class="container">
+    <div style="background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(236,72,153,.14));border:1px solid rgba(124,58,237,.35);border-radius:24px;padding:48px 40px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-60px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(124,58,237,.2),transparent);border-radius:50%;pointer-events:none"></div>
+      <div style="position:absolute;bottom:-40px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(236,72,153,.12),transparent);border-radius:50%;pointer-events:none"></div>
+      <div style="position:relative;z-index:1;max-width:540px">
+        <h2 style="font-family:var(--head);font-size:clamp(26px,4vw,42px);font-weight:800;line-height:1.15;margin-bottom:22px">Builder, stop overthinking.<br><span class="grad-text">Just start.</span></h2>
+        <button class="btn btn-grad" onclick="heroCTA()" style="padding:13px 32px;font-size:15px;margin-bottom:32px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Free
+        </button>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:flex-start;gap:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px">
+            <div style="width:36px;height:36px;background:rgba(124,58,237,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.9"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Your ideas stay private. Always.</div><div style="font-size:13px;color:var(--muted)">We never store or share your startup ideas with anyone.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px">
+            <div style="width:36px;height:36px;background:rgba(236,72,153,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f9a8d4" stroke-width="1.9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Nex AI does the heavy thinking. You just build.</div><div style="font-size:13px;color:var(--muted)">Let Nex AI handle idea validation and research while you focus on execution.</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px">
+            <div style="width:36px;height:36px;background:rgba(16,185,129,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.9"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Everything you need — in one place.</div><div style="font-size:13px;color:var(--muted)">Feed, chat, AI, showcase, network, and grants — all under one roof.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><p>The community platform for students and young entrepreneurs to build, connect, and launch.</p><div class="socials">
+<a href="https://twitter.com/nexbuildr" class="soc" title="Twitter/X"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+<a href="https://www.linkedin.com/in/atharvsinghraj/" class="soc" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+<a href="https://www.instagram.com/atharvsinghraj_/" class="soc" title="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+</div></div>
+      <div class="foot-col"><h5>Legal</h5><ul><li><a href="#">Terms &amp; Conditions</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+      <div class="foot-col"><h5>Platform</h5><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a onclick="scrollToExplore()" style="cursor:pointer">Explore</a></li></ul></div>
+      <div class="foot-col"><h5>Contact</h5><ul><li><a href="mailto:nexbuildrcorporation@gmail.com" style="color:var(--muted);transition:color .2s" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color=''">nexbuildrcorporation@gmail.com</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">&copy; 2025 NexBuildr. All rights reserved.</div>
+  </div>
+</footer>
+</div><!-- /#homepage -->
+
+<!-- ABOUT PAGE -->
+<div id="about-page" style="display:none">
+  <div class="about-nav">
+    <button onclick="hideAboutPage()" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .2s" onmouseenter="this.style.background='rgba(124,58,237,.1)';this.style.borderColor='rgba(124,58,237,.35)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,.1)';this.style.color='rgba(255,255,255,.6)'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
+    </button>
+  </div>
+
+  <div class="about-container">
+    <div class="about-hero">
+      <div class="about-tagline">Meet the Team</div>
+      <h1 class="about-title">The <span>Minds</span> Behind NexBuildr</h1>
+      <p class="about-subtitle">A focused team of young builders reshaping how India's next generation of founders connect, learn, and launch.</p>
+    </div>
+
+    <!-- Atharv Singh Raj -->
+    <div class="person-card">
+      <span class="person-badge-pill">THE VISIONARY</span>
+      <div class="person-photo-col">
+        <img src="/images/me.jpg" alt="Atharv Singh Raj" class="person-photo-circle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="person-photo-circle-fallback" style="display:none">A</div>
+      </div>
+      <div style="margin-bottom:20px">
+        <div class="person-fullname">Atharv Singh Raj</div>
+        <div class="person-title-tag">FOUNDER &amp; CEO</div>
+      </div>
+      <p style="font-size:15px;font-style:italic;color:#888;line-height:1.7;margin:0 0 20px">
+        "A young entrepreneur on a mission to build India's most powerful community for student founders — because every builder deserves a place to grow."
+      </p>
+      <div class="person-about">
+        <p><strong>Atharv Singh Raj</strong> is from <em>Deoria, Uttar Pradesh</em>. He founded <em>The Founders Network (TFN)</em> and NexBuildr — a platform where students <strong>actually build, connect, and launch</strong>, not just dream.</p>
+        <p>His philosophy: <em>"Start young. Build real. Win early."</em></p>
+      </div>
+      <div class="person-socials-row" style="margin-top:24px">
+        <a href="https://www.instagram.com/atharvsinghraj_/" target="_blank" rel="noopener" class="person-soc-btn" title="Instagram"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://www.linkedin.com/in/atharvsinghraj/" target="_blank" rel="noopener" class="person-soc-btn" title="LinkedIn"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Pradyumna Saha -->
+    <div class="person-card">
+      <span class="person-badge-pill">THE OPERATOR</span>
+      <div class="person-photo-col">
+        <img src="/images/pradyumna.jpg" alt="Pradyumna Saha" class="person-photo-circle" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="person-photo-circle-fallback" style="display:none">P</div>
+      </div>
+      <div style="margin-bottom:20px">
+        <div class="person-fullname">Pradyumna Saha</div>
+        <div class="person-title-tag">CHIEF OPERATING OFFICER</div>
+      </div>
+      <p style="font-size:15px;font-style:italic;color:#888;line-height:1.7;margin:0 0 20px">
+        "Great products aren't just built — they're operated with precision, scaled with discipline, and grown with purpose."
+      </p>
+      <div class="person-about">
+        <p><strong>Pradyumna Saha</strong> is the operational backbone of NexBuildr. As <em>COO</em>, he brings <strong>systems thinking and human empathy</strong> — translating vision into execution, every single day.</p>
+        <p>He believes: <em>"Execution is the highest form of strategy."</em></p>
+      </div>
+      <div class="person-socials-row" style="margin-top:24px">
+        <a href="#" class="person-soc-btn" title="Instagram"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="#" class="person-soc-btn" title="LinkedIn"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
+    </div>
+
+        <div class="about-mission">
+      <h3>Our Mission</h3>
+      <p style="font-style:italic;font-size:17px;line-height:2;color:#C4C4D4">
+        To <em style="color:#a78bfa;font-style:italic">democratize entrepreneurship</em> for India's youth —<br>
+        giving every student founder <em style="color:#c4b5fd;font-style:italic">the tools</em>,
+        <em style="color:#f9a8d4;font-style:italic">the network</em>, and
+        <em style="color:#a78bfa;font-style:italic">the community</em><br>
+        they need to build something
+        <em style="color:#e879f9;font-style:italic">real, meaningful, and lasting</em> —<br>
+        before they turn <strong style="color:#fff;font-style:normal">25</strong>.
+      </p>
+      <p style="margin-top:20px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">NexBuildr &middot; Est. 2025</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- ════════════ AUTH MODAL ════════════ -->
+<div class="overlay hidden" id="auth-ov" onclick="if(event.target===this)closeAuth()">
+  <div class="modal">
+    <div class="modal-logo"><span style="font-family:var(--head);color:#fff">Nex</span><span style="font-family:var(--head);background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Buildr</span></div>
+    <div class="modal-tabs"><button class="mtab active" id="atab-login" onclick="switchAuth('login')">Login</button><button class="mtab" id="atab-signup" onclick="switchAuth('signup')">Sign Up</button></div>
+    <div class="error-box hidden" id="auth-err"></div>
+    <div class="mform" id="af-login">
+      <div class="fg"><label>Email</label><input type="email" id="li-email" placeholder="you@example.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="li-pass" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-grad btn-wide" id="li-btn" onclick="doLogin()">Login</button>
+      <div class="modal-div"><span>or</span></div>
+      <button class="btn-google" onclick="doGoogle()"><svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Continue with Google</button>
+    </div>
+    <div class="mform hidden" id="af-signup">
+      <div class="fg"><label>Full Name</label><input type="text" id="su-name" placeholder="Your full name"></div>
+      <div class="fg"><label>Handle</label><input type="text" id="su-handle" placeholder="@yourhandle (no spaces)"></div>
+      <div class="fg"><label>Email</label><input type="email" id="su-email" placeholder="you@example.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="su-pass" placeholder="Min. 6 characters" onkeydown="if(event.key==='Enter')doSignup()"></div>
+      <button class="btn btn-grad btn-wide" id="su-btn" onclick="doSignup()">Create Account</button>
+      <div class="modal-div"><span>or</span></div>
+      <button class="btn-google" onclick="doGoogle()"><svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Continue with Google</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MODALS ════════════ -->
+<!-- Create Post -->
+<div class="overlay hidden" id="post-ov" onclick="if(event.target===this)closePost()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Create a Post</h3><button class="modal-close" onclick="closePost()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div class="fg"><label>Sector</label><select id="pf-sector"><option value="Technology">Technology</option><option value="Education">Education</option><option value="Healthcare">Healthcare</option><option value="Finance">Finance</option><option value="E-commerce">E-commerce</option><option value="Social">Social</option><option value="Agriculture">Agriculture</option><option value="Environment">Environment</option><option value="Other">Other</option></select></div>
+      <div class="fg"><label>Title</label><input type="text" id="pf-title" placeholder="What is your post about?"></div>
+      <div class="fg"><label>Content</label><textarea id="pf-content" placeholder="Share your idea, progress, or learnings..." style="min-height:120px"></textarea></div>
+      <div class="fg"><label>Image (optional)</label><div class="img-zone"><input type="file" id="pf-img" accept="image/*" onchange="previewImg('pf-img','pf-prev')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><p>Click to upload image</p><span style="font-size:11px;color:var(--faint)">PNG, JPG, WEBP up to 5MB</span></div><img id="pf-prev" class="img-preview"></div>
+      <div class="error-box hidden" id="post-err"></div>
+      <button class="btn btn-grad" id="post-sub-btn" onclick="submitPost()" style="align-self:flex-start"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post Detail (comments+share) -->
+<div class="overlay hidden" id="pd-ov" onclick="if(event.target===this)closePD()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3 id="pd-title">Post</h3><button class="modal-close" onclick="closePD()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-tabs"><button class="mtab active" id="pdt-cmt" onclick="switchPD('comments')">Comments</button><button class="mtab" id="pdt-share" onclick="switchPD('share')">Share Post</button></div>
+    <div id="pd-pane-cmt">
+      <div class="cmt-list" id="cmt-list"><div class="spinner"></div></div>
+      <div class="cmt-input-row"><textarea id="cmt-input" placeholder="Write a comment..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment()}"></textarea><button class="btn btn-grad btn-sm" id="cmt-sub-btn" onclick="submitComment()" style="white-space:nowrap;align-self:flex-end">Post</button></div>
+    </div>
+    <div id="pd-pane-share" class="hidden">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Share this post with a builder on the platform.</p>
+      <input type="text" id="share-inp" placeholder="Search by name or handle..." oninput="searchShareUsers()" style="margin-bottom:10px">
+      <div id="share-results" style="display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto"></div>
+      <div class="success-box hidden" id="share-ok" style="margin-top:10px">Post shared!</div>
+    </div>
+  </div>
+</div>
+
+<!-- Startup Detail (dashboard) -->
+<div class="overlay hidden" id="sd-ov" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal modal-xl">
+    <div class="modal-hd"><h3>Startup Details</h3><button class="modal-close" onclick="document.getElementById('sd-ov').classList.add('hidden')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div id="sd-body"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- Public Startup Detail -->
+<div class="overlay hidden" id="pub-sd-ov" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal modal-xl">
+    <div class="modal-hd"><h3>Startup Details</h3><button class="modal-close" onclick="document.getElementById('pub-sd-ov').classList.add('hidden')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div id="pub-sd-body"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- Add Startup -->
+<div class="overlay hidden" id="as-ov" onclick="if(event.target===this)closeAS()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>List Your Startup</h3><button class="modal-close" onclick="closeAS()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Startup Name</label><input type="text" id="sf-name" placeholder="e.g. EduTrack"></div>
+        <div class="fg"><label>Stage</label><select id="sf-stage"><option value="idea">Idea</option><option value="mvp">MVP</option><option value="growth">Growth</option><option value="scale">Scale</option></select></div>
+        <div class="fg" style="grid-column:1/-1"><label>Short Description</label><input type="text" id="sf-short" placeholder="One-line summary"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Full Description</label><textarea id="sf-desc" placeholder="What does your startup do?"></textarea></div>
+        <div class="fg"><label>Website (optional)</label><input type="url" id="sf-web" placeholder="https://..."></div>
+        <div class="fg"><label>Funding Needed?</label><select id="sf-fund"><option value="no">No</option><option value="yes">Yes</option></select></div>
+        <div class="fg"><label>Tags (comma separated)</label><input type="text" id="sf-tags" placeholder="edtech, saas, b2b"></div>
+        <div class="fg"><label>Twitter/X (optional)</label><input type="text" id="sf-twitter" placeholder="@handle"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Logo (optional)</label><div class="img-zone"><input type="file" id="sf-logo" accept="image/*" onchange="previewImg('sf-logo','sf-logo-prev')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><p>Click to upload logo</p></div><img id="sf-logo-prev" class="img-preview"></div>
+      </div>
+      <div class="error-box hidden" id="sf-err"></div>
+      <button class="btn btn-grad" id="sf-sub-btn" onclick="submitStartup()" style="align-self:flex-start">Submit Startup</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Profile Modal -->
+<div class="overlay hidden" id="up-ov" onclick="if(event.target===this)closeUP()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Profile</h3><button class="modal-close" onclick="closeUP()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div id="up-body"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="overlay hidden" id="ep-ov" onclick="if(event.target===this)closeEditProfile()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Edit Profile</h3><button class="modal-close" onclick="closeEditProfile()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <!-- Photo + Banner upload row -->
+      <div style="display:flex;gap:10px;margin-bottom:4px">
+        <div style="flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer" onclick="document.getElementById('photo-inp').click()">
+          <div class="avatar" id="ep-photo-av" style="width:44px;height:44px;font-size:16px;flex-shrink:0"></div>
+          <div><div style="font-size:12px;font-weight:600">Profile Photo</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
+        </div>
+        <div style="flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer" onclick="document.getElementById('banner-inp').click()">
+          <div id="ep-banner-prev" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
+          <div><div style="font-size:12px;font-weight:600">Banner Image</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
+        <div class="fg"><label>Handle</label><input type="text" id="pe-handle" placeholder="@yourhandle"></div>
+        <div class="fg" style="grid-column:1/-1"><label>About</label><input type="text" id="pe-about" placeholder="Brief headline"></div>
+
+        <div class="fg" style="grid-column:1/-1"><label>Experience</label><textarea id="pe-exp" placeholder="Experience, education, previous work..." style="min-height:70px"></textarea></div>
+        <div class="fg" style="grid-column:1/-1"><label>Skills (Enter to add)</label><input type="text" id="pe-skill-inp" placeholder="e.g. React, Design..." onkeydown="handleSkillKey(event)"><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px" id="pe-skills-tags"></div></div>
+      </div>
+      <div class="success-box hidden" id="pe-ok" style="margin-top:8px">Profile updated!</div>
+      <div class="error-box hidden" id="pe-err" style="margin-top:8px"></div>
+      <button class="btn btn-grad" id="pe-save-btn" onclick="saveProfile()" style="margin-top:4px;align-self:flex-start">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Co-founder Post Modal -->
+<div class="overlay hidden" id="cf-post-ov" onclick="if(event.target===this)closeCFPost()">
+  <div class="modal modal-lg" style="max-width:620px">
+    <div class="modal-hd"><h3>Post Co-founder Opportunity</h3><button class="modal-close" onclick="closeCFPost()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label>Startup Name</label><input type="text" id="cf-startup" placeholder="e.g. EduTrack"></div>
+        <div class="fg"><label>Role Needed</label><select id="cf-role"><option value="Co-founder">Co-founder</option><option value="Developer">Developer</option><option value="Designer">Designer</option><option value="Marketer">Marketer</option><option value="Finance">Finance/CFO</option><option value="Sales">Sales</option><option value="Operations">Operations</option></select></div>
+        <div class="fg"><label>Startup Stage</label><select id="cf-stage"><option value="Idea">Idea Stage</option><option value="MVP">MVP</option><option value="Growing">Growing</option><option value="Funded">Funded</option></select></div>
+        <div class="fg"><label>Industry</label><select id="cf-industry"><option value="Technology">Technology</option><option value="Education">Education</option><option value="Healthcare">Healthcare</option><option value="Finance">Finance</option><option value="E-commerce">E-commerce</option><option value="Social">Social</option><option value="Agriculture">Agriculture</option><option value="Other">Other</option></select></div>
+        <div class="fg"><label>Equity Offering (%)</label><input type="number" id="cf-equity" placeholder="e.g. 20" min="0" max="100"></div>
+        <div class="fg"><label>Commitment</label><select id="cf-commit"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Flexible">Flexible</option></select></div>
+        <div class="fg"><label>Location</label><input type="text" id="cf-location" placeholder="Remote / City"></div>
+        <div class="fg"><label>Contact via</label><select id="cf-contact"><option value="chat">Chat on NexBuildr</option><option value="email">Email</option></select></div>
+        <div class="fg" style="grid-column:1/-1"><label>Skills Required (comma separated)</label><input type="text" id="cf-skills" placeholder="e.g. React, Product Design, Growth"></div>
+        <div class="fg" style="grid-column:1/-1"><label>Description</label><textarea id="cf-desc" placeholder="Describe your startup, what you're building, and what you're looking for..." style="min-height:100px"></textarea></div>
+      </div>
+      <div class="error-box hidden" id="cf-err"></div>
+      <button class="btn btn-grad" id="cf-sub-btn" onclick="submitCFPost()" style="align-self:flex-start">Post Opportunity</button>
+    </div>
+  </div>
+</div>
+
+<!-- Co-founder Apply Modal -->
+<div class="overlay hidden" id="cf-apply-ov" onclick="if(event.target===this)closeCFApply()">
+  <div class="modal modal-lg">
+    <div class="modal-hd"><h3>Apply for Co-founder Role</h3><button class="modal-close" onclick="closeCFApply()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="mform">
+      <div id="cf-apply-header" style="padding:12px;background:#1a1a1a;border:1px solid #1F1F1F;border-radius:var(--r);margin-bottom:4px;font-size:13px;color:var(--muted)"></div>
+      <div class="fg"><label>Your Name</label><input type="text" id="ca-name" placeholder="Full name"></div>
+      <div class="fg"><label>Your Skills</label><input type="text" id="ca-skills" placeholder="e.g. React, Node.js, UI/UX"></div>
+      <div class="fg"><label>Experience</label><textarea id="ca-exp" placeholder="Brief background, relevant experience..." style="min-height:70px"></textarea></div>
+      <div class="fg"><label>Portfolio / LinkedIn</label><input type="url" id="ca-portfolio" placeholder="https://..."></div>
+      <div class="fg"><label>Why do you want to join?</label><textarea id="ca-why" placeholder="Tell them why you're a great fit..." style="min-height:80px"></textarea></div>
+      <div class="error-box hidden" id="ca-err"></div>
+      <div class="success-box hidden" id="ca-ok">Application sent!</div>
+      <button class="btn btn-grad" id="ca-sub-btn" onclick="submitCFApply()" style="align-self:flex-start">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- Conn List Modal -->
+<div class="overlay hidden" id="cl-ov" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="cl-title">Connections</h3><button class="modal-close" onclick="document.getElementById('cl-ov').classList.add('hidden')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div id="cl-body"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ════════════ EXPLORE FULLPAGE ════════════ -->
+<div id="explore-page" style="display:none">
+  <div class="explore-page-nav">
+    <button onclick="hideExplorePage()" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--sans)" onmouseenter="this.style.background='rgba(124,58,237,0.12)';this.style.borderColor='rgba(124,58,237,0.4)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.7)'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Home
+    </button>
+    <span style="font-size:14px;font-weight:600;color:var(--muted)"></span>
+  </div>
+  <div style="background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(236,72,153,.1));padding:48px 24px 40px;text-align:center">
+    <h1 style="font-family:var(--head);font-size:clamp(26px,5vw,42px);font-weight:800;margin-bottom:10px">Explore <span class="grad-text">Startups</span></h1>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:24px">Discover innovative startups and connect with founders building the future</p>
+    <div style="position:relative;max-width:480px;margin:0 auto">
+      <svg style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--faint);fill:none;stroke-width:2;pointer-events:none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="exp-search" placeholder="Search startups..." oninput="filterExplore()" style="padding:14px 20px 14px 44px;width:100%;border-radius:14px;font-size:15px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff">
+    </div>
+  </div>
+  <div style="max-width:1100px;margin:0 auto;padding:28px 20px 60px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select id="exp-filter" onchange="filterExplore()" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:var(--r2);font-size:13px;outline:none">
+          <option value="">All Stages</option><option value="idea">Idea</option><option value="mvp">MVP</option><option value="growth">Growth</option><option value="scale">Scale</option>
+        </select>
+      </div>
+      <div id="exp-count" style="font-size:13px;color:var(--faint)"></div>
+    </div>
+    <div class="explore-pub-grid" id="explore-grid"><div class="spinner"></div></div>
+    <div style="text-align:center;margin-top:40px;padding:28px;background:var(--card);border:1px solid var(--border);border-radius:var(--r2)">
+      <div style="font-size:16px;font-weight:600;margin-bottom:6px">Have a startup to showcase?</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Join NexBuildr and list your startup in front of thousands of builders.</div>
+      <button class="btn btn-grad" onclick="openAuth('signup')" style="padding:11px 28px">Join NexBuildr — It's Free</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ DASHBOARD ════════════ -->
+<div id="dashboard">
   <div class="sb-overlay" id="sb-ov" onclick="closeSB()"></div>
   <aside id="sidebar">
     <div class="sb-logo"><div class="logo"><span class="nex">Nex</span><span class="buildr">Buildr</span></div><button class="sb-close" onclick="closeSB()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -1181,36 +1801,22 @@ input,select,textarea,button{max-width:100%}
   </div>
 </div>
 
-
-
-<!-- ONBOARDING -->
-
-
 <!-- IMAGE LIGHTBOX -->
 <div class="lightbox hidden" id="lightbox" onclick="this.classList.add('hidden')">
   <img id="lightbox-img" src="" alt="fullsize">
 </div>
 
-
-
-<!-- TOAST -->
-<div class="toast-wrap" id="toast-wrap"></div>
-
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script>
 if(!firebase.apps.length){
   firebase.initializeApp({apiKey:"AIzaSyDOEDheA7whqz4Y50dPtXJxHVcOHT5cYMU",authDomain:"nexbuildr-c2660.firebaseapp.com",projectId:"nexbuildr-c2660",storageBucket:"nexbuildr-c2660.firebasestorage.app",messagingSenderId:"116373525590",appId:"1:116373525590:web:ce249c4ec3ac4d48ae97f7"});
 }
 const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),GP=new firebase.auth.GoogleAuthProvider(),fv=firebase.firestore.FieldValue;
-console.log('[Firebase] Init OK');
-window.onerror=function(msg,src,line,col,err){console.error('[JS ERROR]',msg,'line:',line,err);return false;};
-window.addEventListener('unhandledrejection',e=>{console.error('[PROMISE]',e.reason);});
-
-
+console.log('[Firebase] Initialized. Project:nexbuildr-c2660 DB:',!!db,'Auth:',!!auth);
 
 // Global error catcher — surfaces silent JS failures
 window.onerror=function(msg,src,line,col,err){
@@ -1284,15 +1890,44 @@ function safeSnap(query,onData,onErr){
 
 // ── HOMEPAGE ──
 window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',scrollY>20));
-function toggleMNav(){document.getElementById('mobile-nav').classList.toggle('open')}function hideExplorePage(){
+function toggleMNav(){document.getElementById('mobile-nav').classList.toggle('open')}
+function showExplorePage(){
+  document.getElementById('explore-page').classList.add('open');
+  document.body.style.overflow='hidden';
+  loadPublicExplore();
+  if(document.getElementById('mobile-nav').classList.contains('open'))toggleMNav();
+}
+function hideExplorePage(){
   document.getElementById('explore-page').classList.remove('open');
   document.body.style.overflow='';
-}function hideAboutPage(){
+}
+function showAboutPage(){
+  document.getElementById('about-page').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(document.getElementById('mobile-nav').classList.contains('open'))toggleMNav();
+}
+function hideAboutPage(){
   document.getElementById('about-page').classList.remove('open');
   document.body.style.overflow='';
 }
 function scrollToExplore(){showExplorePage()}
 function toggleFaq(el){const i=el.parentElement,b=i.querySelector('.faq-body'),o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-body').style.maxHeight='0'});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
+function heroCTA(){if(CU){showDash();_loadAllFeaturesOnce();}else{openAuth('signup');}}
+
+// Update navbar based on auth state
+function updateNavbar(){
+  const na=document.getElementById('nav-actions'),ma=document.getElementById('mnav-auth');
+  if(CU){
+    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
+    ma.innerHTML=`<button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();showDash();_loadAllFeaturesOnce()">Dashboard</button>`;
+    document.getElementById('hero-cta-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Open Dashboard';
+  }else{
+    na.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="openAuth('login')">Login</button><button class="btn btn-grad btn-sm" onclick="openAuth('signup')">Start Free</button>`;
+    ma.innerHTML=`<button class="btn btn-ghost" style="font-size:16px" onclick="toggleMNav();openAuth('login')">Login</button><button class="btn btn-grad" style="font-size:16px" onclick="toggleMNav();openAuth('signup')">Start Free</button>`;
+    document.getElementById('hero-cta-btn').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Start Free';
+  }
+}
+
 // ── AUTH ──
 function openAuth(tab){document.getElementById('auth-ov').classList.remove('hidden');switchAuth(tab||'login');clearAErr()}
 function closeAuth(){document.getElementById('auth-ov').classList.add('hidden')}
@@ -1337,37 +1972,28 @@ async function doLogout(){cleanup();await auth.signOut()}
 async function makeUserDoc(uid,data){await db.collection('users').doc(uid).set(data,{merge:true})}
 function authMsg(code){const m={'auth/user-not-found':'No account with this email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already in use.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password min 6 chars.','auth/too-many-requests':'Too many attempts.','auth/popup-closed-by-user':'Popup closed.','auth/invalid-credential':'Invalid email or password.'};return m[code]||'Error. Please try again.'}
 
-// ── AUTH — guard: if not logged in → back to landing ──
+// ── APP AUTH: redirect to index.html if not logged in ──
 var _appBooted=false;
 auth.onAuthStateChanged(async u=>{
   CU=u||null;
   if(u){
-    if(_appBooted){return;}
+    if(_appBooted)return;
     _appBooted=true;
-    console.log('[App] User signed in:',u.uid);
+    console.log('[App] Signed in:',u.uid);
     try{await loadUD();}catch(e){
-      console.error('[App] loadUD failed:',e.code||e.message);
+      console.error('[App] loadUD failed:',e.message);
       UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
     }
-    // Show dashboard immediately
-    document.getElementById('dashboard').classList.remove('hidden');
-    // Update welcome name with real user name
-    const el=document.getElementById('welcome-name');
-    if(el)el.textContent=UD?.name||CU?.displayName||'Builder';
+    const wn=document.getElementById('welcome-name');
+    if(wn)wn.textContent=UD?.name||CU?.displayName||'Builder';
     try{_syncNavbarPhoto();}catch(_){}
-    // Load all features
     _loadAllFeaturesOnce();
-    // nav to home
     nav('home');
   }else{
-    console.log('[App] Not logged in → redirecting to landing');
+    console.log('[App] Not logged in → index.html');
     window.location.href='index.html';
   }
 });
-
-function doLogout(){
-  auth.signOut().then(()=>{window.location.href='index.html';}).catch(e=>console.error(e));
-}
 
 // All feature loaders — called ONCE after auth+UD ready
 function _loadAllFeatures(){
@@ -3329,26 +3955,17 @@ function loadHomeInsights(){
 
 // ── NAVBAR PROFILE ICON (always in sync with Firestore) ──
 function _syncNavbarPhoto(){
-  const src=(UD&&(UD.profileImage||UD.photoURL))||CU?.photoURL||'';
-  const ini_text=ini(UD?.name||CU?.displayName||'U');
-  // Topbar avatar
   const av=document.getElementById('tb-profile-av');
-  if(av){
-    if(src){av.style.background='none';av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.remove()">`;}
-    else{av.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';av.textContent=ini_text;}
+  if(!av)return;
+  // Priority: Firestore profileImage → Firestore photoURL → Auth photoURL → initials
+  const src=(UD&&(UD.profileImage||UD.photoURL))||CU?.photoURL||'';
+  if(src){
+    av.style.background='none';
+    av.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';this.innerHTML='${ini(UD?.name||CU?.displayName||'U')}'">`;
+  }else{
+    av.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';
+    av.textContent=ini(UD?.name||CU?.displayName||'U');
   }
-  // Settings avatar
-  const sav=document.getElementById('settings-av');
-  if(sav){
-    if(src){sav.style.background='none';sav.innerHTML=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.remove()">`;}
-    else{sav.style.background='linear-gradient(135deg,#7C3AED,#EC4899)';sav.textContent=ini_text;}
-  }
-  // Settings name/handle/email
-  const sn=document.getElementById('settings-name');if(sn)sn.textContent=UD?.name||'—';
-  const sh=document.getElementById('settings-handle');if(sh)sh.textContent=UD?.handle?'@'+UD.handle:'—';
-  const se=document.getElementById('settings-email');if(se)se.textContent=CU?.email||'—';
-  // Welcome name
-  const wn=document.getElementById('welcome-name');if(wn)wn.textContent=UD?.name||CU?.displayName||'Builder';
 }
 // Patch loadProfile to always sync navbar photo
 const __origLP=loadProfile;
@@ -3505,7 +4122,6 @@ loadProfile=function(){
   _obOrigLP.call(this);
   try{updateProfileCompletion();}catch(_){}
 };
-
 
 </script>
 </body>
