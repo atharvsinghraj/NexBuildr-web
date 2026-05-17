@@ -446,7 +446,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .profile-banner{height:140px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,0,0,.8));position:relative;background-size:cover;background-position:center;transition:background-image .3s}
 .profile-body{padding:0 22px 22px}
 .pav-wrap{margin-top:-38px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.pav-lg{width:96px;height:96px;font-size:34px;font-weight:700;border:3px solid rgba(124,58,237,.4);cursor:pointer;position:relative;box-shadow:0 0 24px rgba(124,58,237,.15)}
+.pav-lg{width:110px;height:110px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s}
 .pav-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .pav-lg:hover .pav-overlay{opacity:1}
 .pav-overlay svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2}
@@ -739,12 +739,124 @@ input,select,textarea,button{max-width:100%}
   .tb-search-container{display:none}
   #topbar{padding:0 10px}
 }
+
+/* ── NexBuildr Premium Animations ── */
+@keyframes nxUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes nxFade{from{opacity:0}to{opacity:1}}
+@keyframes nxScale{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
+@keyframes nxGlow{0%,100%{box-shadow:0 0 18px rgba(124,58,237,.2)}50%{box-shadow:0 0 38px rgba(124,58,237,.5),0 0 70px rgba(236,72,153,.12)}}
+@keyframes nxSpin{to{transform:rotate(360deg)}}
+@keyframes nxOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(3%,2%)}}
+@keyframes nxShimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes nxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes nxToast{from{opacity:0;transform:translateY(14px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes nxModal{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes nxSlideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes nxRipple{to{transform:scale(3.5);opacity:0}}
+@keyframes nxBorderGlow{0%,100%{border-color:rgba(124,58,237,.25)}50%{border-color:rgba(236,72,153,.5)}}
+
+/* Hero entrances */
+.badge-pill{animation:nxUp .6s cubic-bezier(.16,1,.3,1) .05s both}
+.hero-h{animation:nxUp .7s cubic-bezier(.16,1,.3,1) .15s both}
+.hero-sub{animation:nxUp .65s cubic-bezier(.16,1,.3,1) .28s both}
+.hero-cta-wrap{animation:nxUp .65s cubic-bezier(.16,1,.3,1) .4s both}
+.hero-stats{animation:nxUp .6s cubic-bezier(.16,1,.3,1) .52s both}
+
+/* Shimmer on gradient text */
+.grad-text{background-size:200% auto!important;animation:nxShimmer 3.5s linear infinite!important}
+
+/* Hero ambient orb */
+.hero-inner{position:relative;overflow:hidden}
+.hero-inner::before{content:'';position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.18),rgba(236,72,153,.07) 55%,transparent 75%);top:-180px;left:50%;transform:translateX(-50%);filter:blur(50px);animation:nxOrb 12s ease-in-out infinite;pointer-events:none;z-index:0}
+
+/* CTA button glow */
+.btn-grad{animation:nxGlow 3.5s ease-in-out infinite}
+.btn-grad:hover{transform:translateY(-2px) scale(1.025)!important;box-shadow:0 6px 30px rgba(124,58,237,.45)!important;animation:none}
+.btn:active{transform:scale(.95)!important}
+.btn{transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .2s!important;position:relative;overflow:hidden}
+.btn-ghost:hover{border-color:rgba(124,58,237,.5)!important;background:rgba(124,58,237,.08)!important;transform:translateY(-1px)}
+
+/* Topbar scroll */
+#topbar{transition:background .3s,box-shadow .3s,border-color .3s!important}
+#topbar.nxScrolled{background:rgba(0,0,0,.9)!important;backdrop-filter:blur(16px);box-shadow:0 2px 32px rgba(0,0,0,.7)!important}
+
+/* Cards hover */
+.card,.home-block,.test-card,.price-card{transition:transform .22s cubic-bezier(.34,1.4,.64,1),box-shadow .22s,border-color .22s!important}
+.card:hover,.home-block:hover,.test-card:hover,.price-card:hover{transform:translateY(-4px)!important;box-shadow:0 12px 38px rgba(124,58,237,.13)!important;border-color:rgba(124,58,237,.3)!important}
+.sc-card,.net-card,.cf-card,.news-card,.person-card{transition:transform .22s cubic-bezier(.34,1.4,.64,1),box-shadow .22s,border-color .22s!important}
+.sc-card:hover,.net-card:hover,.cf-card:hover,.news-card:hover,.person-card:hover{transform:translateY(-4px) scale(1.008)!important;box-shadow:0 10px 34px rgba(124,58,237,.16)!important;border-color:rgba(124,58,237,.35)!important}
+.post-card{transition:transform .2s,box-shadow .2s,border-color .2s!important}
+.post-card:hover{transform:translateY(-2px)!important;box-shadow:0 6px 22px rgba(124,58,237,.1)!important}
+
+/* Sidebar */
+.sb-link{transition:background .18s,color .18s,transform .15s!important;position:relative}
+.sb-link:hover{transform:translateX(4px)!important}
+.sb-link.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:55%;background:linear-gradient(180deg,#7C3AED,#EC4899);border-radius:0 3px 3px 0;animation:nxFade .3s ease}
+
+/* Inputs */
+input,textarea,select{transition:border-color .2s,box-shadow .2s!important}
+input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12)!important}
+
+/* Spinner premium */
+.spinner{width:28px;height:28px;border:2.5px solid rgba(124,58,237,.15);border-top-color:#7C3AED;border-radius:50%;animation:nxSpin .75s linear infinite!important;display:block;margin:auto}
+
+/* Modal + overlay */
+.modal{animation:nxModal .35s cubic-bezier(.16,1,.3,1)!important}
+.overlay{animation:nxFade .2s ease!important}
+.toast{animation:nxToast .4s cubic-bezier(.16,1,.3,1)!important}
+
+/* Page enter */
+.page.active{animation:nxSlideUp .32s cubic-bezier(.16,1,.3,1)!important}
+
+/* Avatar */
+.avatar{transition:transform .18s,box-shadow .18s!important}
+.avatar:hover{transform:scale(1.1)!important;box-shadow:0 0 18px rgba(124,58,237,.3)!important}
+
+/* Notif */
+.notif-pip{animation:nxGlow 2.2s ease-in-out infinite!important}
+
+/* Nav underline */
+.nav-links a{position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1.5px;background:linear-gradient(90deg,#7C3AED,#EC4899);transition:width .28s cubic-bezier(.16,1,.3,1)}
+.nav-links a:hover::after{width:100%}
+
+/* Scroll reveal classes */
+.nxR{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.nxR.nxOn{opacity:1;transform:none}
+.nxRS{opacity:0;transform:scale(.94);transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1)}
+.nxRS.nxOn{opacity:1;transform:none}
+
+/* Progress bar */
+#nxPb{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#7C3AED,#EC4899);z-index:9999;width:0%;opacity:0;transition:width .4s ease,opacity .3s;pointer-events:none}
+
+/* Feature cards stagger */
+.feat-big-card{animation:nxUp .5s cubic-bezier(.16,1,.3,1) both}
+.feat-big-card:nth-child(1){animation-delay:.05s}
+.feat-big-card:nth-child(2){animation-delay:.12s}
+.feat-big-card:nth-child(3){animation-delay:.19s}
+.feat-big-card:nth-child(4){animation-delay:.26s}
+
+/* How steps */
+.step{animation:nxUp .5s cubic-bezier(.16,1,.3,1) both}
+.step:nth-child(1){animation-delay:.08s}
+.step:nth-child(2){animation-delay:.18s}
+.step:nth-child(3){animation-delay:.28s}
+.step:nth-child(4){animation-delay:.38s}
+
+/* About-page float on person photo */
+.person-photo-circle{animation:nxFloat 5s ease-in-out infinite}
+
+/* Net connect button */
+.net-connect-btn{transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,background .18s!important}
+.net-connect-btn.connect:hover{transform:scale(1.03)!important;box-shadow:0 4px 18px rgba(124,58,237,.35)!important}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 
 <!-- ════════════ HOMEPAGE ════════════ -->
-<div id="homepage" class="hidden" style="display:none">
+<div id="homepage" style="display:none">
 
 <nav id="navbar">
   <a href="#" class="logo" onclick="event.preventDefault();scrollTo({top:0,behavior:'smooth'})"><span class="nex">Nex</span><span class="buildr">Buildr</span></a>
@@ -1065,7 +1177,7 @@ input,select,textarea,button{max-width:100%}
 </div><!-- /#homepage -->
 
 <!-- ABOUT PAGE -->
-<div id="about-page" style="display:none">
+<div id="about-page">
   <div class="about-nav">
     <button onclick="hideAboutPage()" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .2s" onmouseenter="this.style.background='rgba(124,58,237,.1)';this.style.borderColor='rgba(124,58,237,.35)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,.1)';this.style.color='rgba(255,255,255,.6)'">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back
@@ -1262,10 +1374,7 @@ input,select,textarea,button{max-width:100%}
           <div class="avatar" id="ep-photo-av" style="width:44px;height:44px;font-size:16px;flex-shrink:0"></div>
           <div><div style="font-size:12px;font-weight:600">Profile Photo</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
         </div>
-        <div style="flex:1;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer" onclick="document.getElementById('banner-inp').click()">
-          <div id="ep-banner-prev" style="width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg></div>
-          <div><div style="font-size:12px;font-weight:600">Banner Image</div><div style="font-size:11px;color:var(--muted)">Click to change</div></div>
-        </div>
+
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="fg"><label>Display Name</label><input type="text" id="pe-name" placeholder="Your full name"></div>
@@ -1332,7 +1441,7 @@ input,select,textarea,button{max-width:100%}
 </div>
 
 <!-- ════════════ EXPLORE FULLPAGE ════════════ -->
-<div id="explore-page" style="display:none">
+<div id="explore-page">
   <div class="explore-page-nav">
     <button onclick="hideExplorePage()" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:8px 16px;color:rgba(255,255,255,0.7);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--sans)" onmouseenter="this.style.background='rgba(124,58,237,0.12)';this.style.borderColor='rgba(124,58,237,0.4)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.7)'">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -1701,11 +1810,7 @@ input,select,textarea,button{max-width:100%}
                 <div><div style="font-size:13px;font-weight:600">Profile Photo</div><div style="font-size:12px;color:var(--muted)">JPG, PNG up to 5MB</div></div>
                 <button class="btn btn-ghost btn-sm" onclick="document.getElementById('photo-inp').click()">Upload</button>
               </div>
-              <div style="height:1px;background:#1F1F1F"></div>
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div><div style="font-size:13px;font-weight:600">Banner Image</div><div style="font-size:12px;color:var(--muted)">Wide format recommended</div></div>
-                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('banner-inp').click()">Upload</button>
-              </div>
+
             </div>
           </div>
 
@@ -1745,10 +1850,7 @@ input,select,textarea,button{max-width:100%}
       <div class="page" id="page-profile">
         <div class="page-hd"><div class="page-hd-l"><h1>Profile</h1><p>Your builder identity.</p></div></div>
         <div class="profile-card">
-          <div class="profile-banner" id="my-banner" onclick="triggerBanner()" title="Click to upload banner" style="cursor:pointer;position:relative">
-            <input type="file" id="banner-inp" accept="image/*" class="hidden" onchange="uploadBanner(event)">
-            <div id="banner-overlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;background:rgba(0,0,0,.5)" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span style="font-size:12px;color:#fff;margin-left:6px">Upload Banner</span></div>
-          </div>
+
           <div class="profile-body">
             <div class="pav-wrap">
               <div class="avatar pav-lg" id="my-av" style="cursor:default">
@@ -1972,28 +2074,19 @@ async function doLogout(){cleanup();await auth.signOut()}
 async function makeUserDoc(uid,data){await db.collection('users').doc(uid).set(data,{merge:true})}
 function authMsg(code){const m={'auth/user-not-found':'No account with this email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already in use.','auth/invalid-email':'Invalid email.','auth/weak-password':'Password min 6 chars.','auth/too-many-requests':'Too many attempts.','auth/popup-closed-by-user':'Popup closed.','auth/invalid-credential':'Invalid email or password.'};return m[code]||'Error. Please try again.'}
 
-// ── APP AUTH: redirect to index.html if not logged in ──
 var _appBooted=false;
 auth.onAuthStateChanged(async u=>{
   CU=u||null;
   if(u){
-    if(_appBooted)return;
-    _appBooted=true;
-    console.log('[App] Signed in:',u.uid);
-    try{await loadUD();}catch(e){
-      console.error('[App] loadUD failed:',e.message);
-      UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};
-    }
-    const wn=document.getElementById('welcome-name');
-    if(wn)wn.textContent=UD?.name||CU?.displayName||'Builder';
+    if(_appBooted)return;_appBooted=true;
+    try{await loadUD();}catch(e){UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0,connectionCount:0,followerCount:0,followingCount:0};}
+    document.getElementById('dashboard').classList.remove('hidden');
+    const wn=document.getElementById('welcome-name');if(wn)wn.textContent=UD?.name||CU?.displayName||'Builder';
     try{_syncNavbarPhoto();}catch(_){}
-    _loadAllFeaturesOnce();
-    nav('home');
-  }else{
-    console.log('[App] Not logged in → index.html');
-    window.location.href='index.html';
-  }
+    _loadAllFeaturesOnce();nav('home');
+  }else{window.location.href='index.html';}
 });
+function doLogout(){auth.signOut().then(()=>window.location.href='index.html').catch(e=>console.error(e));}
 
 // All feature loaders — called ONCE after auth+UD ready
 function _loadAllFeatures(){
@@ -3073,7 +3166,7 @@ async function viewUser(uid){
         <div class="avatar up-av" style="${_vuph?'background:none':''}">${ph}</div>
         <div class="up-info">
           <h2>${esc(u.name||'Builder')}</h2>
-          <p style="color:var(--muted);font-size:13px">@${esc(u.handle||'')}</p>
+          <p style="color:var(--muted);font-size:13px">@${esc((u.handle||"").replace(/^@+/,""))}</p>
           ${u.about?`<p style="font-size:12px;color:var(--muted);margin-top:2px">${esc(u.about)}</p>`:''}
           <div class="up-actions">
             ${CU?connBtn:''}
@@ -4123,6 +4216,238 @@ loadProfile=function(){
   try{updateProfileCompletion();}catch(_){}
 };
 
+
+// ── NexBuildr Animation Engine ──
+(function(){
+  // Progress bar
+  var pb=document.createElement('div');pb.id='nxPb';document.body.prepend(pb);
+  function pbS(){pb.style.opacity='1';pb.style.width='0%';requestAnimationFrame(function(){pb.style.width='65%';})}
+  function pbH(){pb.style.width='100%';setTimeout(function(){pb.style.opacity='0';setTimeout(function(){pb.style.width='0%';},350);},250);}
+
+  // Scroll reveal
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('nxOn');obs.unobserve(e.target);}});
+  },{threshold:.1,rootMargin:'0px 0px -32px 0px'});
+
+  function applyReveal(){
+    document.querySelectorAll('.section,.sec-title,.sec-sub,.about-hero,.about-mission,.foot-brand').forEach(function(el){
+      if(!el.classList.contains('nxR')){el.classList.add('nxR');obs.observe(el);}
+    });
+    document.querySelectorAll('.stats-grid>*,.test-grid>*,.price-grid>*,.foot-grid>*,.icards>*').forEach(function(el,i){
+      if(!el.classList.contains('nxR')){el.classList.add('nxR');el.style.transitionDelay=(i*.07)+'s';obs.observe(el);}
+    });
+    document.querySelectorAll('.sc-card,.net-card,.news-card,.cf-card,.person-card').forEach(function(el,i){
+      if(!el.dataset.nxA){
+        el.dataset.nxA='1';el.style.opacity='0';el.style.transform='translateY(18px)';
+        el.style.transition='opacity .4s cubic-bezier(.16,1,.3,1) '+(i*.06)+'s,transform .4s cubic-bezier(.16,1,.3,1) '+(i*.06)+'s';
+        setTimeout(function(){el.style.opacity='1';el.style.transform='none';},80+i*60);
+      }
+    });
+  }
+
+  // Topbar scroll
+  function initScroll(){
+    var tb=document.getElementById('topbar');if(!tb)return;
+    var pg=document.getElementById('pages');
+    function onS(){tb.classList.toggle('nxScrolled',(pg?pg.scrollTop:window.scrollY)>22);}
+    if(pg)pg.addEventListener('scroll',onS,{passive:true});
+    window.addEventListener('scroll',onS,{passive:true});
+  }
+
+  // Button ripple
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.btn');if(!btn)return;
+    var r=document.createElement('span');
+    var rect=btn.getBoundingClientRect();
+    var sz=Math.max(rect.width,rect.height)*1.6;
+    r.style.cssText='position:absolute;border-radius:50%;background:rgba(255,255,255,.14);width:'+sz+'px;height:'+sz+'px;left:'+(e.clientX-rect.left-sz/2)+'px;top:'+(e.clientY-rect.top-sz/2)+'px;transform:scale(0);animation:nxRipple .55s ease-out forwards;pointer-events:none';
+    btn.style.position='relative';btn.style.overflow='hidden';
+    btn.appendChild(r);setTimeout(function(){r.remove();},600);
+  });
+
+  // Nav page transition
+  if(typeof nav==='function'&&!window._nxHooked){
+    window._nxHooked=true;
+    var _prev=nav;
+    nav=function(page){
+      pbS();_prev(page);
+      setTimeout(function(){pbH();applyReveal();},80);
+    };
+  }
+
+  // Smooth image load
+  document.querySelectorAll('img[src]').forEach(function(img){
+    if(!img.complete&&!img.dataset.nxI){
+      img.dataset.nxI='1';img.style.opacity='0';img.style.transition='opacity .4s ease';
+      img.addEventListener('load',function(){img.style.opacity='1';});
+    }
+  });
+
+  // Boot
+  function boot(){applyReveal();initScroll();setTimeout(applyReveal,1500);setTimeout(applyReveal,3500);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}
+  else{setTimeout(boot,60);}
+})();
+
+
+// ══════════════════════════════════════════════════════
+// PRODUCTION FEATURES v2
+// ══════════════════════════════════════════════════════
+
+// ── 1. Global Photo Sync — real-time listener ──
+var _photoUnsub=null;
+function startPhotoSync(){
+  if(!CU||_photoUnsub)return;
+  _photoUnsub=db.collection('users').doc(CU.uid).onSnapshot(snap=>{
+    if(!snap.exists)return;
+    const data=snap.data();
+    const src=data.profileImage||data.photoURL||'';
+    if(!src)return;
+    if(UD)Object.assign(UD,{profileImage:src,photoURL:src});
+    const imgHtml=`<img src="${esc(src)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.remove()">`;
+    ['my-av','ep-photo-av','settings-av','tb-profile-av'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.style.background='none';el.innerHTML=imgHtml;}
+    });
+  },e=>console.warn('[photoSync]',e.message));
+}
+
+// ── 2. Dashboard REAL stats ──
+async function loadRealDashStats(){
+  if(!CU)return;
+  const setEl=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v??'0';};
+  try{
+    const[pSnap,sSnap,connSnap,follSnap]=await Promise.all([
+      db.collection('posts').where('userId','==',CU.uid).get(),
+      db.collection('startups').where('userId','==',CU.uid).get(),
+      db.collection('connections').where('fromUid','==',CU.uid).where('status','==','accepted').get().catch(()=>({size:0})),
+      db.collection('follows').where('followingUid','==',CU.uid).get().catch(()=>({size:0}))
+    ]);
+    setEl('st-posts',pSnap.size);
+    setEl('st-startups',sSnap.size);
+    setEl('st-connections',connSnap.size||(UD?.connectionCount||0));
+    setEl('st-followers',follSnap.size||(UD?.followerCount||0));
+    // Also sync profile counts
+    setEl('my-conns',connSnap.size||(UD?.connectionCount||0));
+    setEl('my-followers',follSnap.size||(UD?.followerCount||0));
+    console.log('[dashStats] posts:',pSnap.size,'startups:',sSnap.size,'conns:',connSnap.size,'followers:',follSnap.size);
+  }catch(e){console.error('[loadRealDashStats]',e.message);}
+}
+
+// ── 3. Post delete with confirmation (owner only) ──
+async function delPost(postId,btn){
+  if(!CU){toast('Not signed in','err');return;}
+  if(!confirm('Delete this post? This cannot be undone.'))return;
+  try{
+    if(btn)btn.disabled=true;
+    await db.collection('posts').doc(postId).delete();
+    // Remove card from DOM
+    const card=document.getElementById('post-'+postId)||document.querySelector(`[data-post="${postId}"]`);
+    if(card){card.style.transition='opacity .3s,transform .3s';card.style.opacity='0';card.style.transform='scale(.95)';setTimeout(()=>card.remove(),300);}
+    toast('Post deleted','ok');
+  }catch(e){
+    console.error('[delPost]',e.message);
+    toast('Delete failed: '+e.message,'err');
+    if(btn)btn.disabled=false;
+  }
+}
+
+// ── 4. Startup delete (owner only) ──
+async function delStartup(startupId){
+  if(!CU){toast('Not signed in','err');return;}
+  if(!confirm('Delete this startup listing?'))return;
+  try{
+    await db.collection('startups').doc(startupId).delete();
+    // Remove from DOM
+    const card=document.querySelector(`[data-sc="${startupId}"]`);
+    if(card){card.style.transition='opacity .3s';card.style.opacity='0';setTimeout(()=>{card.remove();},300);}
+    // Close modal if open
+    const ov=document.getElementById('sc-modal-ov');if(ov)ov.classList.add('hidden');
+    toast('Startup removed','ok');
+    console.log('[delStartup] deleted:',startupId);
+  }catch(e){
+    console.error('[delStartup]',e.message);
+    toast('Delete failed','err');
+  }
+}
+
+// ── 5. Message delete (sender only) ──
+async function delGlobMsg(msgId,el){
+  if(!confirm('Delete this message?'))return;
+  try{
+    await db.collection('globalMessages').doc(msgId).delete();
+    if(el){el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),300);}
+    toast('Message deleted','ok');
+  }catch(e){toast('Could not delete','err');}
+}
+
+// ── 6. Global chat — render with delete button for own messages ──
+const _origRenderGlobMsg=renderGlobMsg;
+if(typeof renderGlobMsg==='function'){
+  renderGlobMsg=function(m,mine){
+    const base=_origRenderGlobMsg(m,mine);
+    if(!mine)return base;
+    // Append delete button to own messages
+    return base.replace('</div></div>',
+      `<button onclick="delGlobMsg('${m.id}',this.closest('.cmsg'))" title="Delete" style="background:none;border:none;color:rgba(255,255,255,.25);cursor:pointer;font-size:13px;padding:0 4px;transition:color .18s" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='rgba(255,255,255,.25)'">✕</button></div></div>`);
+  };
+}
+
+// ── 7. Startup ranking by views (hidden from UI) ──
+// Already sorted by views in loadStartups — reinforce here
+const _origRenderStItems=window.renderStItems;
+if(typeof renderStItems==='function'&&!window._nxRankHooked){
+  window._nxRankHooked=true;
+  const _baseRender=renderStItems;
+  renderStItems=function(docs){
+    // Sort by views desc before rendering
+    const sorted=[...docs].sort((a,b)=>{
+      const av=a.data?a.data().views||0:a.views||0;
+      const bv=b.data?b.data().views||0:b.views||0;
+      return bv-av;
+    });
+    _baseRender(sorted);
+  };
+}
+
+// ── 8. Username sanitizer — strip extra @ on save ──
+function sanitizeHandle(handle){
+  return (handle||'').replace(/^@+/,'').replace(/[^a-zA-Z0-9_]/g,'').toLowerCase();
+}
+
+// ── 9. Daily Insights auto-refresh (24h) + dedup ──
+var _lastInsightLoad=0;
+function shouldRefreshInsights(){
+  return !allInsights.length||(Date.now()-_lastInsightLoad)>86400000;
+}
+
+// ── Hook into _loadAllFeatures ──
+const _origFeatAll=_loadAllFeatures;
+_loadAllFeatures=function(){
+  _origFeatAll.call(this);
+  setTimeout(()=>{
+    startPhotoSync();
+    loadRealDashStats();
+  },600);
+};
+
+// Also run stats after loadProfile
+const _origLPFinal=loadProfile;
+loadProfile=function(){
+  _origLPFinal.call(this);
+  setTimeout(loadRealDashStats,400);
+};
+
+// ── Handle sanitize on onboarding/edit profile save ──
+const _origSaveEP=saveEP;
+if(typeof saveEP==='function'){
+  saveEP=async function(){
+    const hinp=document.getElementById('pe-handle');
+    if(hinp)hinp.value=sanitizeHandle(hinp.value);
+    await _origSaveEP.call(this);
+  };
+}
+
 </script>
 </body>
-</html>
+</html><!-- test -->
