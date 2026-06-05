@@ -247,7 +247,7 @@ img{display:block}
 .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;font-size:14px;font-weight:500}
 .faq-q svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;flex-shrink:0;transition:transform .3s}
 .faq-item.open .faq-q svg{transform:rotate(180deg);stroke:var(--purple)}
-.faq-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-
 .faq-body-in{padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.7}
 footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
@@ -731,12 +731,12 @@ input,select,textarea,button{max-width:100%}
   .stats-grid{grid-template-columns:1fr 1fr}
   .net-grid{grid-template-columns:1fr}
   /* search always full width */
-  .tb-search-inner:focus-within{width:150px}
+  
   .pstats-row{flex-wrap:wrap;gap:10px}
   .notif-btn{width:30px;height:30px}
 }
 @media(max-width:360px){
-  .tb-search-container{display:none}
+  .tb-search-container{display:flex!important;flex:1;min-width:120px;max-width:500px}
   #topbar{padding:0 10px}
 }
 
@@ -4422,6 +4422,8 @@ loadProfile=function(){
   function boot(){applyReveal();initScroll();setTimeout(applyReveal,1500);setTimeout(applyReveal,3500);}
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}
   else{setTimeout(boot,60);}
+  // Always ensure scrolling works
+  setTimeout(()=>{document.body.style.overflow='';document.body.style.overflowY='auto';document.documentElement.style.overflow='auto';},300);
 })();
 
 
