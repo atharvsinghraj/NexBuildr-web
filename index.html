@@ -446,7 +446,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .profile-banner{height:140px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,0,0,.8));position:relative;background-size:cover;background-position:center;transition:background-image .3s}
 .profile-body{padding:0 22px 22px}
 .pav-wrap{margin-top:-38px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.pav-lg{width:110px;height:110px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s}
+.pav-lg{width:110px;height:110px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s;overflow:hidden}
 .pav-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .pav-lg:hover .pav-overlay{opacity:1}
 .pav-overlay svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2}
@@ -669,9 +669,9 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 
 /* ── TOPBAR SEARCH ── */
 .tb-search-container{position:relative;flex:1;min-width:0}
-.tb-search-inner{display:flex;align-items:center;gap:10px;background:#141414;border:1px solid #222;border-radius:100px;padding:10px 18px;width:100%;transition:border-color .2s,background .2s}
+.tb-search-inner{display:flex;align-items:center;gap:8px;background:#111;border:1px solid #222;border-radius:100px;padding:7px 14px;width:100%;transition:border-color .2s}
 .tb-search-inner:focus-within{border-color:rgba(124,58,237,.4);background:#0D0D0D}
-.tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:14px;color:#fff;line-height:1}
+.tb-search-inner input{background:none;border:none;outline:none;width:100%;font-size:13px;color:#fff;line-height:1}
 .tb-search-inner input::placeholder{color:#555;font-size:14px}
 #tb-results{position:absolute;top:calc(100%+8px);left:0;right:0;background:#080808;border:1px solid #1F1F1F;border-radius:14px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,.9);z-index:400;min-width:240px}
 #tb-results{position:absolute;top:calc(100%+6px);left:0;right:0;background:#0A0A0A;border:1px solid #1F1F1F;border-radius:var(--r2);padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.8);z-index:400;min-width:240px}
@@ -736,7 +736,7 @@ input,select,textarea,button{max-width:100%}
   .notif-btn{width:30px;height:30px}
 }
 @media(max-width:360px){
-  .tb-search-container{display:flex!important;flex:1;min-width:120px;max-width:500px}
+  .tb-search-container{display:flex!important;flex:1;min-width:100px;max-width:380px}
   #topbar{padding:0 10px}
 }
 
@@ -1372,6 +1372,23 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12
   </div>
 </div>
 
+<!-- BATTLE SUBMIT MODAL -->
+<div class="overlay hidden" id="battle-submit-ov" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-hd"><h3>Submit to Battles</h3><button class="modal-close" onclick="document.getElementById('battle-submit-ov').classList.add('hidden')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div style="padding:4px 0 12px;display:flex;flex-direction:column;gap:12px">
+      <input id="bs-name" class="finp" placeholder="Startup name" maxlength="60">
+      <input id="bs-tagline" class="finp" placeholder="One-line tagline" maxlength="100">
+      <select id="bs-cat" class="finp">
+        <option value="Best Teen Startup">🏆 Best Teen Startup</option>
+        <option value="Fastest Growing">🚀 Fastest Growing</option>
+        <option value="Most Creative">💡 Most Creative</option>
+        <option value="Best Design">🎨 Best Design</option>
+      </select>
+      <button id="bs-submit-btn" class="btn btn-grad btn-wide" onclick="submitBattle()">Submit</button>
+    </div>
+  </div>
+</div>
 <!-- TOAST -->
 <div class="toast-wrap" id="toast-wrap"></div>
 
@@ -1992,7 +2009,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12
       <!-- PROFILE -->
       <div class="page" id="page-profile">
         <div class="page-hd"><div class="page-hd-l"><h1>Profile</h1><p>Your builder identity.</p></div></div>
-        <div class="profile-card">
+        <div class="profile-card" style="padding-top:16px">
 
           <div class="profile-body">
             <div class="pav-wrap">
@@ -2157,7 +2174,7 @@ function hideAboutPage(){
 }
 function scrollToExplore(){showExplorePage()}
 function toggleFaq(el){const i=el.parentElement,b=i.querySelector('.faq-body'),o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-body').style.maxHeight='0'});if(!o){i.classList.add('open');b.style.maxHeight=b.scrollHeight+'px'}}
-function heroCTA(){if(CU){window.location.href="app.html";}else{openAuth('signup');}}
+function heroCTA(){if(CU){showDash();_loadAllFeaturesOnce();}else{openAuth('signup');}}
 
 // Update navbar based on auth state
 function updateNavbar(){
@@ -2219,8 +2236,19 @@ function authMsg(code){const m={'auth/user-not-found':'No account with this emai
 
 var _appBooted=false;
 auth.onAuthStateChanged(async u=>{
-  if(u){window.location.href='app.html';}
-  else{updateNavbar();loadPublicExplore();}
+  CU=u||null;
+  if(u){
+    try{await loadUD();}catch(e){UD={name:CU.displayName||'Builder',handle:'u'+CU.uid.slice(0,5),email:CU.email||'',role:'user',bio:'',about:'',skills:[],photoURL:CU.photoURL||'',profileImage:CU.photoURL||'',bannerImage:'',coins:0};}
+    updateNavbar();
+    try{_syncNavbarPhoto();}catch(_){}
+    // Sync profile photo
+    const _src=UD?.profileImage||UD?.photoURL||CU?.photoURL||'';
+    const _av=document.getElementById('my-av');
+    if(_av&&_src){_av.style.background='none';_av.innerHTML=`<img src="${esc(_src)}" style="width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:50%;display:block">`;}
+    // Stay on landing — user must click Start button
+  }else{
+    CU=null;UD=null;updateNavbar();loadPublicExplore();
+  }
 });
 
 // All feature loaders — called ONCE after auth+UD ready
@@ -4779,21 +4807,24 @@ async function voteBattle(id,btn){
 
 function openBattleSubmit(){
   if(!CU){toast('Sign in first','err');return;}
-  const name=prompt('Startup name:');if(!name)return;
-  const tagline=prompt('Tagline (1 line):');if(!tagline)return;
-  const cats=['Best Teen Startup','Fastest Growing','Most Creative','Best Design'];
-  const cat=prompt('Select category: 1=Best Teen Startup, 2=Fastest Growing, 3=Most Creative, 4=Best Design');
-  const catName=cats[(parseInt(cat)||1)-1]||'Best Teen Startup';
-  db.collection('battles').add({
-    name,tagline,category:catName,
-    founderName:UD?.name||'Anonymous',
-    founderId:CU.uid,votes:0,voters:[],
-    createdAt:firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{
-    toast('Startup submitted to Battles!','ok');
-    gainXP('startup');
-    loadBattles();
-  }).catch(e=>{toast('Submit failed: '+e.message,'err');});
+  const ov=document.getElementById('battle-submit-ov');
+  if(ov)ov.classList.remove('hidden');
+}
+async function submitBattle(){
+  const name=(document.getElementById('bs-name')?.value||'').trim();
+  const tagline=(document.getElementById('bs-tagline')?.value||'').trim();
+  const cat=document.getElementById('bs-cat')?.value||'Best Teen Startup';
+  if(!name||!tagline){toast('Fill all fields','err');return;}
+  const btn=document.getElementById('bs-submit-btn');
+  if(btn){btn.disabled=true;btn.textContent='Submitting...';}
+  try{
+    await db.collection('battles').add({name,tagline,category:cat,founderName:UD?.name||'Anonymous',founderId:CU.uid,votes:0,voters:[],createdAt:fv.serverTimestamp()});
+    document.getElementById('battle-submit-ov')?.classList.add('hidden');
+    ['bs-name','bs-tagline'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast('Submitted to Battles! 🚀','ok');
+    gainXP('startup');loadBattles();
+  }catch(e){toast('Submit failed: '+e.message,'err');}
+  if(btn){btn.disabled=false;btn.textContent='Submit';}
 }
 
 async function loadBattles(){
