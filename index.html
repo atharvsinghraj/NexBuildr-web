@@ -446,7 +446,7 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .profile-banner{height:140px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,0,0,.8));position:relative;background-size:cover;background-position:center;transition:background-image .3s}
 .profile-body{padding:0 22px 22px}
 .pav-wrap{margin-top:-38px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.pav-lg{width:110px;height:110px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s;overflow:hidden}
+.pav-lg{width:116px;height:116px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s;overflow:hidden;margin-top:8px}
 .pav-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .pav-lg:hover .pav-overlay{opacity:1}
 .pav-overlay svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2}
@@ -1670,6 +1670,55 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12
       <!-- HOME -->
       <div class="page active" id="page-home">
         <div class="dash-welcome"><h2>Welcome back, <span class="grad-text" id="welcome-name">Builder</span></h2></div>
+        <!-- ══ FOUNDER OS ══ -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <!-- Level + XP -->
+          <div class="fos-card">
+            <div class="level-badge" id="fos-level-badge">Level 1</div>
+            <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:2px" id="fos-level-title">Newcomer</div>
+            <div style="font-size:12px;color:#52525B">XP: <span id="fos-xp">0</span> / <span id="fos-xp-next">200</span></div>
+            <div class="xp-bar-bg"><div class="xp-bar-fill" id="fos-xp-bar" style="width:0%"></div></div>
+            <div style="font-size:11px;color:#52525B" id="fos-next-label">Next: Builder</div>
+          </div>
+          <!-- Streak -->
+          <div class="fos-card" style="text-align:center">
+            <div style="font-size:22px;margin-bottom:2px">🔥</div>
+            <div class="streak-num" id="fos-streak">0</div>
+            <div style="font-size:11px;color:#71717A;margin-top:4px">Day Streak</div>
+            <div style="font-size:10px;color:#52525B;margin-top:3px" id="fos-streak-msg">Log in daily!</div>
+          </div>
+        </div>
+        <!-- Today's Missions -->
+        <div class="fos-card" style="margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:700;color:#fff">Today's Missions</div>
+            <div style="font-size:11px;color:#a78bfa" id="fos-missions-done">0/4 done</div>
+          </div>
+          <div class="mission-item"><div class="mcheck" id="mc-connect" onclick="completeMission('connect',this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="mission-label" id="ml-connect">Make 1 connection</div><span class="mission-xp">+20 XP</span></div>
+          <div class="mission-item"><div class="mcheck" id="mc-post" onclick="completeMission('post',this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="mission-label" id="ml-post">Post 1 update</div><span class="mission-xp">+30 XP</span></div>
+          <div class="mission-item"><div class="mcheck" id="mc-startup" onclick="completeMission('startup',this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="mission-label" id="ml-startup">Explore 1 startup</div><span class="mission-xp">+15 XP</span></div>
+          <div class="mission-item"><div class="mcheck" id="mc-message" onclick="completeMission('message',this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="mission-label" id="ml-message">Message a founder</div><span class="mission-xp">+25 XP</span></div>
+        </div>
+        <!-- Startup Stage Tracker -->
+        <div class="fos-card" style="margin-bottom:18px">
+          <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:2px">Startup Stage</div>
+          <div style="font-size:12px;color:#52525B;margin-bottom:10px">Tap to update your stage</div>
+          <div class="stage-wrap" id="fos-stage-track">
+            <div class="stage-dot act" data-stage="0" onclick="setStage(0)" title="Idea">💡</div>
+            <div class="stage-line" id="sl-0"></div>
+            <div class="stage-dot" data-stage="1" onclick="setStage(1)" title="Building">🛠</div>
+            <div class="stage-line" id="sl-1"></div>
+            <div class="stage-dot" data-stage="2" onclick="setStage(2)" title="Launching">🚀</div>
+            <div class="stage-line" id="sl-2"></div>
+            <div class="stage-dot" data-stage="3" onclick="setStage(3)" title="Scaling">📈</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;padding:0 6px">
+            <span style="font-size:10px;color:#52525B">Idea</span>
+            <span style="font-size:10px;color:#52525B">Building</span>
+            <span style="font-size:10px;color:#52525B">Launching</span>
+            <span style="font-size:10px;color:#52525B">Scaling</span>
+          </div>
+        </div>
         <!-- Profile Completion Widget -->
         <div id="profile-completion-widget" style="background:#0A0A0A;border:1px solid #1A1A1A;border-radius:14px;padding:16px 20px;margin-bottom:18px;display:none">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -2009,7 +2058,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12
       <!-- PROFILE -->
       <div class="page" id="page-profile">
         <div class="page-hd"><div class="page-hd-l"><h1>Profile</h1><p>Your builder identity.</p></div></div>
-        <div class="profile-card" style="padding-top:16px">
+        <div class="profile-card" style="padding-top:20px">
 
           <div class="profile-body">
             <div class="pav-wrap">
@@ -4586,6 +4635,12 @@ function shouldRefreshInsights(){
   return !allInsights.length||(Date.now()-_lastInsightLoad)>86400000;
 }
 
+// ── Hook Founder OS into _loadAllFeatures ──
+const _fosOrigLoad=_loadAllFeatures;
+_loadAllFeatures=function(){
+  _fosOrigLoad.call(this);
+  setTimeout(()=>{loadFounderOS();},700);
+};
 // ── Hook into _loadAllFeatures ──
 const _origFeatAll=_loadAllFeatures;
 _loadAllFeatures=function(){
