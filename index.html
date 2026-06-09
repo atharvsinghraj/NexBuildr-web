@@ -442,11 +442,11 @@ footer{background:#000;border-top:1px solid #1F1F1F;padding:60px 0 30px}
 .ctab.active{color:var(--text);border-bottom-color:var(--purple)}
 
 /* ── PROFILE ── */
-.profile-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
+.profile-card{background:#111111;border:1px solid #1F1F1F;border-radius:var(--r2);overflow:hidden;margin-bottom:20px;padding-top:0}
 .profile-banner{height:140px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,0,0,.8));position:relative;background-size:cover;background-position:center;transition:background-image .3s}
 .profile-body{padding:0 22px 22px}
-.pav-wrap{margin-top:-38px;margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.pav-lg{width:116px;height:116px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s;overflow:hidden;margin-top:8px}
+.pav-wrap{margin-top:0;margin-bottom:16px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:24px}
+.pav-lg{width:116px;height:116px;font-size:38px;font-weight:700;border:3px solid rgba(124,58,237,.5);cursor:pointer;position:relative;box-shadow:0 0 28px rgba(124,58,237,.22),0 0 0 6px rgba(124,58,237,.07);transition:box-shadow .3s;overflow:hidden}
 .pav-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .pav-lg:hover .pav-overlay{opacity:1}
 .pav-overlay svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2}
@@ -2058,7 +2058,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(124,58,237,.12
       <!-- PROFILE -->
       <div class="page" id="page-profile">
         <div class="page-hd"><div class="page-hd-l"><h1>Profile</h1><p>Your builder identity.</p></div></div>
-        <div class="profile-card" style="padding-top:20px">
+        <div class="profile-card">
 
           <div class="profile-body">
             <div class="pav-wrap">
@@ -2437,15 +2437,24 @@ async function loadHomeStats(){
     const[pSnap,sSnap,connSnap,followSnap,recentSnap]=await Promise.all([
       db.collection('posts').where('userId','==',CU.uid).get(),
       db.collection('startups').where('userId','==',CU.uid).get(),
-      db.collection('connections').where('fromUid','==',CU.uid).where('status','==','accepted').get().catch(()=>({size:0})),
+      Promise.all([
+        db.collection('connections').where('fromUid','==',CU.uid).get().catch(()=>({docs:[]})),
+        db.collection('connections').where('toUid','==',CU.uid).get().catch(()=>({docs:[]}))
+      ]).then(([s1,s2])=>{
+        const ids=new Set();
+        (s1.docs||[]).forEach(d=>{const u=d.data().toUid;if(u&&u!==CU.uid)ids.add(u);});
+        (s2.docs||[]).forEach(d=>{const u=d.data().fromUid;if(u&&u!==CU.uid)ids.add(u);});
+        return{size:ids.size};
+      }).catch(()=>({size:0})),
       db.collection('follows').where('followingUid','==',CU.uid).get().catch(()=>({size:0})),
       db.collection('posts').limit(5).get()
     ]);
     setEl('st-posts', pSnap.size);
     setEl('st-startups', sSnap.size);
-    const connCount=connSnap.size||UD?.connectionCount||0;
+    const connCount=Math.max(connSnap.size||0,UD?.connectionCount||0);
     const follCount=followSnap.size||UD?.followerCount||0;
     setEl('st-connections', connCount);
+    setEl('my-conns', connCount);
     setEl('st-followers', follCount);
     // Sync small dashboard stat boxes
 
@@ -4534,7 +4543,15 @@ async function loadRealDashStats(){
     const[pSnap,sSnap,connSnap,follSnap]=await Promise.all([
       db.collection('posts').where('userId','==',CU.uid).get(),
       db.collection('startups').where('userId','==',CU.uid).get(),
-      db.collection('connections').where('fromUid','==',CU.uid).where('status','==','accepted').get().catch(()=>({size:0})),
+      Promise.all([
+        db.collection('connections').where('fromUid','==',CU.uid).get().catch(()=>({docs:[]})),
+        db.collection('connections').where('toUid','==',CU.uid).get().catch(()=>({docs:[]}))
+      ]).then(([s1,s2])=>{
+        const ids=new Set();
+        (s1.docs||[]).forEach(d=>{const u=d.data().toUid;if(u&&u!==CU.uid)ids.add(u);});
+        (s2.docs||[]).forEach(d=>{const u=d.data().fromUid;if(u&&u!==CU.uid)ids.add(u);});
+        return{size:ids.size};
+      }).catch(()=>({size:0})),
       db.collection('follows').where('followingUid','==',CU.uid).get().catch(()=>({size:0}))
     ]);
     setEl('st-posts',pSnap.size);
